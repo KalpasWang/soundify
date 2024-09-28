@@ -10,4 +10,4 @@ if (mysqli_connect_errno()) {
   echo "Failed to connect: " . mysqli_connect_errno();
 }
 
-define('BASE_URL', 'http://localhost/soundify/');
+const BASE_URL = 'http://localhost/soundify/';

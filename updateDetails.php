@@ -1,5 +1,5 @@
 <?php
-include_once("includes/includedFiles.php");
+include_once("includes/top.php");
 ?>
 
 <div class="userDetails">

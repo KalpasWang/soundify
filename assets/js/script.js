@@ -40,6 +40,11 @@ $(document).on("change", "select.playlist", function () {
   });
 });
 
+window.onpopstate = function (e) {
+  const route = window.location.pathname;
+  openPage(route);
+};
+
 function updateEmail(emailClass) {
   var emailValue = $("." + emailClass).val();
 
@@ -85,16 +90,24 @@ function openPage(url) {
     clearTimeout(timer);
   }
 
+  const originalUrl = url;
   if (url.indexOf("?") == -1) {
     url = url + "?";
   }
 
-  var encodedUrl = encodeURI(
-    url + "&userLoggedIn=" + userLoggedIn + "&ajax=true"
-  );
-  $("#mainContent").load(encodedUrl);
+  var encodedUrl = encodeURI(url + "&userLoggedIn=" + userLoggedIn);
+  $("#topContainer").load(encodedUrl, function (response, status, xhr) {
+    if (status == "error") {
+      console.error("Error: " + xhr.status + " " + xhr.statusText);
+      return;
+    }
+    let title = response.match(/<title>(.*?)<\/title>/);
+    if (title) {
+      $("title").text(title[1] + " - Soundify");
+    }
+  });
   $("body").scrollTop(0);
-  history.pushState(null, null, url);
+  history.pushState({}, "", originalUrl);
 }
 
 function removeFromPlaylist(button, playlistId) {

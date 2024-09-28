@@ -1,5 +1,5 @@
 <?php
-include_once("includes/includedFiles.php");
+include_once("includes/top.php");
 
 if (isset($_GET['id'])) {
   $albumId = $_GET['id'];
