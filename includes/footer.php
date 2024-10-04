@@ -1,7 +1,11 @@
 </div>
 </div>
 </div>
-<?php include_once("includes/nowPlayingBar.php"); ?>
+<?php
+if (empty($_GET['ajax'])) {
+  include_once("includes/nowPlayingBar.php");
+}
+?>
 </div>
 </body>
 

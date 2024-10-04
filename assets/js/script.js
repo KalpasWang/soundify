@@ -89,13 +89,11 @@ function openPage(url) {
   if (timer != null) {
     clearTimeout(timer);
   }
-
   const originalUrl = url;
   if (url.indexOf("?") == -1) {
     url = url + "?";
   }
-
-  var encodedUrl = encodeURI(url + "&userLoggedIn=" + userLoggedIn);
+  let encodedUrl = encodeURI(`${url}&userLoggedIn=${userLoggedIn}&ajax=true`);
   $("#topContainer").load(encodedUrl, function (response, status, xhr) {
     if (status == "error") {
       console.error("Error: " + xhr.status + " " + xhr.statusText);
