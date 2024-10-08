@@ -20,30 +20,54 @@ function getInputValue($name)
 
 <head>
   <title>Welcome to Soundify!</title>
-  <link rel="stylesheet" type="text/css" href="assets/css/register.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" type="image/png" href="assets/images/icons/logo64x64.png">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <!-- <link rel="stylesheet" type="text/css" href="assets/css/register.css"> -->
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="assets/js/register.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+  <!-- <script src="assets/js/register.js"></script> -->
 </head>
 
 <body>
-  <?php
-  if (isset($_POST['registerButton'])) {
-    echo '<script>
-				$(document).ready(function() {
-					$("#loginForm").hide();
-					$("#registerForm").show();
-				});
-			</script>';
-  } else {
-    echo '<script>
-				$(document).ready(function() {
-					$("#loginForm").show();
-					$("#registerForm").hide();
-				});
-			</script>';
-  }
-  ?>
-  <div id="background">
+  <section class="bg-black">
+    <div class="container py-5">
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-8 col-xl-6">
+          <div class="text-white text-center p-5">
+            <header>
+              <img class="mb-4" src="assets/images/icons/logo64x64.png" alt="Soundify logo" width="64">
+              <h1 class="h1 fw-bold mb-5 text-uppercase">註冊即可開始收聽</h1>
+            </header>
+            <form class="text-start" action="register.php" method="POST">
+              <div class="mb-3">
+                <label for="InputEmail" class="form-label">電子郵件地址</label>
+                <input type="email" class="form-control" id="InputEmail" placeholder="name@domain.com">
+              </div>
+              <div class="mb-3">
+                <label for="InputPassword" class="form-label">密碼</label>
+                <input type="password" class="form-control" id="InputPassword">
+              </div>
+              <div class="mb-3">
+                <label for="InputPassword2" class="form-label">請再次輸入密碼</label>
+                <input type="password" class="form-control" id="InputPassword2">
+              </div>
+              <div class="text-center">
+                <button type="submit" class="btn btn-primary">提交</button>
+              </div>
+            </form>
+            <p class="mt-5 mb-0">
+              <span class="text-secondary">已擁有帳號？</span>
+              <a href="login.php" class="text-white fw-bold text-decoration-underline">請在此處登入</a>
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- <div id="background">
     <div id="loginContainer">
       <div id="inputContainer">
         <form id="loginForm" action="register.php" method="POST">
@@ -118,7 +142,7 @@ function getInputValue($name)
         </ul>
       </div>
     </div>
-  </div>
+  </div> -->
 </body>
 
 </html>
