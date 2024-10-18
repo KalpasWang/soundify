@@ -1,5 +1,5 @@
 <?php
-include_once("includes/top.php");
+include_once("includes/header.php");
 
 if (isset($_GET['term'])) {
   $term = urldecode($_GET['term']);

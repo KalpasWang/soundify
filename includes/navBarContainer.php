@@ -5,7 +5,7 @@ $page = basename($_SERVER['PHP_SELF'], '.php');
 <div id="navBarContainer">
   <nav class="navBar">
     <span role="link" tabindex="0" onclick="openPage('index.php')" class="logo">
-      <img src="assets/images/icons/logo.png">
+      <img src="assets/images/icons/logo.svg" width="128px" alt="Soundify logo">
     </span>
     <div class="group">
       <div class="navItem">

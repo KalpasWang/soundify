@@ -1,7 +1,7 @@
 <?php
 $title = 'Soundify - Web Player: Music for everyone';
 
-include_once("includes/top.php");
+include_once("includes/header.php");
 ?>
 
 <h1 class="pageHeadingBig">You Might Also Like</h1>

@@ -1,11 +1,11 @@
 <?php
 
 include_once("includes/config.php");
-include_once("includes/classes/User.php");
-include_once("includes/classes/Artist.php");
-include_once("includes/classes/Album.php");
-include_once("includes/classes/Song.php");
-include_once("includes/classes/Playlist.php");
+include_once("core/User.php");
+include_once("core/Artist.php");
+include_once("core/Album.php");
+include_once("core/Song.php");
+include_once("core/Playlist.php");
 
 //session_destroy(); LOGOUT
 
@@ -22,11 +22,11 @@ include_once("includes/header.php");
 // echo $_GET['ajax'];
 // if (isset($_GET['ajax'])) {
 //   include("includes/config.php");
-//   include("includes/classes/User.php");
-//   include("includes/classes/Artist.php");
-//   include("includes/classes/Album.php");
-//   include("includes/classes/Song.php");
-//   include("includes/classes/Playlist.php");
+//   include("core/User.php");
+//   include("core/Artist.php");
+//   include("core/Album.php");
+//   include("core/Song.php");
+//   include("core/Playlist.php");
 
 //   if (isset($_GET['userLoggedIn'])) {
 //     $userLoggedIn = new User($con, $_GET['userLoggedIn']);

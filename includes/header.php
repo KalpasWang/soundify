@@ -1,4 +1,22 @@
 <?php
+
+include_once("includes/config.php");
+include_once("core/User.php");
+include_once("core/Artist.php");
+include_once("core/Album.php");
+include_once("core/Song.php");
+include_once("core/Playlist.php");
+
+//session_destroy(); LOGOUT
+
+if (isset($_SESSION['userLoggedIn'])) {
+  $userLoggedIn = new User($con, $_SESSION['userLoggedIn']);
+  $username = $userLoggedIn->getUsername();
+  echo "<script>userLoggedIn = '$username';</script>";
+} else {
+  header("Location: register.php");
+}
+
 $newTitle = 'Soundify - Web Player: Music for everyone';
 if (isset($title)) {
   $newTitle = $title;

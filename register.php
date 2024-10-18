@@ -1,12 +1,12 @@
 <?php
 include_once("includes/config.php");
-include_once("includes/classes/Account.php");
-include_once("includes/classes/Constants.php");
+include_once("core/Account.php");
+include_once("core/Constants.php");
 
 $account = new Account($con);
 
-include_once("includes/handlers/register-handler.php");
-include_once("includes/handlers/login-handler.php");
+include_once("handlers/register-handler.php");
+include_once("handlers/login-handler.php");
 
 function getInputValue($name)
 {
@@ -22,7 +22,7 @@ function getInputValue($name)
   <title>Welcome to Soundify!</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <link rel="icon" type="image/png" href="assets/images/icons/logo.svg">
+  <link rel="icon" type="image/png" href="assets/images/icons/logo-black.svg">
   <link rel="stylesheet" type="text/css" href="assets/css/main.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
@@ -35,7 +35,7 @@ function getInputValue($name)
       <div class="d-flex w-100 justify-content-center">
         <div class="text-white text-center">
           <header>
-            <img class="mb-4" src="assets/images/icons/logo-black.svg" alt="Soundify logo" height="64">
+            <img class="mb-4" src="assets/images/icons/logo-white.svg" alt="Soundify logo" height="64">
             <h1 class="h1 fw-bold mb-5 text-wrap">註冊即可開始收聽</h1>
           </header>
           <form class="text-start mx-auto" action="register.php" method="POST" style="width: 324px;">
