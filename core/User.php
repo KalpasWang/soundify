@@ -1,31 +1,27 @@
 <?php
+
+declare(strict_types=1);
+
 class User
 {
-  private $con;
-  private $username;
+  private mysqli $con;
+  private string $userEmail;
 
-  public function __construct($con, $username)
+  public function __construct(mysqli $con, string $email)
   {
     $this->con = $con;
-    $this->username = $username;
+    $this->userEmail = $email;
   }
 
   public function getUsername()
   {
-    return $this->username;
+    $query = mysqli_query($this->con, "SELECT username FROM users WHERE email='$this->userEmail'");
+    $row = mysqli_fetch_array($query);
+    return $row['username'];
   }
 
   public function getEmail()
   {
-    $query = mysqli_query($this->con, "SELECT email FROM users WHERE username='$this->username'");
-    $row = mysqli_fetch_array($query);
-    return $row['email'];
-  }
-
-  public function getFirstAndLastName()
-  {
-    $query = mysqli_query($this->con, "SELECT concat(firstName, ' ', lastName) as 'name'  FROM users WHERE username='$this->username'");
-    $row = mysqli_fetch_array($query);
-    return $row['name'];
+    return $this->userEmail;
   }
 }

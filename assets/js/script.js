@@ -26,7 +26,7 @@ $(document).on("change", "select.playlist", function () {
   var playlistId = select.val();
   var songId = select.prev(".songId").val();
 
-  $.post("handlers/ajax/addToPlaylist.php", {
+  $.post("handlers/addToPlaylist.php", {
     playlistId: playlistId,
     songId: songId,
   }).done(function (error) {
@@ -48,7 +48,7 @@ window.onpopstate = function (e) {
 function updateEmail(emailClass) {
   var emailValue = $("." + emailClass).val();
 
-  $.post("handlers/ajax/updateEmail.php", {
+  $.post("handlers/updateEmail.php", {
     email: emailValue,
     username: userLoggedIn,
   }).done(function (response) {
@@ -67,7 +67,7 @@ function updatePassword(
   var newPassword1 = $("." + newPasswordClass1).val();
   var newPassword2 = $("." + newPasswordClass2).val();
 
-  $.post("handlers/ajax/updatePassword.php", {
+  $.post("handlers/updatePassword.php", {
     oldPassword: oldPassword,
     newPassword1: newPassword1,
     newPassword2: newPassword2,
@@ -80,7 +80,7 @@ function updatePassword(
 }
 
 function logout() {
-  $.post("handlers/ajax/logout.php", function () {
+  $.post("handlers/logout.php", function () {
     location.reload();
   });
 }
@@ -111,7 +111,7 @@ function openPage(url) {
 function removeFromPlaylist(button, playlistId) {
   var songId = $(button).prevAll(".songId").val();
 
-  $.post("handlers/ajax/removeFromPlaylist.php", {
+  $.post("handlers/removeFromPlaylist.php", {
     playlistId: playlistId,
     songId: songId,
   }).done(function (error) {
@@ -129,7 +129,7 @@ function createPlaylist() {
   var popup = prompt("Please enter the name of your playlist");
 
   if (popup != null) {
-    $.post("handlers/ajax/createPlaylist.php", {
+    $.post("handlers/createPlaylist.php", {
       name: popup,
       username: userLoggedIn,
     }).done(function (error) {
@@ -148,7 +148,7 @@ function deletePlaylist(playlistId) {
   var prompt = confirm("Are you sure you want to delte this playlist?");
 
   if (prompt == true) {
-    $.post("handlers/ajax/deletePlaylist.php", {
+    $.post("handlers/deletePlaylist.php", {
       playlistId: playlistId,
     }).done(function (error) {
       if (error != "") {

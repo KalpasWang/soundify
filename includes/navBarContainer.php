@@ -39,7 +39,8 @@ $page = basename($_SERVER['PHP_SELF'], '.php');
           role="link"
           tabindex="0"
           onclick="openPage('settings.php')"
-          class="navItemLink <?= $page === 'settings' ? 'active' : '' ?>"><?= $userLoggedIn->getFirstAndLastName(); ?></span>
+          class="navItemLink <?= $page === 'settings' ? 'active' : '' ?>">
+          <?= $userLoggedIn->getUsername(); ?></span>
       </div>
     </div>
   </nav>

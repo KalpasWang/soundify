@@ -131,19 +131,19 @@ $jsonArray = json_encode($resultArray);
       currentIndex = currentPlaylist.indexOf(trackId);
     }
     pauseSong();
-    $.post("handlers/ajax/getSongJson.php", {
+    $.post("handlers/getSongJson.php", {
       songId: trackId
     }, function(data) {
       var track = JSON.parse(data);
       $(".trackName span").text(track.title);
-      $.post("handlers/ajax/getArtistJson.php", {
+      $.post("handlers/getArtistJson.php", {
         artistId: track.artist
       }, function(data) {
         var artist = JSON.parse(data);
         $(".trackInfo .artistName span").text(artist.name);
         $(".trackInfo .artistName span").attr("onclick", "openPage('artist.php?id=" + artist.id + "')");
       });
-      $.post("handlers/ajax/getAlbumJson.php", {
+      $.post("handlers/getAlbumJson.php", {
         albumId: track.album
       }, function(data) {
         var album = JSON.parse(data);
@@ -160,7 +160,7 @@ $jsonArray = json_encode($resultArray);
 
   function playSong() {
     if (audioElement.audio.currentTime == 0) {
-      $.post("handlers/ajax/updatePlays.php", {
+      $.post("handlers/updatePlays.php", {
         songId: audioElement.currentlyPlaying.id
       });
     }

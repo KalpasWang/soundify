@@ -1,5 +1,5 @@
 <?php
-include_once("../../config.php");
+include_once("../includes/config.php");
 
 
 if (isset($_POST['playlistId']) && isset($_POST['songId'])) {

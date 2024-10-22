@@ -9,8 +9,8 @@ include_once("core/Playlist.php");
 
 //session_destroy(); LOGOUT
 
-if (isset($_SESSION['userLoggedIn'])) {
-  $userLoggedIn = new User($con, $_SESSION['userLoggedIn']);
+if (isset($_SESSION['user'])) {
+  $userLoggedIn = new User($con, $_SESSION['user']);
   $username = $userLoggedIn->getUsername();
   echo "<script>userLoggedIn = '$username';</script>";
 } else {
