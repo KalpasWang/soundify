@@ -11,7 +11,6 @@ class Auth
   private static string $passwordsDoNoMatch = "密碼不一致";
   private static string $passwordNotValid = "密碼必須是英文與數字的組合，介於 6 到 30 字元之間";
   private static string $emailInvalid = "Email 格式不正確";
-  private static string $emailsDoNotMatch = "Your emails don't match";
   private static string $emailTaken = "此 Email 已經註冊過了";
   private static string $usernameCharacters = "用戶名稱必須介於 5 到 25 字元之間";
   private static string $loginFailed = "用戶名稱或密碼不正確。";
@@ -32,7 +31,7 @@ class Auth
     return $_SESSION['user'] ?? null;
   }
 
-  public static function register($username, $email, $password, $confirmPassword)
+  public static function register(string $username, string $email, string $password, string $confirmPassword): bool
   {
     $username = self::sanitizeInput($username);
     $email = self::sanitizeInput($email);
@@ -54,14 +53,27 @@ class Auth
       throw new AuthException('confirmPassword', self::$passwordsDoNoMatch);
     }
     $result = self::createUser($username, $email, $password);
-    if (!$result) {
+    if ($result == false) {
       throw new AuthException('register', self::$signupFailed);
     }
-    $_SESSION['user'] = $email;
     return true;
   }
 
-  public static function login($email, $password) {}
+  public static function login(string $email, string $password): bool
+  {
+    $email = self::sanitizeInput($email);
+    $password = self::sanitizeInput($password);
+    $result = self::$db->query("SELECT * FROM users WHERE email='$email'");
+    if ($result->num_rows !== 1) {
+      throw new AuthException('login', self::$loginFailed);
+    }
+    // verify password
+    $row = $result->fetch_assoc();
+    if (!password_verify($password, $row['password'])) {
+      throw new AuthException('login', self::$loginFailed);
+    }
+    return true;
+  }
 
   private static function sanitizeInput($input)
   {

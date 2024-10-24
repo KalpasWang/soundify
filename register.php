@@ -19,6 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" && isset($_POST['registerButton'])) {
   $confirmPassword = $_POST['confirmPassword'];
   try {
     Auth::register($username, $email, $password, $confirmPassword);
+    $_SESSION['user'] = $email;
     header("Location: index.php");
   } catch (AuthException $e) {
     $errorMsg = $e->getMessage();
@@ -35,14 +36,13 @@ function getInputValue($name)
 <html lang="zh-TW">
 
 <head>
-  <title>Welcome to Soundify!</title>
+  <title>註冊 Soundify</title>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/png" href="assets/images/icons/logo-black.svg">
   <link rel="stylesheet" type="text/css" href="assets/css/main.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
-  <!-- <script src="assets/js/register.js"></script> -->
 </head>
 
 <body>
@@ -55,16 +55,18 @@ function getInputValue($name)
             <h1 class="h1 fw-bold mb-5 text-wrap">註冊即可開始收聽</h1>
           </header>
           <?php if ($errorMsg): ?>
-            <div class="alert alert-danger d-flex align-items-center" role="alert">
-              <svg data-encore-id="icon" role="img" aria-label="Error:" aria-hidden="false" width="24" height="24" viewBox="0 0 24 24">
-                <title>Error:</title>
-                <path d="M11 18v-2h2v2h-2zm0-4V6h2v8h-2z"></path>
-                <path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM1 12C1 5.925 5.925 1 12 1s11 4.925 11 11-4.925 11-11 11S1 18.075 1 12z"></path>
-              </svg>
-              <p class="ps-3 my-0">
-                <?= $errorMsg ?>
-              </p>
-            </div>
+            <section class="d-flex justify-content-center">
+              <div class="alert alert-danger d-flex align-items-center w-100" role="alert" style="max-width: 40rem;">
+                <svg data-encore-id="icon" role="img" aria-label="Error:" aria-hidden="false" width="24" height="24" viewBox="0 0 24 24">
+                  <title>Error:</title>
+                  <path d="M11 18v-2h2v2h-2zm0-4V6h2v8h-2z"></path>
+                  <path d="M12 3a9 9 0 1 0 0 18 9 9 0 0 0 0-18zM1 12C1 5.925 5.925 1 12 1s11 4.925 11 11-4.925 11-11 11S1 18.075 1 12z"></path>
+                </svg>
+                <p class="ps-3 my-0">
+                  <?= $errorMsg ?>
+                </p>
+              </div>
+            </section>
           <?php endif ?>
           <form class="text-start mx-auto" action="register.php" method="POST" style="max-width: 324px;">
             <div class="mb-3">

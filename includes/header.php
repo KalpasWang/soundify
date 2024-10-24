@@ -14,7 +14,7 @@ if (isset($_SESSION['user'])) {
   $username = $userLoggedIn->getUsername();
   echo "<script>userLoggedIn = '$username';</script>";
 } else {
-  header("Location: register.php");
+  header("Location: login.php");
 }
 
 $newTitle = 'Soundify - Web Player: Music for everyone';
