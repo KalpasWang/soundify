@@ -31,6 +31,12 @@ function getInputValue($name)
 {
   return $_POST[$name] ?? '';
 }
+
+function isInvalid($name)
+{
+  global $errorName;
+  return ($name == $errorName) ? 'is-invalid' : '';
+}
 ?>
 
 <html lang="zh-TW">
@@ -41,8 +47,6 @@ function getInputValue($name)
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/png" href="assets/images/icons/logo-black.svg">
   <link rel="stylesheet" type="text/css" href="assets/css/main.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 </head>
 
 <body>
@@ -54,7 +58,7 @@ function getInputValue($name)
             <img class="mb-4" src="assets/images/icons/logo-white.svg" alt="Soundify logo" height="64">
             <h1 class="h1 fw-bold mb-5 text-wrap">註冊即可開始收聽</h1>
           </header>
-          <?php if ($errorMsg): ?>
+          <?php if ($errorName == 'register'): ?>
             <section class="d-flex justify-content-center">
               <div class="alert alert-danger d-flex align-items-center w-100" role="alert" style="max-width: 40rem;">
                 <svg data-encore-id="icon" role="img" aria-label="Error:" aria-hidden="false" width="24" height="24" viewBox="0 0 24 24">
@@ -77,12 +81,17 @@ function getInputValue($name)
               <input
                 type="email"
                 name="email"
-                class="form-control form-control-lg"
+                class="form-control form-control-lg <?= isInvalid('email') ?>"
                 id="email"
                 placeholder="name@domain.com"
                 value="<?= getInputValue('email') ?>"
+                aria-describedby="emailFeedback"
                 required>
-
+              <?php if ($errorName == 'email'): ?>
+                <div id="emailFeedback" class="invalid-feedback">
+                  <?= $errorMsg ?>
+                </div>
+              <?php endif ?>
             </div>
             <div class="mb-3">
               <label
@@ -93,24 +102,52 @@ function getInputValue($name)
               <input
                 type="text"
                 name="username"
-                class="form-control form-control-lg"
+                class="form-control form-control-lg <?= isInvalid('username') ?>"
                 id="username"
                 value="<?= getInputValue('username') ?>"
+                aria-describedby="usernameFeedback"
                 required>
+              <?php if ($errorName == 'username'): ?>
+                <div id="usernameFeedback" class="invalid-feedback">
+                  <?= $errorMsg ?>
+                </div>
+              <?php endif ?>
             </div>
             <div class="mb-3">
               <label for="InputPassword" class="form-label">
                 密碼
                 <span class="text-danger">*</span>
               </label>
-              <input type="password" name="password" class="form-control form-control-lg" id="password" required>
+              <input
+                type="password"
+                name="password"
+                class="form-control form-control-lg <?= isInvalid('password') ?>"
+                id="password"
+                aria-describedby="passwordFeedback"
+                required>
+              <?php if ($errorName == 'password'): ?>
+                <div id="passwordFeedback" class="invalid-feedback">
+                  <?= $errorMsg ?>
+                </div>
+              <?php endif ?>
             </div>
             <div class="mb-5">
               <label for="InputPassword2" class="form-label">
                 請再次輸入密碼
                 <span class="text-danger">*</span>
               </label>
-              <input type="password" name="confirmPassword" class="form-control form-control-lg" id="confirmPassword" required>
+              <input
+                type="password"
+                name="confirmPassword"
+                class="form-control form-control-lg <?= isInvalid('confirmPassword') ?>"
+                id="confirmPassword"
+                aria-describedby="confirmPasswordFeedback"
+                required>
+              <?php if ($errorName == 'confirmPassword'): ?>
+                <div id="confirmPasswordFeedback" class="invalid-feedback">
+                  <?= $errorMsg ?>
+                </div>
+              <?php endif ?>
             </div>
             <div class="text-center">
               <button
@@ -134,5 +171,7 @@ function getInputValue($name)
     window.history.replaceState(null, null, window.location.href);
   }
 </script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
 
 </html>
