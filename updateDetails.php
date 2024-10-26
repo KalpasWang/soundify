@@ -4,10 +4,10 @@ include_once("includes/header.php");
 
 <div class="userDetails">
   <div class="container borderBottom">
-    <h2>EMAIL</h2>
-    <input type="text" class="email" name="email" placeholder="Email address..." value="<?php echo $userLoggedIn->getEmail(); ?>">
+    <h2>User Name</h2>
+    <input type="text" class="username" name="username" placeholder="your name..." value="<?php echo $userLoggedIn->getUsername(); ?>">
     <span class="message"></span>
-    <button class="button" onclick="updateEmail('email')">SAVE</button>
+    <button class="button" onclick="updateUsername('username')">SAVE</button>
   </div>
   <div class="container">
     <h2>PASSWORD</h2>
@@ -18,3 +18,5 @@ include_once("includes/header.php");
     <button class="button" onclick="updatePassword('oldPassword', 'newPassword1', 'newPassword2')">SAVE</button>
   </div>
 </div>
+
+<?php include_once("includes/footer.php"); ?>

@@ -6,7 +6,6 @@ var mouseDown = false;
 var currentIndex = 0;
 var repeat = false;
 var shuffle = false;
-var userLoggedIn;
 var timer;
 
 $(document).click(function (click) {
@@ -45,14 +44,12 @@ window.onpopstate = function (e) {
   openPage(route);
 };
 
-function updateEmail(emailClass) {
-  var emailValue = $("." + emailClass).val();
-
-  $.post("handlers/updateEmail.php", {
-    email: emailValue,
-    username: userLoggedIn,
+function updateUsername(usernameClass) {
+  var value = $("." + usernameClass).val();
+  $.post("handlers/updateUsername.php", {
+    username: value,
   }).done(function (response) {
-    $("." + emailClass)
+    $("." + usernameClass)
       .nextAll(".message")
       .text(response);
   });
@@ -71,7 +68,6 @@ function updatePassword(
     oldPassword: oldPassword,
     newPassword1: newPassword1,
     newPassword2: newPassword2,
-    username: userLoggedIn,
   }).done(function (response) {
     $("." + oldPasswordClass)
       .nextAll(".message")
@@ -89,12 +85,7 @@ function openPage(url) {
   if (timer != null) {
     clearTimeout(timer);
   }
-  const originalUrl = url;
-  if (url.indexOf("?") == -1) {
-    url = url + "?";
-  }
-  let encodedUrl = encodeURI(`${url}&userLoggedIn=${userLoggedIn}&ajax=true`);
-  $("#topContainer").load(encodedUrl, function (response, status, xhr) {
+  $("#topContainer").load(url, function (response, status, xhr) {
     if (status == "error") {
       console.error("Error: " + xhr.status + " " + xhr.statusText);
       return;
@@ -105,7 +96,7 @@ function openPage(url) {
     }
   });
   $("body").scrollTop(0);
-  history.pushState({}, "", originalUrl);
+  history.pushState({}, "", url);
 }
 
 function removeFromPlaylist(button, playlistId) {
@@ -131,7 +122,6 @@ function createPlaylist() {
   if (popup != null) {
     $.post("handlers/createPlaylist.php", {
       name: popup,
-      username: userLoggedIn,
     }).done(function (error) {
       if (error != "") {
         alert(error);

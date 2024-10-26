@@ -7,12 +7,8 @@ include_once("core/Album.php");
 include_once("core/Song.php");
 include_once("core/Playlist.php");
 
-//session_destroy(); LOGOUT
-
 if (isset($_SESSION['user'])) {
   $userLoggedIn = new User($con, $_SESSION['user']);
-  $username = $userLoggedIn->getUsername();
-  echo "<script>userLoggedIn = '$username';</script>";
 } else {
   header("Location: login.php");
 }
