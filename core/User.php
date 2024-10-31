@@ -24,4 +24,11 @@ class User
   {
     return $this->userEmail;
   }
+
+  public function getAvatar()
+  {
+    $query = mysqli_query($this->con, "SELECT avatar FROM users WHERE email='$this->userEmail'");
+    $row = mysqli_fetch_array($query);
+    return $row['avatar'];
+  }
 }

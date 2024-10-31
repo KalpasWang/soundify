@@ -8,6 +8,35 @@ $info: #0dcaf0;
 $warning: #ffc107;
 $danger: #e91429;
 $light: #fff;
-$dark: #121212;
+$dark: #1f1f1f;
+
+$utilities: (
+  "width": (
+    property: width,
+    class: w,
+    values: (
+      25: 25%,
+      50: 50%,
+      75: 75%,
+      100: 100%,
+      auto: auto,
+      2rem: 2rem,
+      3rem: 3rem,
+    ),
+  ),
+  "height": (
+    property: height,
+    class: h,
+    values: (
+      25: 25%,
+      50: 50%,
+      75: 75%,
+      100: 100%,
+      auto: auto,
+      2rem: 2rem,
+      3rem: 3rem,
+    ),
+  ),
+);
 
 @import "../node_modules/bootstrap/scss/bootstrap";

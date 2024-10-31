@@ -85,6 +85,11 @@ function openPage(url) {
   if (timer != null) {
     clearTimeout(timer);
   }
+  const originalUrl = url;
+  if (url.indexOf("?") == -1) {
+    url = url + "?";
+  }
+  url = encodeURI(`${url}&ajax=true`);
   $("#topContainer").load(url, function (response, status, xhr) {
     if (status == "error") {
       console.error("Error: " + xhr.status + " " + xhr.statusText);
@@ -96,7 +101,7 @@ function openPage(url) {
     }
   });
   $("body").scrollTop(0);
-  history.pushState({}, "", url);
+  history.pushState({}, "", originalUrl);
 }
 
 function removeFromPlaylist(button, playlistId) {
