@@ -10,6 +10,9 @@ $danger: #e91429;
 $light: #fff;
 $dark: #1f1f1f;
 
+$enable-shadows: false;
+$input-focus-box-shadow: none;
+
 $utilities: (
   "width": (
     property: width,
@@ -40,3 +43,30 @@ $utilities: (
 );
 
 @import "../node_modules/bootstrap/scss/bootstrap";
+
+.search-bar > .form-control,
+.search-bar > .input-group-text {
+  cursor: pointer;
+}
+
+.search-bar:hover > .form-control,
+.search-bar:hover > .input-group-text {
+  background-color: $gray-800 !important;
+}
+
+.search-bar:focus-within {
+  box-shadow: 0 0 0 2px $light;
+}
+
+.search-bar:focus-within > .form-control,
+.search-bar:focus-within > .input-group-text {
+  background-color: $dark !important;
+  cursor: default;
+}
+
+.search-bar:focus-within .bi {
+  fill: $light !important;
+}
+.search-bar:focus-within .bi path {
+  stroke-width: 2px !important;
+}

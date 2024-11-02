@@ -4,16 +4,16 @@ $page = basename($_SERVER['PHP_SELF'], '.php');
 <!-- <link rel="stylesheet" type="text/css" href="assets/css/main.css"> -->
 
 <header class="d-none d-lg-block p-2">
-  <div class="container">
+  <div class="container-xxl">
     <div class="d-flex flex-nowrap justify-content-between align-items-center">
-      <a href="/" class="d-flex align-items-center">
+      <a href="/" title="Soundify" class="d-flex align-items-center">
         <img src="assets/images/icons/logo-white.svg" alt="Soundify logo" height="32">
       </a>
 
       <form class="mx-3 my-0" role="search">
-        <div class="input-group input-group-lg rounded-pixel overflow-hidden">
+        <div class="search-bar input-group input-group-lg rounded-pill overflow-hidden">
           <!-- search icon -->
-          <span class="input-group-text bg-dark border-0">
+          <span class="input-group-text bg-dark border-0 pe-0">
             <svg xmlns="http://www.w3.org/2000/svg" role="img" width="24" height="24" fill="currentColor" class="bi bi-search text-secondary" viewBox="0 0 16 16">
               <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0" />
             </svg>
