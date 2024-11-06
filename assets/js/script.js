@@ -44,6 +44,14 @@ window.onpopstate = function (e) {
   openPage(route);
 };
 
+// invoke bootstrap 5 tooltips
+const tooltipTriggerList = document.querySelectorAll(
+  '[data-bs-toggle="tooltip"]'
+);
+const tooltipList = [...tooltipTriggerList].map(
+  (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl)
+);
+
 function updateUsername(usernameClass) {
   var value = $("." + usernameClass).val();
   $.post("handlers/updateUsername.php", {

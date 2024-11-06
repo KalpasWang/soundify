@@ -26,15 +26,16 @@ if (isset($title)) {
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/png" href="assets/images/icons/logo.svg">
   <title><?= $newTitle ?></title>
-  <!-- <link rel="stylesheet" type="text/css" href="assets/css/style.css"> -->
   <link rel="stylesheet" type="text/css" href="assets/css/main.css">
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="assets/js/script.js"></script>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 </head>
 
 <body>
-  <div id="mainContainer">
+  <div id="app">
     <div id="topContainer" class="min-vh-100">
       <?php include_once("includes/navbar.php"); ?>
-      <div id="mainViewContainer">
-        <div id="mainContent">
+      <div class="container-xxl">
+        <div class="w-100 d-flex flex-row flex-nowrap">
+          <?php include_once("includes/sidebar.php"); ?>
+          <main id="mainContent" class="flex-grow-1">

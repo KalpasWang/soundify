@@ -1,6 +1,18 @@
 $body-bg: #000;
 $body-color: #fff;
 
+$white: #fff;
+$gray-100: #f8f9fa;
+$gray-200: #e9ecef;
+$gray-300: #dee2e6;
+$gray-400: #ced4da;
+$gray-500: #adb5bd;
+$gray-600: #6c757d;
+$gray-700: #495057;
+$gray-800: #343a40;
+$gray-900: #212529;
+$black: #000;
+
 $primary: #19e68c;
 $secondary: #b3b3b3;
 $success: #198754;
@@ -13,6 +25,9 @@ $dark: #1f1f1f;
 $enable-shadows: false;
 $input-focus-box-shadow: none;
 
+$tooltip-bg: $dark;
+$tooltip-color: $light;
+
 $utilities: (
   "width": (
     property: width,
@@ -23,6 +38,9 @@ $utilities: (
       75: 75%,
       100: 100%,
       auto: auto,
+      72px: 72px,
+      60px: 60px,
+      64px: 64px,
       2rem: 2rem,
       3rem: 3rem,
     ),
@@ -36,6 +54,9 @@ $utilities: (
       75: 75%,
       100: 100%,
       auto: auto,
+      72px: 72px,
+      60px: 60px,
+      64px: 64px,
       2rem: 2rem,
       3rem: 3rem,
     ),
@@ -54,6 +75,10 @@ $utilities: (
   background-color: $gray-800 !important;
 }
 
+.search-bar:hover .bi {
+  color: $light !important;
+}
+
 .search-bar:focus-within {
   box-shadow: 0 0 0 2px $light;
 }
@@ -65,8 +90,5 @@ $utilities: (
 }
 
 .search-bar:focus-within .bi {
-  fill: $light !important;
-}
-.search-bar:focus-within .bi path {
-  stroke-width: 2px !important;
+  color: $light !important;
 }
