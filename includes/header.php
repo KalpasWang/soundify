@@ -35,7 +35,6 @@ if (isset($title)) {
   <div id="app">
     <div id="topContainer" class="min-vh-100">
       <?php include_once("includes/navbar.php"); ?>
-      <div class="container-xxl">
-        <div class="w-100 d-flex flex-row flex-nowrap">
-          <?php include_once("includes/sidebar.php"); ?>
-          <main id="mainContent" class="flex-grow-1">
+      <div class="w-100 px-2 d-flex flex-row flex-nowrap">
+        <?php include_once("includes/sidebar.php"); ?>
+        <main id="mainContent" class="flex-grow-1">

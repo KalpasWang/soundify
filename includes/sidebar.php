@@ -1,4 +1,4 @@
-<aside class="flex-grow-0 flex-shrink-0 h-100 px-2">
+<aside class="flex-grow-0 flex-shrink-0 h-100">
   <nav class="h-100 d-flex flex-column align-items-center">
     <button type="button" class="btn btn-dark w-72px h-60px" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="展開「你的音樂庫」" aria-label="Toggle Sidebar">
       <i class="bi bi-bookmarks" style="font-size: 32px;"></i>
