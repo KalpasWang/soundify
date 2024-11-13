@@ -37,4 +37,4 @@ if (isset($title)) {
       <?php include_once("includes/navbar.php"); ?>
       <div class="w-100 px-2 d-flex flex-row flex-nowrap">
         <?php include_once("includes/sidebar.php"); ?>
-        <main id="mainContent" class="flex-grow-1">
+        <main id="mainContent" class="flex-grow-1 overflow-hidden">

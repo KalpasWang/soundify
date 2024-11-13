@@ -8,7 +8,26 @@ var repeat = false;
 var shuffle = false;
 var timer;
 
-$(document).click(function (click) {
+let sliderWidth;
+let cardWidth;
+let scrollPosition = 0;
+
+function slide(direction) {
+  if (!sliderWidth || !cardWidth) {
+    sliderWidth = $(".slider")[0].scrollWidth;
+    cardWidth = $(".slider-item").width();
+  }
+  if (direction === "prev" && scrollPosition > 0) {
+    scrollPosition -= cardWidth;
+    $(".slider").animate({ scrollLeft: scrollPosition }, 300);
+  }
+  if (direction === "next" && scrollPosition < sliderWidth - cardWidth) {
+    scrollPosition += cardWidth;
+    $(".slider").animate({ scrollLeft: scrollPosition }, 300);
+  }
+}
+
+$(document).on("click", function (click) {
   var target = $(click.target);
 
   if (!target.hasClass("item") && !target.hasClass("optionsButton")) {
