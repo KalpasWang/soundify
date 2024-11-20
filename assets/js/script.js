@@ -129,6 +129,7 @@ function openPage(url) {
   });
   $("body").scrollTop(0);
   history.pushState({}, "", originalUrl);
+  return false;
 }
 
 function removeFromPlaylist(button, playlistId) {

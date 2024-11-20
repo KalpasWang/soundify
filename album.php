@@ -7,7 +7,7 @@ if (isset($_GET['id'])) {
   header("Location: index.php");
 }
 
-$album = new Album($con, $albumId);
+$album = Album::createById($con, $albumId);
 $artist = $album->getArtist();
 $artistId = $artist->getId();
 ?>

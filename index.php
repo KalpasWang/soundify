@@ -24,12 +24,19 @@ $albums = Album::getRandomAlbums($con, 10);
     <ul class="slider list-unstyled">
       <?php foreach ($albums as $album): ?>
         <li class="slider-item">
-          <div class="btn btn-dark h-100">
+          <div role="button" onclick="openPage('album.php?id=<?= $album->getId(); ?>')" class="btn btn-dark h-100">
             <div class="card border-0 bg-transparent h-100" style="width: 9rem;">
-              <img src="<?= $album->artworkPath; ?>" class="card-img-top" alt="<?= $album->title; ?>">
+              <img src="<?= $album->getArtworkPath(); ?>" class="card-img-top" alt="<?= $album->getTitle(); ?>">
               <div class="card-body text-start p-0 pt-2">
-                <h5 class="card-title fs-6 fw-bold mb-0"><?= $album->title; ?></h5>
-                <p class="card-text fs-7 text-secondary">artist name</p>
+                <h5 class="card-title fs-6 fw-bold mb-0"><?= $album->getTitle(); ?></h5>
+                <p class="card-text fs-7 text-secondary">
+                  <a
+                    href="artist.php?id=<?= $album->getArtist()->getId(); ?>"
+                    onclick="openPage('artist.php?id=<?= $album->getArtist()->getId(); ?>')"
+                    class="link-secondary link-underline link-underline-opacity-0 link-underline-opacity-100-hover">
+                    <?= $album->getArtist()->getName(); ?>
+                  </a>
+                </p>
               </div>
             </div>
           </div>

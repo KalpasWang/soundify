@@ -5,11 +5,11 @@ declare(strict_types=1);
 class Album
 {
   private mysqli $db;
-  public string $id;
-  public string $title;
-  public string $artistId;
-  public string $genre;
-  public string $artworkPath;
+  private string $id;
+  private string $title;
+  private string $artistId;
+  private string $genre;
+  private string $artworkPath;
   private array $songs;
 
   public function __construct(mysqli $db, array $row)
@@ -22,7 +22,7 @@ class Album
     $this->artworkPath = $row['artworkPath'];
   }
 
-  public static function createById(mysqli $db, int $id)
+  public static function createById(mysqli $db, string $id)
   {
     $result = $db->query("SELECT * FROM albums WHERE id='$id'");
     $row = $result->fetch_assoc();
@@ -40,10 +40,15 @@ class Album
     $rows = $result->fetch_all(MYSQLI_ASSOC);
     $albums = array();
     foreach ($rows as $row) {
-      $album = new Album($db, $row);
+      $album = Album::createByRow($db, $row);
       array_push($albums, $album);
     }
     return $albums;
+  }
+
+  public function getId()
+  {
+    return $this->id;
   }
 
   public function getArtist()
@@ -51,10 +56,25 @@ class Album
     return new Artist($this->db, $this->artistId);
   }
 
+  public function getArtworkPath()
+  {
+    return $this->artworkPath;
+  }
+
+  public function getTitle()
+  {
+    return $this->title;
+  }
+
+  public function getGenre()
+  {
+    return $this->genre;
+  }
+
   public function getNumberOfSongs()
   {
     $stmt = $this->db->prepare("SELECT id FROM songs WHERE album=?");
-    $stmt->bind_param("i", $this->id);
+    $stmt->bind_param("s", $this->id);
     $stmt->execute();
     return $stmt->num_rows;
   }
