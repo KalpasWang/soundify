@@ -3,7 +3,7 @@ $page = basename($_SERVER['PHP_SELF'], '.php');
 ?>
 <!-- <link rel="stylesheet" type="text/css" href="assets/css/main.css"> -->
 
-<header class="d-none d-lg-block p-2">
+<header class="d-none d-lg-block p-2 bg-dark">
   <div class="d-flex flex-nowrap justify-content-between align-items-center">
     <a href="/" title="Soundify" class="d-flex justify-content-center align-items-center w-72px">
       <img src="assets/images/icons/logo-white.svg" alt="Soundify logo" height="32">
@@ -12,14 +12,14 @@ $page = basename($_SERVER['PHP_SELF'], '.php');
     <form class="mx-3 my-0" role="search">
       <div class="search-bar input-group input-group-lg rounded-pill overflow-hidden">
         <!-- search icon -->
-        <span class="input-group-text bg-dark border-0 pe-0" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="搜尋">
+        <span class="input-group-text bg-success border-0 pe-0" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="搜尋">
           <i class="bi bi-search text-secondary"></i>
         </span>
-        <input type="search" class="form-control form-control-lg border-0 bg-dark text-white" placeholder="想播放什麼內容？" aria-label="Search">
+        <input type="search" class="form-control form-control-lg border-0 bg-success text-white" placeholder="想播放什麼內容？" aria-label="Search">
         <!-- seperator -->
-        <span class="input-group-text bg-dark border-0 text-secondary pe-0">|</span>
+        <span class="input-group-text bg-success border-0 text-secondary pe-0">|</span>
         <!-- archieve icon -->
-        <span class="input-group-text bg-dark border-0" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="瀏覽">
+        <span class="input-group-text bg-success border-0" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="瀏覽">
           <i class="bi bi-archive text-secondary"></i>
         </span>
       </div>

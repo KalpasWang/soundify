@@ -176,67 +176,67 @@ $jsonArray = json_encode($resultArray);
   }
 </script>
 
-<div id="nowPlayingBarContainer">
-  <div id="nowPlayingBar">
-    <div id="nowPlayingLeft">
-      <div class="content">
-        <span class="albumLink">
-          <img role="link" tabindex="0" src="" class="albumArtwork">
-        </span>
-        <div class="trackInfo">
-          <span class="trackName">
-            <span role="link" tabindex="0"></span>
-          </span>
-          <span class="artistName">
-            <span role="link" tabindex="0"></span>
-          </span>
+<footer class="position-fixed bottom-0 start-0 w-100 bg-black">
+  <div class="d-flex justify-content-between align-items-center p-2">
+    <div id="bar-left" class="w-30">
+      <div class="d-flex align-items-center">
+        <button type="button" class="btn btn-dark btn-sm me-3">
+          <img src="assets/images/artwork/clearday.jpg" width="56px" height="56px" class="bg-dark">
+        </button>
+        <div>
+          <p class="fs-6 mb-0">
+            <a href="album.php" onclick="event.preventDefault();" class="link-light link-underline link-underline-opacity-0 link-underline-opacity-100-hover">Test</a>
+          </p>
+          <p class="fs-7 mb-0">
+            <a href="" class="link-secondary link-underline link-underline-opacity-0 link-underline-opacity-100-hover">Test</a>
+          </p>
         </div>
       </div>
     </div>
-    <div id="nowPlayingCenter">
-      <div class="content playerControls">
-        <div class="buttons">
-          <button class="controlButton shuffle" title="Shuffle button" onclick="setShuffle()">
-            <img src="assets/images/icons/shuffle.png" alt="Shuffle">
+    <div id="bar-center" class="w-40 d-flex flex-column align-items-center">
+      <div class="d-flex w-100 flex-column align-items-center">
+        <div class="fs-3">
+          <button class="btn btn-dark btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="隨機播放" onclick="setShuffle()">
+            <i class="bi bi-shuffle fs-5"></i>
           </button>
-          <button class="controlButton previous" title="Previous button" onclick="prevSong()">
-            <img src="assets/images/icons/previous.png" alt="Previous">
+          <button class="btn btn-dark btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="上一步" onclick="prevSong()">
+            <i class="bi bi-skip-start-fill fs-5"></i>
           </button>
-          <button class="controlButton play" title="Play button" onclick="playSong()">
-            <img src="assets/images/icons/play.png" alt="Play">
+          <button class="btn btn-dark btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="播放" onclick="playSong()">
+            <i class="bi bi-play-circle-fill fs-1"></i>
           </button>
-          <button class="controlButton pause" title="Pause button" style="display: none;" onclick="pauseSong()">
-            <img src="assets/images/icons/pause.png" alt="Pause">
+          <button class="btn btn-dark btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="暫停" style="display: none;" onclick="pauseSong()">
+            <i class="bi bi-pause-circle-fill fs-1"></i>
           </button>
-          <button class="controlButton next" title="Next button" onclick="nextSong()">
-            <img src="assets/images/icons/next.png" alt="Next">
+          <button class="btn btn-dark btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="下一步" onclick="nextSong()">
+            <i class="bi bi-skip-end-fill fs-5"></i>
           </button>
-          <button class="controlButton repeat" title="Repeat button" onclick="setRepeat()">
-            <img src="assets/images/icons/repeat.png" alt="Repeat">
+          <button class="btn btn-dark btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="循環播放" onclick="setRepeat()">
+            <i class="bi bi-repeat fs-5"></i>
           </button>
         </div>
-        <div class="playbackBar">
-          <span class="progressTime current">0.00</span>
-          <div class="progressBar">
-            <div class="progressBarBg">
-              <div class="progress"></div>
+        <div class="d-flex align-items-center w-100">
+          <span class="text-secondary fs-8 text-end">0:00</span>
+          <div id="progress-bar" class="w-100 px-1">
+            <div id="progress-container" class="bg-secondary rounded-pill" style="height: 12px;">
+              <div id="progress" class="bg-light rounded-pill h-100" style="width: 10%"></div>
             </div>
           </div>
-          <span class="progressTime remaining">0.00</span>
+          <span class="text-secondary fs-8 text-start">0:00</span>
         </div>
       </div>
     </div>
-    <div id="nowPlayingRight">
-      <div class="volumeBar">
-        <button class="controlButton volume" title="Volume button" onclick="setMute()">
-          <img src="assets/images/icons/volume.png" alt="Volume">
+    <div id="bar-right" class="w-30 d-flex justify-content-end">
+      <div class="d-flex align-items-center">
+        <button class="btn btn-dark btn-sm p-0" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="音量" onclick="setMute()">
+          <i class="bi bi-volume-down fs-3"></i>
         </button>
-        <div class="progressBar">
-          <div class="progressBarBg">
-            <div class="progress"></div>
+        <div class="flex-grow-1">
+          <div class="bg-secondary rounded-pill" style="height: 5px; width: 75px;">
+            <div class="bg-light rounded-pill h-100" style="width: 50%"></div>
           </div>
         </div>
       </div>
     </div>
   </div>
-</div>
+</footer>

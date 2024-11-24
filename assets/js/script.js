@@ -7,23 +7,21 @@ var currentIndex = 0;
 var repeat = false;
 var shuffle = false;
 var timer;
-
-let sliderWidth;
-let cardWidth;
-let scrollPosition = 0;
+var sliderWidth;
+var cardWidth;
+var scrollPosition = 0;
 
 function slide(direction) {
-  if (!sliderWidth || !cardWidth) {
-    sliderWidth = $(".slider")[0].scrollWidth;
-    cardWidth = $(".slider-item").width();
-  }
+  const $slider = $(".slider");
+  sliderWidth = $slider[0].scrollWidth;
+  cardWidth = $(".slider-item").width();
   if (direction === "prev" && scrollPosition > 0) {
     scrollPosition -= cardWidth;
-    $(".slider").animate({ scrollLeft: scrollPosition }, 300);
+    $slider.animate({ scrollLeft: scrollPosition }, 300);
   }
   if (direction === "next" && scrollPosition < sliderWidth - cardWidth) {
     scrollPosition += cardWidth;
-    $(".slider").animate({ scrollLeft: scrollPosition }, 300);
+    $slider.animate({ scrollLeft: scrollPosition }, 300);
   }
 }
 
@@ -63,13 +61,10 @@ window.onpopstate = function (e) {
   openPage(route);
 };
 
-// invoke bootstrap 5 tooltips
-const tooltipTriggerList = document.querySelectorAll(
-  '[data-bs-toggle="tooltip"]'
-);
-const tooltipList = [...tooltipTriggerList].map(
-  (tooltipTriggerEl) => new bootstrap.Tooltip(tooltipTriggerEl)
-);
+// invoke bootstrap 5 tooltips when document is ready
+$(document).ready(function () {
+  $('[data-bs-toggle="tooltip"]').tooltip();
+});
 
 function updateUsername(usernameClass) {
   var value = $("." + usernameClass).val();
@@ -106,6 +101,14 @@ function logout() {
   $.post("handlers/logout.php", function () {
     location.reload();
   });
+}
+
+function albumClickHandler(e, url) {
+  if (e.target.nodeName === "A") {
+    e.preventDefault();
+    return;
+  }
+  openPage(url);
 }
 
 function openPage(url) {

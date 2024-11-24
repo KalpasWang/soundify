@@ -1,4 +1,4 @@
-$body-bg: #000;
+$body-bg: #121212;
 $body-color: #fff;
 
 $white: #fff;
@@ -15,12 +15,12 @@ $black: #000;
 
 $primary: #19e68c;
 $secondary: #b3b3b3;
-$success: #198754;
-$info: #3e1234;
+$success: #1f1f1f;
+$info: #121212;
 $warning: #ffc107;
 $danger: #e91429;
 $light: #fff;
-$dark: #1f1f1f;
+$dark: #000;
 
 $enable-shadows: false;
 $input-focus-box-shadow: none;
@@ -37,6 +37,7 @@ $font-sizes: (
   5: $font-size-base * 1.25,
   6: $font-size-base,
   7: $font-size-base * 0.875,
+  8: $font-size-base * 0.75,
 );
 
 $utilities: (
@@ -45,6 +46,8 @@ $utilities: (
     class: w,
     values: (
       25: 25%,
+      30: 30%,
+      40: 40%,
       50: 50%,
       75: 75%,
       100: 100%,
@@ -95,7 +98,7 @@ $utilities: (
 
   &-control-prev,
   &-control-next {
-    background-color: $dark;
+    background-color: $info;
     color: $white;
     font-size: 1.5rem;
     font-weight: bold;
@@ -130,7 +133,7 @@ $utilities: (
 
 .search-bar:focus-within > .form-control,
 .search-bar:focus-within > .input-group-text {
-  background-color: $dark !important;
+  background-color: $success !important;
   cursor: default;
 }
 
