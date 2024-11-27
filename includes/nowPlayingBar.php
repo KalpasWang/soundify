@@ -33,33 +33,29 @@ $jsonArray = json_encode($resultArray);
     <div id="bar-center" class="w-40 d-flex flex-column align-items-center">
       <div class="d-flex w-100 flex-column align-items-center">
         <div class="fs-3">
-          <button class="btn btn-dark btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="隨機播放" onclick="setShuffle()">
+          <button id="shuffle-btn" class="btn btn-dark btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="隨機播放">
             <i class="bi bi-shuffle fs-5"></i>
           </button>
-          <button class="btn btn-dark btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="上一步" onclick="prevSong()">
+          <button id="prev-btn" class="btn btn-dark btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="上一步">
             <i class="bi bi-skip-start-fill fs-5"></i>
           </button>
-          <button class="btn btn-dark btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="播放" onclick="playSong()">
+          <button id="play-btn" class="btn btn-dark btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="播放">
             <i class="bi bi-play-circle-fill fs-1"></i>
           </button>
-          <button class="btn btn-dark btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="暫停" style="display: none;" onclick="pauseSong()">
+          <button id="pause-btn" class="btn btn-dark btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="暫停" style="display: none;">
             <i class="bi bi-pause-circle-fill fs-1"></i>
           </button>
-          <button class="btn btn-dark btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="下一步" onclick="nextSong()">
+          <button id="next-btn" class="btn btn-dark btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="下一步">
             <i class="bi bi-skip-end-fill fs-5"></i>
           </button>
-          <button class="btn btn-dark btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="循環播放" onclick="setRepeat()">
+          <button id="repeat-btn" class="btn btn-dark btn-sm" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="循環播放">
             <i class="bi bi-repeat fs-5"></i>
           </button>
         </div>
         <div class="d-flex align-items-center w-100">
-          <span id="time-elpased" class="text-secondary fs-8 text-end">0:00</span>
+          <span id="time-elapsed" class="text-secondary fs-8 text-end">0:00</span>
           <div id="play-progressBar" class="position-relative w-100 px-1">
             <input type="range" class="play-progress form-range" id="play-progress">
-            <!-- <div id="play-progress" class="position-absolute start-0 top-50 translate-middle bg-light rounded-pill" style="height: 1.5rem;"></div> -->
-            <!-- <div class="bg-secondary rounded-pill" style="height: 12px;">
-              <div id="play-progress" class="bg-light rounded-pill h-100"></div>
-            </div> -->
           </div>
           <span id="time-remaining" class="text-secondary fs-8 text-start">0:00</span>
         </div>

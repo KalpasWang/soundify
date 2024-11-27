@@ -33,8 +33,7 @@ class PlaylistPlayer {
         music: "assets/music/bensound-betterdays.mp3",
       },
     ];
-    this.currentlyPlaying;
-    this.audio = $("<audio></audio>");
+    this.audio = document.createElement("audio");
     this.musicCover = $("#music-cover");
     this.songNameLabel = $("#song-name");
     this.artistNameLabel = $("#artist-name");
@@ -42,29 +41,35 @@ class PlaylistPlayer {
     this.volumeProgress = $("#volume-progress");
     this.timeRemaining = $("#time-remaining");
     this.timeElapsed = $("#time-elapsed");
+    this.nextBtn = $("#next-btn");
+    this.prevBtn = $("#prev-btn");
+    this.playBtn = $("#play-btn");
+    this.pauseBtn = $("#pause-btn");
+    this.repeatBtn = $("#repeat-btn");
+    this.shuffleBtn = $("#shuffle-btn");
 
     this.currentIndex = 0;
     this.isPlaying = false;
-    this.random = false;
+    this.isRandom = false;
+    this.isRepeat = false;
 
     this.init();
   }
 
   init() {
-    this.audio.on("ended", () => {
+    this.audio.addEventListener("ended", () => {
       this.nextSong();
     });
-    this.audio.on("canplay", () => {
-      let duration = this.formatTime(this.audio.duration);
-      this.timeRemaining.text(duration);
+    this.audio.addEventListener("canplay", () => {
+      this.updateTimeProgressText();
     });
-    this.audio.on("timeupdate", () => {
+    this.audio.addEventListener("timeupdate", () => {
       if (this.audio.duration) {
         this.updateTimeProgressBar();
         this.updateTimeProgressText();
       }
     });
-    this.audio.on("volumechange", () => {
+    this.audio.addEventListener("volumechange", () => {
       this.updateVolumeProgressBar();
     });
     this.playProgress.on("input", () => {
@@ -74,49 +79,96 @@ class PlaylistPlayer {
     this.volumeProgress.on("input", () => {
       this.updateAudioVolume();
     });
-    this.playProgress.val(0);
-    this.volumeProgress.val(50);
+
+    // player buttons bind events
+    this.nextBtn.on("click", () => {
+      this.nextSong();
+    });
+    this.prevBtn.on("click", () => {
+      this.prevSong();
+    });
+    this.playBtn.on("click", () => {
+      this.play();
+    });
+    this.pauseBtn.on("click", () => {
+      this.pause();
+    });
+    this.repeatBtn.on("click", () => {
+      this.repeat();
+    });
+    this.shuffleBtn.on("click", () => {
+      this.shuffle();
+    });
+
+    this.volumeProgress.val(100);
   }
 
   loadPlaylist(playlist, index = 0) {
-    // clearInterval(updateTimer);
-    // reset();
-    let newSong = playlist[index];
     this.playlist = playlist;
     this.currentIndex = index;
-    this.audio.src = newSong.music;
-    this.audio[0].load();
+    this.loadSong();
+  }
 
+  loadSong() {
+    let newSong = this.playlist[this.currentIndex];
+    this.audio.src = newSong.music;
+    this.audio.load();
     this.musicCover[0].src = newSong.img;
     this.songNameLabel.text(newSong.name);
     this.artistNameLabel.text(newSong.artist);
-  }
-  setTrack(track) {
-    this.currentlyPlaying = track;
-    this.audio.src = track.path;
+    this.playProgress.val(0);
   }
 
   play() {
     this.audio.play();
+    this.isPlaying = true;
+    this.playBtn.hide();
+    this.pauseBtn.show();
   }
 
   pause() {
     this.audio.pause();
-  }
-
-  setTime(seconds) {
-    this.audio.currentTime = seconds;
+    this.isPlaying = false;
+    this.playBtn.show();
+    this.pauseBtn.hide();
   }
 
   nextSong() {
-    // Implement the logic for advancing to the next song
+    if (!this.isRepeat && this.index == this.playlist.length - 1) {
+      this.pause();
+      return;
+    }
+    if (!this.isRandom) {
+      this.currentIndex = (this.currentIndex + 1) % this.playlist.length;
+    } else {
+      this.currentIndex = Math.floor(Math.random() * this.playlist.length);
+    }
+    this.loadSong();
   }
 
-  formatTime(seconds) {
-    let time = Math.round(seconds);
-    let minutes = Math.floor(time / 60);
-    let extraZero = time % 60 < 10 ? "0" : "";
-    return minutes + ":" + extraZero + (time % 60);
+  prevSong() {
+    this.currentIndex--;
+    if (this.currentIndex < 0) {
+      this.currentIndex = this.playlist.length - 1;
+    }
+    this.loadSong();
+  }
+
+  repeat() {
+    this.isRepeat = !this.isRepeat;
+    this.repeatBtn.toggleClass("text-primary", this.isRepeat);
+  }
+
+  shuffle() {
+    this.isRandom = !this.isRandom;
+    this.shuffleBtn.toggleClass("text-primary", this.isRandom);
+  }
+
+  formatTime(elapsedTime) {
+    let seconds = Math.round(elapsedTime % 60);
+    let minutes = Math.floor(elapsedTime / 60);
+    let extraZero = elapsedTime % 60 < 10 ? "0" : "";
+    return minutes + ":" + extraZero + seconds;
   }
 
   updateTimeProgressBar() {
