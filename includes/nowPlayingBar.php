@@ -55,7 +55,13 @@ $jsonArray = json_encode($resultArray);
         <div class="d-flex align-items-center w-100">
           <span id="time-elapsed" class="text-secondary fs-8 text-end">0:00</span>
           <div id="play-progressBar" class="position-relative w-100 px-1">
-            <input type="range" class="play-progress form-range" id="play-progress">
+            <input
+              type="range"
+              id="play-progress"
+              class="play-progress form-range"
+              min="0"
+              max="100"
+              step="0.1">
           </div>
           <span id="time-remaining" class="text-secondary fs-8 text-start">0:00</span>
         </div>

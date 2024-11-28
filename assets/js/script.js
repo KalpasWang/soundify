@@ -21,7 +21,7 @@ class PlaylistPlayer {
         music: "assets/music/bensound-acousticbreeze.mp3",
       },
       {
-        img: "assets/images/artwork/energy.jpg",
+        img: "assets/images/artwork/clearday.jpg",
         name: "Neyim Var Ki",
         artist: "CEZA",
         music: "assets/music/bensound-anewbeginning.mp3",
@@ -30,7 +30,7 @@ class PlaylistPlayer {
         img: "assets/images/artwork/goinghigher.jpg",
         name: "Unutulacak Dunler",
         artist: "Gazapizm",
-        music: "assets/music/bensound-betterdays.mp3",
+        music: "assets/music/bensound-epic.mp3",
       },
     ];
     this.audio = document.createElement("audio");
@@ -82,7 +82,7 @@ class PlaylistPlayer {
 
     // player buttons bind events
     this.nextBtn.on("click", () => {
-      this.nextSong();
+      this.nextSong(true);
     });
     this.prevBtn.on("click", () => {
       this.prevSong();
@@ -133,17 +133,18 @@ class PlaylistPlayer {
     this.pauseBtn.hide();
   }
 
-  nextSong() {
-    if (!this.isRepeat && this.index == this.playlist.length - 1) {
+  nextSong(force = false) {
+    let nextIndex = (this.currentIndex + 1) % this.playlist.length;
+    if (!this.isRepeat && !force && nextIndex == 0) {
       this.pause();
       return;
     }
-    if (!this.isRandom) {
-      this.currentIndex = (this.currentIndex + 1) % this.playlist.length;
-    } else {
-      this.currentIndex = Math.floor(Math.random() * this.playlist.length);
+    if (this.isRandom) {
+      nextIndex = Math.floor(Math.random() * this.playlist.length);
     }
+    this.currentIndex = nextIndex;
     this.loadSong();
+    this.play();
   }
 
   prevSong() {
@@ -152,6 +153,7 @@ class PlaylistPlayer {
       this.currentIndex = this.playlist.length - 1;
     }
     this.loadSong();
+    this.play();
   }
 
   repeat() {
