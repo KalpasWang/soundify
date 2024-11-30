@@ -40,6 +40,15 @@ $font-sizes: (
   8: $font-size-base * 0.75,
 );
 
+$form-range-thumb-height: 0.5rem;
+$form-range-thumb-focus-box-shadow-width: 0;
+$form-range-track-bg: $gray-800;
+
+$form-range-thumb-width: 0.5rem;
+$form-range-thumb-height: $form-range-thumb-width;
+$form-range-thumb-bg: $primary;
+$form-range-thumb-border: 2px solid $light;
+
 $utilities: (
   "width": (
     property: width,
@@ -110,6 +119,24 @@ $utilities: (
     &:hover {
       opacity: 1;
     }
+  }
+}
+
+.play-progress,
+.volume-progress {
+  overflow: hidden;
+  border-radius: 1rem;
+
+  &::-webkit-slider-thumb {
+    box-shadow: -25.4rem 0 0 25rem $primary;
+  }
+  /** FF*/
+  &::-moz-range-progress {
+    background-color: $primary;
+  }
+  /* IE*/
+  &::-ms-fill-lower {
+    background-color: $primary;
   }
 }
 

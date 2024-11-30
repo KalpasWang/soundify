@@ -58,7 +58,8 @@ $jsonArray = json_encode($resultArray);
             <input
               type="range"
               id="play-progress"
-              class="play-progress form-range"
+              class="form-range play-progress"
+              style="max-width: 25rem;"
               min="0"
               max="100"
               step="0.1">
@@ -73,7 +74,7 @@ $jsonArray = json_encode($resultArray);
           <i class="bi bi-volume-up fs-3"></i>
         </button>
         <div class="flex-grow-1">
-          <input type="range" class="volume-progress form-range" id="volume-progress">
+          <input type="range" class="form-range volume-progress" style="max-width: 4.5rem;" id="volume-progress">
         </div>
       </div>
     </div>
