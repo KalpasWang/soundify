@@ -30,7 +30,7 @@ $owner = new User($con, $playlist->getOwner());
     $songIdArray = $playlist->getSongIds();
     $i = 1;
     foreach ($songIdArray as $songId) {
-      $playlistSong = new Song($con, $songId);
+      $playlistSong = Song::createById($con, $songId);
       $songArtist = $playlistSong->getArtist();
       echo "<li class='tracklistRow'>
 					<div class='trackCount'>

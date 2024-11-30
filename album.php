@@ -29,7 +29,7 @@ $artistId = $artist->getId();
     $songIdArray = $album->getSongIds();
     $i = 1;
     foreach ($songIdArray as $songId) {
-      $albumSong = new Song($con, $songId);
+      $albumSong = Song::createById($con, $songId);
       $albumArtist = $albumSong->getArtist();
 
       echo "<li class='tracklistRow'>
@@ -60,8 +60,4 @@ $artistId = $artist->getId();
   </ul>
 </div>
 
-
-<nav class="optionsMenu">
-  <input type="hidden" class="songId">
-  <?php echo Playlist::getPlaylistsDropdown($con, $userLoggedIn->getUsername()); ?>
-</nav>
+<?php include_once("includes/footer.php"); ?>

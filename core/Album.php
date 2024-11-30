@@ -2,24 +2,22 @@
 
 declare(strict_types=1);
 
+include_once("Song.php");
+include_once("Artist.php");
+
 class Album
 {
   private mysqli $db;
-  private string $id;
-  private string $title;
-  private string $artistId;
+  private array $mysqliData;
+  private Artist $artist;
   private string $genre;
-  private string $artworkPath;
+  private int $songCount;
   private array $songs;
 
   public function __construct(mysqli $db, array $row)
   {
     $this->db = $db;
-    $this->id = $row['id'];
-    $this->title = $row['title'];
-    $this->artistId = $row['artist'];
-    $this->genre = $row['genre'];
-    $this->artworkPath = $row['artworkPath'];
+    $this->mysqliData = $row;
   }
 
   public static function createById(mysqli $db, string $id)
@@ -48,42 +46,90 @@ class Album
 
   public function getId()
   {
-    return $this->id;
+    return $this->mysqliData["id"];
   }
 
   public function getArtist()
   {
-    return new Artist($this->db, $this->artistId);
+    if (empty($this->artist)) {
+      $this->artist = new Artist($this->db, $this->mysqliData['artist']);
+    }
+    return $this->artist;
   }
 
   public function getArtworkPath()
   {
-    return $this->artworkPath;
+    return $this->mysqliData["artworkPath"];
   }
 
   public function getTitle()
   {
-    return $this->title;
+    return $this->mysqliData["title"];
   }
 
   public function getGenre()
   {
+    if (empty($this->genre)) {
+      $genreId = $this->mysqliData['genre'];
+      $query = $this->db->query("SELECT * FROM genres WHERE id='$genreId'");
+      $row = $query->fetch_assoc();
+      $this->genre = $row['name'];
+    }
     return $this->genre;
   }
 
   public function getNumberOfSongs()
   {
-    $stmt = $this->db->prepare("SELECT id FROM songs WHERE album=?");
-    $stmt->bind_param("s", $this->id);
+    if (empty($this->songCount)) {
+      $stmt = $this->db->prepare("SELECT id FROM songs WHERE album=?");
+      $stmt->bind_param("s", $this->mysqliData["id"]);
+      $stmt->execute();
+      $stmt->store_result();
+      $this->songCount = $stmt->num_rows;
+    }
+    return $this->songCount;
+  }
+
+  public function getAllSongs()
+  {
+    if (isset($this->songs)) {
+      return $this->songs;
+    }
+    $stmt = $this->db->prepare("SELECT * FROM songs WHERE album=? ORDER BY albumOrder ASC");
+    $stmt->bind_param("s", $this->mysqliData["id"]);
     $stmt->execute();
-    return $stmt->num_rows;
+    $result = $stmt->get_result();
+    $array = [
+      "type" => "album",
+      "id" => $this->mysqliData["id"],
+      "title" => $this->mysqliData["title"],
+      "artist" => $this->getArtist()->getName(),
+      "genre" => $this->getGenre(),
+      "cover" => $this->mysqliData["artworkPath"],
+      "songs" => []
+    ];
+    while ($row = $result->fetch_assoc()) {
+      $song = Song::createByRow($this->db, $row);
+      $songData = [
+        "id" => $song->getId(),
+        "title" => $song->getTitle(),
+        "duration" => $song->getDuration(),
+        "path" => $song->getPath()
+      ];
+      array_push($array["songs"], $songData);
+    }
+    $this->songs = $array;
+    return $this->songs;
   }
 
   public function getSongIds()
   {
-    $query = mysqli_query($this->db, "SELECT id FROM songs WHERE album='$this->id' ORDER BY albumOrder ASC");
+    $stmt = $this->db->prepare("SELECT id FROM songs WHERE album=? ORDER BY albumOrder ASC");
+    $stmt->bind_param("s", $this->mysqliData["id"]);
+    $stmt->execute();
+    $result = $stmt->get_result();
     $array = array();
-    while ($row = mysqli_fetch_array($query)) {
+    while ($row = $result->fetch_assoc()) {
       array_push($array, $row['id']);
     }
     return $array;

@@ -103,19 +103,39 @@ class PlaylistPlayer {
     this.volumeProgress.val(100);
   }
 
-  loadPlaylist(playlist, index = 0) {
-    this.playlist = playlist;
-    this.currentIndex = index;
-    this.loadSong();
+  loadPlaylist(type, id, index = 0, play = false) {
+    let postUrl;
+    let postData;
+    if (type == "playlist") {
+      postUrl = "handlers/getPlaylistJson.php";
+      postData = { playlistId: id };
+    } else if (type == "album") {
+      postUrl = "handlers/getAlbumJson.php";
+      postData = { albumId: id };
+    } else {
+      console.error("Invalid playlist type: " + type);
+      return;
+    }
+    $.post(postUrl, postData, (data) => {
+      let playlist = JSON.parse(data);
+      this.playlist = playlist;
+      this.currentIndex = index;
+      this.loadSong();
+      if (play) {
+        this.play();
+      }
+    });
   }
 
   loadSong() {
-    let newSong = this.playlist[this.currentIndex];
-    this.audio.src = newSong.music;
+    let newSong = this.playlist.songs[this.currentIndex];
+    let cover = newSong.cover ?? this.playlist.cover;
+    let artist = newSong.artist ?? this.playlist.artist;
+    this.audio.src = newSong.path;
     this.audio.load();
-    this.musicCover[0].src = newSong.img;
-    this.songNameLabel.text(newSong.name);
-    this.artistNameLabel.text(newSong.artist);
+    this.musicCover[0].src = cover;
+    this.songNameLabel.text(newSong.title);
+    this.artistNameLabel.text(artist);
     this.playProgress.val(0);
   }
 
@@ -134,13 +154,13 @@ class PlaylistPlayer {
   }
 
   nextSong(force = false) {
-    let nextIndex = (this.currentIndex + 1) % this.playlist.length;
+    let nextIndex = (this.currentIndex + 1) % this.playlist.songs.length;
     if (!this.isRepeat && !force && nextIndex == 0) {
       this.pause();
       return;
     }
     if (this.isRandom) {
-      nextIndex = Math.floor(Math.random() * this.playlist.length);
+      nextIndex = Math.floor(Math.random() * this.playlist.songs.length);
     }
     this.currentIndex = nextIndex;
     this.loadSong();
@@ -150,7 +170,7 @@ class PlaylistPlayer {
   prevSong() {
     this.currentIndex--;
     if (this.currentIndex < 0) {
-      this.currentIndex = this.playlist.length - 1;
+      this.currentIndex = this.playlist.songs.length - 1;
     }
     this.loadSong();
     this.play();
@@ -169,7 +189,7 @@ class PlaylistPlayer {
   formatTime(elapsedTime) {
     let seconds = Math.round(elapsedTime % 60);
     let minutes = Math.floor(elapsedTime / 60);
-    let extraZero = elapsedTime % 60 < 10 ? "0" : "";
+    let extraZero = seconds < 10 ? "0" : "";
     return minutes + ":" + extraZero + seconds;
   }
 
@@ -207,7 +227,8 @@ $(document).ready(function () {
 
   // initialize music player
   const player = new PlaylistPlayer();
-  player.loadPlaylist(player.playlist);
+  player.loadPlaylist("album", 1);
+  // player.loadPlaylist(player.playlist);
   // setTrack(newPlaylist[0], newPlaylist, false);
   // player.updateAudioVolume();
 });

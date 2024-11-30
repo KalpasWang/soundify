@@ -33,7 +33,7 @@ $artist = new Artist($con, $artistId);
       if ($i > 5) {
         break;
       }
-      $albumSong = new Song($con, $songId);
+      $albumSong = Song::createById($con, $songId);
       $albumArtist = $albumSong->getArtist();
       echo "<li class='tracklistRow'>
 					<div class='trackCount'>
@@ -83,3 +83,5 @@ $artist = new Artist($con, $artistId);
   <input type="hidden" class="songId">
   <?php echo Playlist::getPlaylistsDropdown($con, $userLoggedIn->getUsername()); ?>
 </nav>
+
+<?php include_once("includes/footer.php"); ?>

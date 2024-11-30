@@ -1,5 +1,6 @@
 <?php
 include_once("../includes/config.php");
+include_once("../core/Album.php");
 
 if (empty($_SESSION['user'])) {
   exit("not authenticated");
@@ -7,7 +8,7 @@ if (empty($_SESSION['user'])) {
 
 if (isset($_POST['albumId'])) {
   $albumId = $_POST['albumId'];
-  $query = mysqli_query($con, "SELECT * FROM albums WHERE id='$albumId'");
-  $resultArray = mysqli_fetch_array($query);
+  $album = Album::createById($con, $albumId);
+  $resultArray = $album->getAllSongs();
   echo json_encode($resultArray);
 }

@@ -74,9 +74,6 @@ $jsonArray = json_encode($resultArray);
         </button>
         <div class="flex-grow-1">
           <input type="range" class="volume-progress form-range" id="volume-progress">
-          <!-- <div class="bg-secondary rounded-pill" style="height: 5px; width: 75px;">
-            <div id="volume-progress" class="bg-light rounded-pill h-100"></div>
-          </div> -->
         </div>
       </div>
     </div>
