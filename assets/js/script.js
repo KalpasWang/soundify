@@ -47,11 +47,13 @@ class PlaylistPlayer {
     this.pauseBtn = $("#pause-btn");
     this.repeatBtn = $("#repeat-btn");
     this.shuffleBtn = $("#shuffle-btn");
+    this.volumeBtn = $("#volume-btn");
 
     this.currentIndex = 0;
     this.isPlaying = false;
     this.isRandom = false;
     this.isRepeat = false;
+    this.isMuted = false;
 
     this.init();
   }
@@ -98,6 +100,9 @@ class PlaylistPlayer {
     });
     this.shuffleBtn.on("click", () => {
       this.shuffle();
+    });
+    this.volumeBtn.on("click", () => {
+      this.toggleVolumeMute();
     });
 
     this.volumeProgress.val(100);
@@ -184,6 +189,17 @@ class PlaylistPlayer {
   shuffle() {
     this.isRandom = !this.isRandom;
     this.shuffleBtn.toggleClass("text-primary", this.isRandom);
+  }
+
+  toggleVolumeMute() {
+    this.isMuted = !this.isMuted;
+    this.audio.volume = this.isMuted ? 0 : 1;
+    this.volumeBtn.html(
+      this.isMuted
+        ? '<i class="bi bi-volume-mute fs-3"></i>'
+        : '<i class="bi bi-volume-up fs-3"></i>'
+    );
+    this.volumeBtn.toggleClass("text-primary", this.audio.muted);
   }
 
   formatTime(elapsedTime) {

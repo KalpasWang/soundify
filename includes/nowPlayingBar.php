@@ -69,8 +69,8 @@ $jsonArray = json_encode($resultArray);
     </div>
     <div id="bar-right" class="w-30 d-flex justify-content-end">
       <div class="d-flex align-items-center">
-        <button class="btn btn-dark btn-sm p-0" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="音量" onclick="setMute()">
-          <i class="bi bi-volume-down fs-3"></i>
+        <button id="volume-btn" class="btn btn-dark btn-sm p-1" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="音量">
+          <i class="bi bi-volume-up fs-3"></i>
         </button>
         <div class="flex-grow-1">
           <input type="range" class="volume-progress form-range" id="volume-progress">
