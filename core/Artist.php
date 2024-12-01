@@ -33,6 +33,11 @@ class Artist
     return $name;
   }
 
+  public function getAvatar()
+  {
+    return "assets/images/artist-avatars/jay.jpg";
+  }
+
   public function getSongIds()
   {
     $query = mysqli_query($this->db, "SELECT id FROM songs WHERE artist='$this->id' ORDER BY plays ASC");

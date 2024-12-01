@@ -78,6 +78,16 @@ class Album
     return $this->genre;
   }
 
+  public function getReleaseDate()
+  {
+    return "2005";
+  }
+
+  public function getSongsTotalDuration()
+  {
+    return '52 分鐘 1 秒';
+  }
+
   public function getNumberOfSongs()
   {
     if (empty($this->songCount)) {

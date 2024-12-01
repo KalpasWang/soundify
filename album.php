@@ -12,15 +12,42 @@ $artist = $album->getArtist();
 $artistId = $artist->getId();
 ?>
 
-<div class="entityInfo">
-  <div class="leftSection">
-    <img src="<?php echo $album->getArtworkPath(); ?>">
-  </div>
-  <div class="rightSection">
-    <h2><?php echo $album->getTitle(); ?></h2>
-    <p role="link" tabindex="0" onclick="openPage('artist.php?id=<?php echo $artistId; ?>')">By <?php echo $artist->getName(); ?></p>
-    <p><?php echo $album->getNumberOfSongs(); ?> songs</p>
-  </div>
+<div class="container-xxl px-3">
+  <section id="album-header" class="d-flex w-100 p-3 bg-success bg-gradient rounded-3">
+    <div id="cover" class="flex-shrink-1 d-flex align-items-center">
+      <img width="145px" height="145px" src="<?= $album->getArtworkPath(); ?>" alt="<?= $album->getTitle(); ?>">
+    </div>
+    <div id="details" class="flex-grow-1 ps-4">
+      <h2 class="fs-5"><span class="badge text-bg-primary">專輯</span></h2>
+      <h1 class="display-1 fw-bold my-3"><?= $album->getTitle(); ?></h1>
+      <p class="fs-5">
+        <img class="rounded-circle w-2rem h-2rem align-bottom" src="<?= $artist->getAvatar(); ?>" alt="<?= $artist->getName(); ?>">
+        <a href="artist.php?id=<?= $artistId; ?>" class="link-light link-underline link-underline-opacity-0 link-underline-opacity-100-hover">
+          <?= $artist->getName(); ?>
+        </a>
+        <span class="text-secondary">‧ <?= $album->getReleaseDate(); ?></span>
+        <span class="text-secondary">‧ <?= $album->getNumberOfSongs(); ?> 首歌曲</span>
+        <span class="text-secondary">‧ <?= $album->getSongsTotalDuration(); ?></span>
+      </p>
+    </div>
+  </section>
+  <section id="album-controls" class="d-flex justify-content-between align-items-center w-100 p-3">
+    <div id="left-controls" class="d-flex align-items-center">
+      <button type="button" class="btn btn-primary btn-lg rounded-circle p-2">
+        <i class="bi bi-play-fill fs-1"></i>
+      </button>
+      <div class="ms-3">
+        <button type="button" class="btn btn-dark"><i class="bi bi-plus-circle fs-3"></i></button>
+        <button type="button" class="btn btn-dark"><i class="bi bi-three-dots fs-3"></i></button>
+      </div>
+    </div>
+    <div id="right-controls">
+      <button type="button" class="btn btn-dark fs-6">
+        <span class="align-bottom">清單</span>
+        <i class="bi bi-list-ul"></i>
+      </button>
+    </div>
+  </section>
 </div>
 
 <div class="tracklistContainer">
