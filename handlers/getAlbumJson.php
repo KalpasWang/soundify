@@ -9,6 +9,6 @@ if (empty($_SESSION['user'])) {
 if (isset($_POST['albumId'])) {
   $albumId = $_POST['albumId'];
   $album = Album::createById($con, $albumId);
-  $resultArray = $album->getAllSongs();
+  $resultArray = $album->getAlbumData();
   echo json_encode($resultArray);
 }

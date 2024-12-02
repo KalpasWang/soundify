@@ -40,6 +40,26 @@ $font-sizes: (
   8: $font-size-base * 0.75,
 );
 
+$spacer: 1rem;
+$spacers: (
+  0: 0,
+  1: $spacer * 0.25,
+  2: $spacer * 0.5,
+  3: $spacer,
+  4: $spacer * 1.5,
+  5: $spacer * 3,
+  6: $spacer * 4,
+  7: $spacer * 5,
+  8: $spacer * 6,
+  9: $spacer * 7,
+  10: $spacer * 8,
+  11: $spacer * 9,
+  12: $spacer * 10,
+  13: $spacer * 11,
+  14: $spacer * 12,
+  15: $spacer * 13,
+);
+
 $form-range-thumb-height: 0.5rem;
 $form-range-thumb-focus-box-shadow-width: 0;
 $form-range-track-bg: $gray-800;
@@ -48,6 +68,11 @@ $form-range-thumb-width: 0.5rem;
 $form-range-thumb-height: $form-range-thumb-width;
 $form-range-thumb-bg: $primary;
 $form-range-thumb-border: 2px solid $light;
+
+$list-group-action-hover-color: $light;
+$list-group-hover-bg: $success;
+$list-group-action-active-bg: darken($secondary, 20%);
+$list-group-action-active-color: $light;
 
 $utilities: (
   "width": (
@@ -91,6 +116,16 @@ $utilities: (
 
 .text-wide {
   letter-spacing: 1.5px;
+}
+
+.btn {
+  opacity: 0.8;
+  transition: all 0.15s ease;
+
+  &:hover {
+    opacity: 1;
+    transform: scale(1.02);
+  }
 }
 
 .slider {

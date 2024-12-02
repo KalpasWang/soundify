@@ -100,7 +100,7 @@ class Album
     return $this->songCount;
   }
 
-  public function getAllSongs()
+  public function getAllSongs(): array
   {
     if (isset($this->songs)) {
       return $this->songs;
@@ -109,17 +109,29 @@ class Album
     $stmt->bind_param("s", $this->mysqliData["id"]);
     $stmt->execute();
     $result = $stmt->get_result();
+    $rows = $result->fetch_all(MYSQLI_ASSOC);
+    $array = array();
+    foreach ($rows as $row) {
+      $song = Song::createByRow($this->db, $row);
+      array_push($array, $song);
+    }
+    $this->songs = $array;
+    return $this->songs;
+  }
+
+  public function getAlbumData()
+  {
     $array = [
       "type" => "album",
-      "id" => $this->mysqliData["id"],
-      "title" => $this->mysqliData["title"],
+      "id" => $this->getId(),
+      "title" => $this->getTitle(),
       "artist" => $this->getArtist()->getName(),
       "genre" => $this->getGenre(),
-      "cover" => $this->mysqliData["artworkPath"],
+      "cover" => $this->getArtworkPath(),
       "songs" => []
     ];
-    while ($row = $result->fetch_assoc()) {
-      $song = Song::createByRow($this->db, $row);
+    $songs = $this->getAllSongs();
+    foreach ($songs as $song) {
       $songData = [
         "id" => $song->getId(),
         "title" => $song->getTitle(),
@@ -128,8 +140,7 @@ class Album
       ];
       array_push($array["songs"], $songData);
     }
-    $this->songs = $array;
-    return $this->songs;
+    return $array;
   }
 
   public function getSongIds()
