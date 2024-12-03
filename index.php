@@ -1,7 +1,6 @@
 <?php
 $title = 'Soundify - Web Player: Music for everyone';
 include_once("includes/header.php");
-include_once("core/Album.php");
 
 $albums = Album::getRandomAlbums($con, 10);
 ?>
@@ -49,5 +48,15 @@ $albums = Album::getRandomAlbums($con, 10);
     </ul>
   </div>
 </div>
+
+<script>
+  // init when document ready
+  $(document).ready(function() {
+    $('[data-bs-toggle="tooltip"]').tooltip();
+    if (!player) {
+      player = new PlaylistPlayer();
+    }
+  });
+</script>
 
 <?php include_once("includes/footer.php"); ?>

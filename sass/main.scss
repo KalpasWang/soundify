@@ -60,6 +60,12 @@ $spacers: (
   15: $spacer * 13,
 );
 
+$dropdown-link-active-color: $primary;
+$dropdown-link-active-bg: initial;
+$dropdown-item-padding-y: $spacer * 0.5;
+$dropdown-item-padding-x: $spacer;
+$dropdown-header-padding-y: $dropdown-item-padding-y;
+
 $form-range-thumb-height: 0.5rem;
 $form-range-thumb-focus-box-shadow-width: 0;
 $form-range-track-bg: $gray-800;

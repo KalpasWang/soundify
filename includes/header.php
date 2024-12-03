@@ -1,17 +1,13 @@
 <?php
 
-include_once("includes/config.php");
-include_once("core/User.php");
-include_once("core/Artist.php");
-include_once("core/Album.php");
-include_once("core/Song.php");
-include_once("core/Playlist.php");
-
-if (empty($_SESSION['user'])) {
-  header("Location: login.php");
-}
+include_once("includes/core.php");
 
 $userLoggedIn = new User($con, $_SESSION['user']);
+
+$isNotAjax = true;
+if (isset($_GET['ajax']) && $_GET['ajax'] == "true") {
+  $isNotAjax = false;
+}
 
 $newTitle = 'Soundify - Web Player: Music for everyone';
 if (isset($title)) {
@@ -23,7 +19,7 @@ if (isset($title)) {
 
 <head>
   <title><?= $newTitle ?></title>
-  <?php if (empty($_GET['ajax'])) { ?>
+  <?php if ($isNotAjax) { ?>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="icon" type="image/png" href="assets/images/icons/logo.svg">

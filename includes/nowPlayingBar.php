@@ -13,7 +13,7 @@ $jsonArray = json_encode($resultArray);
   var newPlaylist = <?= $jsonArray; ?>;
 </script>
 
-<footer class="position-fixed bottom-0 start-0 w-100 bg-black">
+<footer class="position-fixed bottom-0 start-0 w-100 bg-black" style="z-index: 9999;">
   <div class="d-flex justify-content-between align-items-center p-2">
     <div id="bar-left" class="w-30">
       <div class="d-flex align-items-center">

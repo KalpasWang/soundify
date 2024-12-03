@@ -10,29 +10,10 @@ var timer;
 var sliderWidth;
 var cardWidth;
 var scrollPosition = 0;
+var player;
 
 class PlaylistPlayer {
   constructor() {
-    this.playlist = [
-      {
-        img: "assets/images/artwork/energy.jpg",
-        name: "Iller Sonra",
-        artist: "Orkhan Zeynalli",
-        music: "assets/music/bensound-acousticbreeze.mp3",
-      },
-      {
-        img: "assets/images/artwork/clearday.jpg",
-        name: "Neyim Var Ki",
-        artist: "CEZA",
-        music: "assets/music/bensound-anewbeginning.mp3",
-      },
-      {
-        img: "assets/images/artwork/goinghigher.jpg",
-        name: "Unutulacak Dunler",
-        artist: "Gazapizm",
-        music: "assets/music/bensound-epic.mp3",
-      },
-    ];
     this.audio = document.createElement("audio");
     this.musicCover = $("#music-cover");
     this.songNameLabel = $("#song-name");
@@ -108,7 +89,7 @@ class PlaylistPlayer {
     this.volumeProgress.val(100);
   }
 
-  loadPlaylist(type, id, index = 0, play = false) {
+  loadPlaylist(type, id, index = 0, play = true) {
     let postUrl;
     let postData;
     if (type == "playlist") {
@@ -236,18 +217,6 @@ class PlaylistPlayer {
     this.audio.volume = this.volumeProgress.val() / 100;
   }
 }
-
-$(document).ready(function () {
-  // invoke bootstrap 5 tooltips when document is ready
-  $('[data-bs-toggle="tooltip"]').tooltip();
-
-  // initialize music player
-  const player = new PlaylistPlayer();
-  player.loadPlaylist("album", 1);
-  // player.loadPlaylist(player.playlist);
-  // setTrack(newPlaylist[0], newPlaylist, false);
-  // player.updateAudioVolume();
-});
 
 function slide(direction) {
   const $slider = $(".slider");
