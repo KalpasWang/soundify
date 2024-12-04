@@ -1,12 +1,20 @@
 <?php
-include_once("includes/header.php");
+include_once("includes/core.php");
+
 if (isset($_GET['id'])) {
   $playlistId = $_GET['id'];
 } else {
   header("Location: index.php");
 }
 $playlist = new Playlist($con, $playlistId);
+$playlistName = $playlist->getName();
 $owner = new User($con, $playlist->getOwner());
+$ownerName = $owner->getUsername();
+
+$title = "$playlistName - playlist by $ownerName | Soundify";
+if (!$isAjax) {
+  include_once("includes/header.php");
+}
 ?>
 
 <div class="entityInfo">
@@ -64,3 +72,22 @@ $owner = new User($con, $playlist->getOwner());
   <?php echo Playlist::getPlaylistsDropdown($con, $userLoggedIn->getUsername()); ?>
   <div class="item" onclick="removeFromPlaylist(this, '<?php echo $playlistId; ?>')">Remove from Playlist</div>
 </nav>
+
+<script>
+  // init when document ready
+  $(document).ready(function() {
+    $('[data-bs-toggle="tooltip"]').tooltip();
+    if (!player) {
+      player = new PlaylistPlayer();
+    }
+    <?php if ($isAjax): ?>
+      $('title').text('<?= $title ?>');
+    <?php endif; ?>
+  });
+</script>
+
+<?php
+if (!$isAjax) {
+  include_once("includes/footer.php");
+}
+?>

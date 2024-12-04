@@ -15,7 +15,9 @@ $artistId = $artist->getId();
 $artistName = $artist->getName();
 
 $title = "$albumTitle - Album by $artistName | Soundify";
-include_once("includes/header.php");
+if (!$isAjax) {
+  include_once("includes/header.php");
+}
 ?>
 
 <div class="container-xxl px-3">
@@ -178,7 +180,14 @@ include_once("includes/header.php");
     if (!player) {
       player = new PlaylistPlayer();
     }
+    <?php if ($isAjax): ?>
+      $('title').text('<?= $title ?>');
+    <?php endif; ?>
   });
 </script>
 
-<?php include_once("includes/footer.php"); ?>
+<?php
+if (!$isAjax) {
+  include_once("includes/footer.php");
+}
+?>

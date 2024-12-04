@@ -1,5 +1,5 @@
 <?php
-include_once("includes/header.php");
+include_once("includes/core.php");
 
 if (isset($_GET['id'])) {
   $artistId = $_GET['id'];
@@ -8,6 +8,12 @@ if (isset($_GET['id'])) {
 }
 
 $artist = new Artist($con, $artistId);
+$artistName = $artist->getName();
+
+$title = "$artistName - Soundify";
+if (!$isAjax) {
+  include_once("includes/header.php");
+}
 ?>
 
 <div class="entityInfo borderBottom">
@@ -84,4 +90,21 @@ $artist = new Artist($con, $artistId);
   <?php echo Playlist::getPlaylistsDropdown($con, $userLoggedIn->getUsername()); ?>
 </nav>
 
-<?php include_once("includes/footer.php"); ?>
+<script>
+  // init when document ready
+  $(document).ready(function() {
+    $('[data-bs-toggle="tooltip"]').tooltip();
+    if (!player) {
+      player = new PlaylistPlayer();
+    }
+    <?php if ($isAjax): ?>
+      $('title').text('<?= $title ?>');
+    <?php endif; ?>
+  });
+</script>
+
+<?php
+if (!$isAjax) {
+  include_once("includes/footer.php");
+}
+?>

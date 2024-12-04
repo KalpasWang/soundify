@@ -4,11 +4,7 @@
   &copy; <?= date("Y"); ?> Soundify Music Player - developed by Kalpas Wang
 </footer>
 </div>
-<?php
-if (empty($_GET['ajax'])) {
-  include_once("includes/nowPlayingBar.php");
-}
-?>
+<?php include_once("includes/nowPlayingBar.php"); ?>
 </div>
 </body>
 

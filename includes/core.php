@@ -10,3 +10,8 @@ include_once("core/Playlist.php");
 if (empty($_SESSION['user'])) {
   header("Location: login.php");
 }
+
+$isAjax = false;
+if (isset($_GET['ajax']) && $_GET['ajax'] == "true") {
+  $isAjax = true;
+}

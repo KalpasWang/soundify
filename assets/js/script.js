@@ -311,14 +311,10 @@ function openPage(url) {
     url = url + "?";
   }
   url = encodeURI(`${url}&ajax=true`);
-  $("#topContainer").load(url, function (response, status, xhr) {
+  $("#main-content").load(url, function (response, status, xhr) {
     if (status == "error") {
       console.error("Error: " + xhr.status + " " + xhr.statusText);
       return;
-    }
-    let title = response.match(/<title>(.*?)<\/title>/);
-    if (title) {
-      $("title").text(title[1] + " - Soundify");
     }
   });
   $("body").scrollTop(0);

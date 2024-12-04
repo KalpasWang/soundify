@@ -5,7 +5,11 @@ $page = basename($_SERVER['PHP_SELF'], '.php');
 
 <header class="d-none d-lg-block p-2 bg-dark">
   <div class="d-flex flex-nowrap justify-content-between align-items-center">
-    <a href="/" title="Soundify" class="d-flex justify-content-center align-items-center w-72px">
+    <a
+      href="/soundify"
+      onclick="event.preventDefault(); openPage('/soundify')"
+      title="Soundify"
+      class="d-flex justify-content-center align-items-center w-72px">
       <img src="assets/images/icons/logo-white.svg" alt="Soundify logo" height="32">
     </a>
 
