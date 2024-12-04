@@ -1,16 +1,18 @@
+var player;
 var currentPlaylist = [];
 var shufflePlaylist = [];
 var tempPlaylist = [];
-var audioElement;
-var mouseDown = false;
+var queue = [];
 var currentIndex = 0;
-var repeat = false;
-var shuffle = false;
+var isPlaying = false;
+var isRepeat = false;
+var isRandom = false;
+var isMuted = false;
 var timer;
 var sliderWidth;
 var cardWidth;
 var scrollPosition = 0;
-var player;
+var listType;
 
 class PlaylistPlayer {
   constructor() {
@@ -218,6 +220,30 @@ class PlaylistPlayer {
   }
 }
 
+function setup() {
+  $('[data-bs-toggle="tooltip"]').tooltip();
+  if (!player) {
+    player = new PlaylistPlayer();
+  }
+  // check cookie for list type
+  const listTypeCookie = document.cookie
+    .split(";")
+    .find((cookie) => cookie.startsWith("listType="));
+  if (listTypeCookie) {
+    const type = listTypeCookie.split("=")[1];
+    listType = type;
+  }
+}
+
+function setListType(type) {
+  document.cookie = `listType=${type}; max-age=2592000; path=/`;
+  listType = type;
+  $("#list-type-concise").toggleClass("active", type === "concise");
+  $("#list-type-normal").toggleClass("active", type === "normal");
+  $("#list-type-concise-check").toggleClass("d-none", type !== "concise");
+  $("#list-type-normal-check").toggleClass("d-none", type !== "normal");
+}
+
 function slide(direction) {
   const $slider = $(".slider");
   sliderWidth = $slider[0].scrollWidth;
@@ -373,12 +399,6 @@ function deletePlaylist(playlistId) {
       openPage("yourMusic.php");
     });
   }
-}
-
-function timeFromOffset(mouse, progressBar) {
-  var percentage = (mouse.offsetX / $(progressBar).width()) * 100;
-  var seconds = audioElement.audio.duration * (percentage / 100);
-  audioElement.setTime(seconds);
 }
 
 function prevSong() {

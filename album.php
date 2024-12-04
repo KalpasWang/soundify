@@ -14,6 +14,13 @@ $artist = $album->getArtist();
 $artistId = $artist->getId();
 $artistName = $artist->getName();
 
+// get cookie list type
+$listType = "normal";
+if (isset($_COOKIE['listType'])) {
+  $listType = $_COOKIE['listType'];
+}
+
+// set title
 $title = "$albumTitle - Album by $artistName | Soundify";
 if (!$isAjax) {
   include_once("includes/header.php");
@@ -74,9 +81,6 @@ if (!$isAjax) {
             type="button"
             data-bs-toggle="dropdown"
             aria-expanded="false"
-            data-bs-toggle="tooltip"
-            data-bs-title="<?= $albumTitle ?> 更多選項"
-            data-bs-placement="top"
             class="btn btn-info">
             <i class="bi bi-three-dots fs-3"></i>
           </button>
@@ -103,13 +107,27 @@ if (!$isAjax) {
           <li>
             <h6 class="dropdown-header text-light fs-8">排列模式</h6>
           </li>
-          <li class="dropdown-item">
+          <li
+            id="list-type-concise"
+            class="dropdown-item <?= $listType == 'concise' ? 'active' : ''; ?>"
+            <?= $listType == 'concise' ? 'aria-current="true"' : ''; ?>
+            onclick="setListType('concise')">
             <i class="bi bi-list"></i>
-            <span class="ps-1">緊湊</span>
+            <span class="ps-1 pe-3">緊密</span>
+            <i
+              id="list-type-concise-check"
+              class="bi bi-check2 <?= $listType == 'concise' ? '' : 'd-none'; ?>"></i>
           </li>
-          <li class="dropdown-item active" aria-current="true">
+          <li
+            id="list-type-normal"
+            class="dropdown-item <?= $listType == 'normal' ? 'active' : ''; ?>"
+            <?= $listType == 'normal' ? 'aria-current="true"' : ''; ?>
+            onclick="setListType('normal')">
             <i class="bi bi-list-ul"></i>
-            <span class="ps-1">清單</span>
+            <span class="ps-1 pe-3">清單</span>
+            <i
+              id="list-type-normal-check"
+              class="bi bi-check2 <?= $listType == 'normal' ? '' : 'd-none'; ?>"></i>
           </li>
         </ul>
       </div>
