@@ -52,7 +52,7 @@ if (!$isAjax) {
         type="button"
         onclick="player.loadPlaylist('album', <?= $albumId ?>)"
         data-bs-toggle="tooltip"
-        data-bs-placement="top"
+        data-bs-placement="bottom"
         data-bs-title="播放"
         class="btn btn-primary btn-lg rounded-circle p-2">
         <i class="bi bi-play-fill fs-1"></i>
@@ -63,7 +63,7 @@ if (!$isAjax) {
           type="button"
           onclick="addToFavorites('album', <?= $albumId ?>)"
           data-bs-toggle="tooltip"
-          data-bs-placement="top"
+          data-bs-placement="bottom"
           data-bs-title="儲存至你的音樂庫"
           class="btn btn-info">
           <i class="bi bi-plus-circle fs-3"></i>
