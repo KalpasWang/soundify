@@ -35,7 +35,7 @@ if (!$isAjax) {
     </div>
     <div id="details" class="flex-grow-1 ps-4">
       <h2 class="fs-5"><span class="badge text-bg-primary">專輯</span></h2>
-      <h1 class="display-1 fw-bold my-3"><?= $albumTitle; ?></h1>
+      <h1 id="album-<?= $albumId; ?>" class="display-1 fw-bold my-3"><?= $albumTitle; ?></h1>
       <!-- 專輯資訊 -->
       <p class="fs-5">
         <img class="rounded-circle w-2rem h-2rem align-bottom" src="<?= $artist->getAvatar(); ?>" alt="<?= $artist->getName(); ?>">
@@ -57,6 +57,7 @@ if (!$isAjax) {
       <!-- 播放專輯 button -->
       <button
         type="button"
+        id="album-play-btn"
         onclick="player.loadPlaylist('album', <?= $albumId ?>)"
         data-bs-toggle="tooltip"
         data-bs-placement="bottom"
@@ -146,18 +147,15 @@ if (!$isAjax) {
         <li class="list-group-item list-group-item-action">
           <div class="d-flex align-items-center">
             <div class="flex-shrink-1">
-              <span class="trackNumber"><?= $key + 1; ?></span>
+              <span id="song-<?= $song->getId(); ?>-number"><?= $key + 1; ?></span>
             </div>
             <div class="flex-grow-1 px-3">
               <div class="d-flex justify-content-between align-items-center">
-                <div id="song-title">
+                <div id="song-info">
                   <p class="mb-0">
-                    <a
-                      href="album.php?id=<?= $albumId; ?>"
-                      onclick="event.preventDefault(); openPage('album.php?id=<?= $albumId; ?>');"
-                      class="link-light link-underline link-underline-opacity-0 link-underline-opacity-100-hover">
+                    <span id="song-<?= $song->getId(); ?>-title">
                       <?= $song->getTitle(); ?>
-                    </a>
+                    </span>
                   </p>
                   <p class="mb-0">
                     <a
@@ -168,11 +166,17 @@ if (!$isAjax) {
                     </a>
                   </p>
                 </div>
-                <div id="add-to-thumbs-up">
-                  <button type="button" class="btn btn-sm">
+                <div>
+                  <!-- 播放 -->
+                  <button
+                    type="button"
+                    onclick="player.loadPlaylist('album', '<?= $albumId; ?>', <?= $key; ?>);"
+                    id="song-<?= $song->getId(); ?>-play-btn"
+                    class="btn btn-sm border-0">
                     <i class="bi bi-play-fill fs-5"></i>
                   </button>
-                  <button type="button" class="btn btn-sm">
+                  <!-- 加入按讚清單 -->
+                  <button type="button" class="btn btn-sm border-0">
                     <i class="bi bi-plus-circle fs-5"></i>
                   </button>
                 </div>
@@ -194,13 +198,11 @@ if (!$isAjax) {
 <script>
   // init when document ready
   $(document).ready(function() {
-    $('[data-bs-toggle="tooltip"]').tooltip();
-    if (!player) {
-      player = new PlaylistPlayer();
-    }
+    setup();
     <?php if ($isAjax): ?>
       $('title').text('<?= $title ?>');
     <?php endif; ?>
+    player.highlightActiveSong();
   });
 </script>
 
