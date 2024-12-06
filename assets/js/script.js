@@ -97,6 +97,25 @@ class PlaylistPlayer {
     this.volumeProgress.val(100);
   }
 
+  loadPlaylistOrPause(type, id, index = 0) {
+    if (this.playlistInfo?.type !== type || this.playlistInfo?.id !== id) {
+      this.loadPlaylist(type, id, index);
+      return;
+    }
+    if (this.isPlaying && this.currentIndex === index) {
+      this.pause();
+      return;
+    }
+    if (!this.isPlaying && this.currentIndex === index) {
+      this.play();
+      return;
+    }
+    this.previousIndex = this.currentIndex;
+    this.currentIndex = index;
+    this.loadSong();
+    this.play();
+  }
+
   loadPlaylist(type, id, index = 0, play = true) {
     let postUrl;
     let postData;

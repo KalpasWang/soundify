@@ -144,7 +144,7 @@ if (!$isAjax) {
     <hr class="text-secondary m-0 mb-1">
     <ul id="songs-list" class="list-group list-group-flush">
       <?php foreach ($album->getAllSongs() as $key => $song) { ?>
-        <li class="list-group-item list-group-item-action">
+        <li class="list-group-item list-group-item-action border-0">
           <div class="d-flex align-items-center">
             <div class="flex-shrink-1">
               <span id="song-<?= $song->getId(); ?>-number"><?= $key + 1; ?></span>
@@ -170,7 +170,7 @@ if (!$isAjax) {
                   <!-- 播放 -->
                   <button
                     type="button"
-                    onclick="player.loadPlaylist('album', '<?= $albumId; ?>', <?= $key; ?>);"
+                    onclick="player.loadPlaylistOrPause('album', '<?= $albumId; ?>', <?= $key; ?>);"
                     id="song-<?= $song->getId(); ?>-play-btn"
                     class="btn btn-sm border-0">
                     <i class="bi bi-play-fill fs-5"></i>
