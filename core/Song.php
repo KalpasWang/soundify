@@ -82,4 +82,30 @@ class Song
     }
     return $this->genre;
   }
+
+  public function isLikedBy(string $userId)
+  {
+    $songId = $this->getId();
+    $stmt = $this->db->prepare("SELECT * FROM likedsongs WHERE song=? AND user=?");
+    $stmt->bind_param("ss", $songId, $userId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return $result->num_rows === 1;
+  }
+
+  public function addToLikes(string $userId)
+  {
+    $songId = $this->getId();
+    $stmt = $this->db->prepare("INSERT INTO likedsongs VALUES('', ?, ?)");
+    $stmt->bind_param("ss", $songId, $userId);
+    return $stmt->execute();
+  }
+
+  public function removeFromLikes(string $userId)
+  {
+    $songId = $this->getId();
+    $stmt = $this->db->prepare("DELETE FROM likedsongs WHERE song=? AND user=?");
+    $stmt->bind_param("ss", $songId, $userId);
+    return $stmt->execute();
+  }
 }

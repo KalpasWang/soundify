@@ -291,21 +291,31 @@ class PlaylistPlayer {
   togglePlayingBtn() {
     let id = this.getCurrentPlayingSongId();
     let prevId = this.getPreviosPlayingSongId();
+    let $albumPlayBtn = $("#album-play-btn");
+    let $albumPauseBtn = $("#album-pause-btn");
+    let $songPlayBtn = $(`#song-${id}-play-btn`);
+    let $songPauseBtn = $(`#song-${id}-pause-btn`);
+    // toggle play/pause button
     if (player.isPlaying) {
       this.playBtn.hide();
       this.pauseBtn.show();
-      $("#album-play-btn").html('<i class="bi bi-pause-fill fs-1"></i>');
-      $(`#song-${id}-play-btn`).html('<i class="bi bi-pause-fill fs-5"></i>');
+      $albumPlayBtn.hide();
+      $albumPauseBtn.show();
+      $songPlayBtn.hide();
+      $songPauseBtn.show();
     } else {
       this.playBtn.show();
       this.pauseBtn.hide();
-      $("#album-play-btn").html('<i class="bi bi-play-fill fs-1"></i>');
-      $(`#song-${id}-play-btn`).html('<i class="bi bi-play-fill fs-5"></i>');
+      $albumPlayBtn.show();
+      $albumPauseBtn.hide();
+      $songPlayBtn.show();
+      $songPauseBtn.hide();
     }
     if (prevId) {
-      $(`#song-${prevId}-play-btn`).html(
-        '<i class="bi bi-play-fill fs-5"></i>'
-      );
+      let $prevSongPlayBtn = $(`#song-${prevId}-play-btn`);
+      let $prevSongPauseBtn = $(`#song-${prevId}-pause-btn`);
+      $prevSongPlayBtn.show();
+      $prevSongPauseBtn.hide();
     }
   }
 }
@@ -436,6 +446,38 @@ function openPage(url) {
   $("body").scrollTop(0);
   history.pushState({}, "", originalUrl);
   return false;
+}
+
+function addToLikedSongs(songId, userId) {
+  $.post("handlers/addToLikedSongs.php", {
+    songId: songId,
+    userId: userId,
+  })
+    .done(function (data) {
+      let $addLikeBtn = $(`#song-${songId}-add-like-btn`);
+      let $removeLikeBtn = $(`#song-${songId}-remove-like-btn`);
+      $addLikeBtn.hide();
+      $removeLikeBtn.show();
+    })
+    .fail(function () {
+      alert("出現錯誤，請稍後再試");
+    });
+}
+
+function removeFromLikedSongs(songId, userId) {
+  $.post("handlers/removeFromLikedSongs.php", {
+    songId: songId,
+    userId: userId,
+  })
+    .done(function (data) {
+      let $addLikeBtn = $(`#song-${songId}-add-like-btn`);
+      let $removeLikeBtn = $(`#song-${songId}-remove-like-btn`);
+      $addLikeBtn.show();
+      $removeLikeBtn.hide();
+    })
+    .fail(function () {
+      alert("出現錯誤，請稍後再試");
+    });
 }
 
 function removeFromPlaylist(button, playlistId) {

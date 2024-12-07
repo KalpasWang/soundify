@@ -13,6 +13,13 @@ class User
     $this->userEmail = $email;
   }
 
+  public function getId()
+  {
+    $query = mysqli_query($this->con, "SELECT id FROM users WHERE email='$this->userEmail'");
+    $row = mysqli_fetch_array($query);
+    return $row['id'];
+  }
+
   public function getUsername()
   {
     $query = mysqli_query($this->con, "SELECT username FROM users WHERE email='$this->userEmail'");

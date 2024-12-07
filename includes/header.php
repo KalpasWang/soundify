@@ -1,5 +1,4 @@
 <?php
-$userLoggedIn = new User($con, $_SESSION['user']);
 $newTitle = 'Soundify - Web Player: Music for everyone';
 if (isset($title)) {
   $newTitle = $title;

@@ -13,6 +13,7 @@ $albumTitle = $album->getTitle();
 $artist = $album->getArtist();
 $artistId = $artist->getId();
 $artistName = $artist->getName();
+$userId = $userLoggedIn->getId();
 
 // get cookie list type
 $listType = "normal";
@@ -64,6 +65,18 @@ if (!$isAjax) {
         data-bs-title="播放"
         class="btn btn-primary btn-lg rounded-circle p-2">
         <i class="bi bi-play-fill fs-1"></i>
+      </button>
+      <!-- 暫停播放 button -->
+      <button
+        type="button"
+        id="album-pause-btn"
+        onclick="player.pause()"
+        data-bs-toggle="tooltip"
+        data-bs-placement="bottom"
+        data-bs-title="暫停"
+        style="display: none;"
+        class="btn btn-primary btn-lg rounded-circle p-2">
+        <i class="bi bi-pause-fill fs-1"></i>
       </button>
       <div class="ms-3">
         <!-- 加入收藏 button -->
@@ -144,11 +157,14 @@ if (!$isAjax) {
     <hr class="text-secondary m-0 mb-1">
     <ul id="songs-list" class="list-group list-group-flush">
       <?php foreach ($album->getAllSongs() as $key => $song) { ?>
+        <?php $isLiked = $song->isLikedBy($userId); ?>
         <li class="list-group-item list-group-item-action border-0">
           <div class="d-flex align-items-center">
+            <!-- 播放編號 -->
             <div class="flex-shrink-1">
               <span id="song-<?= $song->getId(); ?>-number"><?= $key + 1; ?></span>
             </div>
+            <!-- 歌曲資訊 -->
             <div class="flex-grow-1 px-3">
               <div class="d-flex justify-content-between align-items-center">
                 <div id="song-info">
@@ -166,18 +182,54 @@ if (!$isAjax) {
                     </a>
                   </p>
                 </div>
+                <!-- 播放/暫停按鈕 加入/移出按讚清單 -->
                 <div>
                   <!-- 播放 -->
                   <button
                     type="button"
-                    onclick="player.loadPlaylistOrPause('album', '<?= $albumId; ?>', <?= $key; ?>);"
                     id="song-<?= $song->getId(); ?>-play-btn"
+                    onclick="player.loadPlaylistOrPause('album', '<?= $albumId; ?>', <?= $key; ?>);"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="bottom"
+                    data-bs-title="播放 <?= $song->getTitle(); ?>"
                     class="btn btn-sm border-0">
                     <i class="bi bi-play-fill fs-5"></i>
                   </button>
+                  <!-- 暫停 -->
+                  <button
+                    type="button"
+                    id="song-<?= $song->getId(); ?>-pause-btn"
+                    onclick="player.pause();"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="bottom"
+                    data-bs-title="暫停"
+                    class="btn btn-sm border-0"
+                    style="display: none;">
+                    <i class="bi bi-pause-fill fs-5"></i>
+                  </button>
                   <!-- 加入按讚清單 -->
-                  <button type="button" class="btn btn-sm border-0">
+                  <button
+                    id="song-<?= $song->getId(); ?>-add-like-btn"
+                    onclick="addToLikedSongs('<?= $song->getId(); ?>', '<?= $userId; ?>')"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="bottom"
+                    data-bs-title="加入按讚清單"
+                    type="button"
+                    class="btn btn-sm border-0"
+                    style="display: <?= $isLiked ? 'none' : ''; ?>;">
                     <i class="bi bi-plus-circle fs-5"></i>
+                  </button>
+                  <!-- 移出按讚清單 -->
+                  <button
+                    id="song-<?= $song->getId(); ?>-remove-like-btn"
+                    onclick="removeFromLikedSongs('<?= $song->getId(); ?>', '<?= $userId; ?>')"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="bottom"
+                    data-bs-title="移出按讚清單"
+                    type="button"
+                    class="btn btn-sm border-0"
+                    style="display: <?= $isLiked ? '' : 'none'; ?>;">
+                    <i class="bi bi-check-circle-fill fs-5 text-primary"></i>
                   </button>
                 </div>
               </div>
