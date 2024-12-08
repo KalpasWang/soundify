@@ -322,6 +322,7 @@ class PlaylistPlayer {
 
 function setup() {
   $('[data-bs-toggle="tooltip"]').tooltip();
+  $('[data-bs-toggle-second="tooltip"]').tooltip();
   if (!player) {
     player = new PlaylistPlayer();
   }
@@ -480,9 +481,11 @@ function removeFromLikedSongs(songId, userId) {
     });
 }
 
-function removeFromPlaylist(button, playlistId) {
-  var songId = $(button).prevAll(".songId").val();
+function addToPlaylist(playlistId, songId) {
+  console.log("add");
+}
 
+function removeFromPlaylist(playlistId, songId) {
   $.post("handlers/removeFromPlaylist.php", {
     playlistId: playlistId,
     songId: songId,
@@ -491,9 +494,8 @@ function removeFromPlaylist(button, playlistId) {
       alert(error);
       return;
     }
-
     //do something when ajax returns
-    openPage("playlist.php?id=" + playlistId);
+    // openPage("playlist.php?id=" + playlistId);
   });
 }
 
@@ -531,6 +533,10 @@ function deletePlaylist(playlistId) {
       openPage("yourMusic.php");
     });
   }
+}
+
+function closeDropdown(e) {
+  $(e.target).closest(".dropdown-toggle").dropdown("hide");
 }
 
 function prevSong() {

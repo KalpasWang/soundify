@@ -1,6 +1,7 @@
 <?php
 
 declare(strict_types=1);
+include_once("Playlist.php");
 
 class User
 {
@@ -37,5 +38,16 @@ class User
     $query = mysqli_query($this->con, "SELECT avatar FROM users WHERE email='$this->userEmail'");
     $row = mysqli_fetch_array($query);
     return $row['avatar'];
+  }
+
+  public function getPlaylists(): array
+  {
+    $id = $this->getId();
+    $query = $this->con->query("SELECT * FROM playlists WHERE owner='$id'");
+    $playlists = array();
+    while ($row = $query->fetch_assoc()) {
+      array_push($playlists, Playlist::createByRow($this->con, $row));
+    }
+    return $playlists;
   }
 }

@@ -77,8 +77,11 @@ $form-range-thumb-border: 2px solid $light;
 
 $list-group-action-hover-color: $light;
 $list-group-hover-bg: $success;
-$list-group-action-active-bg: darken($secondary, 20%);
+$list-group-action-active-bg: $success;
 $list-group-action-active-color: $light;
+
+$dropdown-dark-bg: $gray-900;
+$dropdown-dark-color: $gray-400;
 
 $utilities: (
   "width": (
@@ -132,6 +135,10 @@ $utilities: (
     opacity: 1;
     transform: scale(1.02);
   }
+}
+
+.dropdown-toggle::after {
+  display: none;
 }
 
 .slider {
