@@ -137,8 +137,9 @@ $utilities: (
   }
 }
 
-.dropdown-toggle::after {
-  display: none;
+.dropdown-toggle::after,
+.dropup .dropdown-toggle::after {
+  display: none !important;
 }
 
 .slider {

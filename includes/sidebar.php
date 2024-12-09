@@ -5,8 +5,8 @@
     </button>
     <ul class="nav nav-pills flex-column mb-auto text-center">
       <li class="nav-item">
-        <button type="button" class="btn w-64px h-64px" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="已按讚的歌曲" data-bs-title="已按讚的歌曲">
-          <i class="bi bi-heart-fill" style="font-size: 32px;"></i>
+        <button type="button" class="btn p-0 w-64px h-64px" data-bs-toggle="tooltip" data-bs-placement="right" aria-label="已按讚的歌曲" data-bs-title="已按讚的歌曲">
+          <img src="assets/images/icons/liked-songs.png" alt="已按讚的歌曲" width="48" height="48" class="object-fit-cover rounded">
         </button>
       </li>
     </ul>
