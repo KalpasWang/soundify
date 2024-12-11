@@ -239,102 +239,101 @@ if (!$isAjax) {
                     data-bs-toggle="tooltip"
                     data-bs-placement="bottom"
                     data-bs-title="加入其他播放清單"
+                    id="song-<?= $songId; ?>-edit-playlist-dropdown"
                     class="dropdown dropup"
                     style="display: <?= $isLiked ? 'inline-block' : 'none'; ?>;">
                     <button
-                      id="song-<?= $songId; ?>-remove-like-btn"
+                      id="song-<?= $songId; ?>-edit-playlist-btn"
                       data-bs-toggle="dropdown"
-                      data-bs-auto-close="false
+                      data-bs-auto-close="outside"
                       aria-expanded=" false"
                       type="button"
                       class="btn btn-sm border-0 dropdown-toggle">
                       <i class="bi bi-check-circle-fill fs-5 text-primary"></i>
                     </button>
-                    <ul class="dropdown-menu dropdown-menu-dark">
-                      <li class="bg-success">
-                        <h6 class="dropdown-header fs-8">新增至撥放清單</h6>
-                      </li>
-                      <li><button type="button" class="dropdown-item bg-success">
-                          <i class="bi bi-plus-lg"></i>
-                          <span class="ps-2">建立新清單</span>
-                        </button></li>
-                      <li>
-                        <hr class="dropdown-divider">
-                      </li>
-                      <!-- 播放清單列表 -->
-                      <li class="overflow-y-auto" style="max-height: 5.5rem;">
-                        <!-- 已按讚的歌曲 -->
-                        <ul class="list-unstyled">
-                          <li class="d-flex justify-content-between align-items-center dropdown-item">
-                            <div class="d-flex align-items-center">
-                              <img
-                                src="assets/images/icons/liked-songs.png"
-                                alt="清單封面"
-                                class="w-2rem h-2rem object-fit-cover rounded">
-                              <span class="ps-3 text-truncate">已按讚的歌曲</span>
-                            </div>
-                            <div class="form-check ps-3">
-                              <input
-                                id="song-liked-<?= $songId; ?>-checkbox"
-                                class="form-check-input rounded-circle"
-                                style="display: <?= $isLiked ? '' : 'none'; ?>;"
-                                type="checkbox"
-                                value=""
-                                checked>
-                              <input
-                                id="song-not-liked-<?= $songId; ?>-checkbox"
-                                class="form-check-input rounded-circle"
-                                style="display: <?= $isLiked ? 'none' : ''; ?>;"
-                                type="checkbox"
-                                value="">
-                            </div>
-                          </li>
-                          <?php foreach ($playlists as $playlist): ?>
-                            <?php
-                            $isInPlaylist = $playlist->isInPlaylist($songId);
-                            $listId = $playlist->getId();
-                            ?>
-                            <li
-                              id="playlist-<?= $listId; ?>-selector"
-                              class="d-flex justify-content-between align-items-center dropdown-item">
-                              <div class="d-flex align-items-center pe-3">
-                                <img
-                                  src="<?= $playlist->getCover(); ?>"
-                                  alt="清單封面"
-                                  class="w-2rem h-2rem object-fit-cover rounded">
-                                <span class="ps-3 text-truncate"><?= $playlist->getName(); ?></span>
-                              </div>
-                              <div class="form-check ps-3">
-                                <input
-                                  onclick="removeFromPlaylist('<?= $listId; ?>', '<?= $songId; ?>')"
-                                  id="playlist-in-<?= $listId; ?>-checkbox"
-                                  class="form-check-input rounded-circle"
-                                  style="display: <?= $isInPlaylist ? '' : 'none'; ?>;"
-                                  type="checkbox"
-                                  value=""
-                                  checked>
-                                <input
-                                  id="playlist-not-in-<?= $listId; ?>-checkbox"
-                                  onclick="addToPlaylist('<?= $listId; ?>', '<?= $songId; ?>')"
-                                  class="form-check-input rounded-circle"
-                                  style="display: <?= $isInPlaylist ? 'none' : ''; ?>;"
-                                  type="checkbox"
-                                  value="">
-                              </div>
-                            </li>
-                          <?php endforeach; ?>
-                        </ul>
-                      </li>
-                      <li>
-                        <hr class="dropdown-divider">
-                      </li>
-                      <li class="dropdown-item-text py-0 bg-success">
-                        <button
-                          type="button"
-                          class="btn border-0 text-end"
-                          onclick="closeDropdown(event);">取消</button>
-                      </li>
-                    </ul>
+                    <form id="song-<?= $songId; ?>-update-form" onsubmit="event.preventDefault(); updateUserPlaylists(event, '<?= $songId; ?>');">
+                      <ul class="dropdown-menu dropdown-menu-dark">
+                        <li class="bg-success">
+                          <h6 class="dropdown-header fs-8">新增至撥放清單</h6>
+                        </li>
+                        <li>
+                          <button
+                            type="submit"
+                            id="create-btn"
+                            class="dropdown-item bg-success">
+                            <i class="bi bi-plus-lg"></i>
+                            <span class="ps-2">建立新清單</span>
+                          </button>
+                        </li>
+                        <li>
+                          <hr class="dropdown-divider">
+                        </li>
+                        <!-- 播放清單列表 -->
+                        <li class="overflow-y-auto" style="max-height: 5.5rem;">
+                          <!-- 已按讚的歌曲 -->
+                          <div>
+                            <ul id="song-<?= $songId; ?>-playlists" class="list-unstyled">
+                              <li class="d-flex justify-content-between align-items-center dropdown-item">
+                                <div class="d-flex align-items-center">
+                                  <img
+                                    src="assets/images/icons/liked-songs.png"
+                                    alt="清單封面"
+                                    class="w-2rem h-2rem object-fit-cover rounded">
+                                  <span class="ps-3 text-truncate">已按讚的歌曲</span>
+                                </div>
+                                <div class="form-check ps-3">
+                                  <input
+                                    id="song-<?= $songId; ?>-liked-checkbox"
+                                    name="song-<?= $songId; ?>-liked-checkbox"
+                                    <?= $isLiked ? 'checked' : ''; ?>
+                                    class="form-check-input rounded-circle"
+                                    type="checkbox"
+                                    value="is-liked">
+                                </div>
+                              </li>
+                              <?php foreach ($playlists as $playlist): ?>
+                                <?php
+                                $isInPlaylist = $playlist->isInPlaylist($songId);
+                                $listId = $playlist->getId();
+                                ?>
+                                <li class="d-flex justify-content-between align-items-center dropdown-item">
+                                  <div class="d-flex align-items-center pe-3">
+                                    <img
+                                      src="<?= $playlist->getCover(); ?>"
+                                      alt="清單封面"
+                                      class="w-2rem h-2rem object-fit-cover rounded">
+                                    <span class="ps-3 text-truncate"><?= $playlist->getName(); ?></span>
+                                  </div>
+                                  <div class="form-check ps-3">
+                                    <input
+                                      id="song-<?= $songId; ?>-playlist-<?= $listId; ?>-checkbox"
+                                      name="song-<?= $songId; ?>-playlist-<?= $listId; ?>-checkbox"
+                                      <?= $isInPlaylist ? 'checked' : ''; ?>
+                                      class="form-check-input rounded-circle"
+                                      type="checkbox"
+                                      value="<?= $listId; ?>">
+                                  </div>
+                                </li>
+                              <?php endforeach; ?>
+                            </ul>
+                          </div>
+                        </li>
+                        <li>
+                          <hr class="dropdown-divider">
+                        </li>
+                        <li class="dropdown-item-text py-1 bg-success text-end">
+                          <button
+                            type="button"
+                            id="cancel-btn"
+                            class="btn border-0"
+                            onclick="closeDropdown(event);">取消</button>
+                          <button
+                            type="submit"
+                            id="update-btn"
+                            class="btn btn-light">完成</button>
+                        </li>
+                      </ul>
+                    </form>
                   </div>
                 </div>
               </div>

@@ -76,4 +76,17 @@ class Playlist
     $result = $stmt->get_result();
     return $result->num_rows === 1;
   }
+
+  public function addNewSongToPlaylist(string $songId): void
+  {
+    $id = $this->getId();
+    // get current playlist order by get max order + 1
+    $query = $this->db->query("SELECT COALESCE(MAX(playlistOrder), 0) + 1 as nextOrder FROM playlistSongs WHERE playlistId='$id'");
+    $row = $query->fetch_assoc();
+    $order = $row['nextOrder'];
+    // insert song into playlistsongs table
+    $stmt = $this->db->prepare("INSERT INTO playlistSongs (songId, playlistId, playlistOrder) VALUES (?, ?, ?)");
+    $stmt->bind_param("sss", $songId, $id, $order);
+    $stmt->execute();
+  }
 }

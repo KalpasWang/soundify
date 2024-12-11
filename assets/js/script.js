@@ -454,14 +454,16 @@ function addToLikedSongs(songId, userId) {
     songId: songId,
     userId: userId,
   })
-    .done(function (data) {
+    .done(function () {
       let $addLikeBtn = $(`#song-${songId}-add-like-btn`);
-      let $removeLikeBtn = $(`#song-${songId}-remove-like-btn`);
+      let $dropdown = $(`#song-${songId}-edit-playlist-dropdown`);
       $addLikeBtn.hide();
-      $removeLikeBtn.show();
+      $dropdown.css("display", "inline-block");
+      $(`#song-${songId}-liked-checkbox`).prop("checked", true);
     })
     .fail(function () {
-      alert("出現錯誤，請稍後再試");
+      $("#toast-body").text("出現錯誤，請稍後再試");
+      $("#toast").toast("show");
     });
 }
 
@@ -497,6 +499,39 @@ function removeFromPlaylist(playlistId, songId) {
     //do something when ajax returns
     // openPage("playlist.php?id=" + playlistId);
   });
+}
+
+function updateUserPlaylists(e, songId) {
+  if (e.submitter.id == "create-btn") {
+    // create new playlist with this song
+    $.post(
+      "handlers/createPlaylistWithSong.php",
+      {
+        songId: songId,
+      },
+      function (data) {
+        let response = JSON.parse(data);
+        if (response.success) {
+          // get scroll position
+          let scrollPosition = $(window).scrollTop();
+          // re-render current page by open same page
+          openPage(window.location.href);
+          // restore scroll position
+          $(window).scrollTop(scrollPosition);
+        }
+        $("#toast-body").text(response.message);
+        $("#toast").toast("show");
+      }
+    );
+    return;
+  }
+
+  if (e.submitter.id == "update-btn") {
+    // update user's playlists
+    let form = $(e.target).serializeArray();
+    console.log("update");
+    closeDropdown(e);
+  }
 }
 
 function createPlaylist() {
@@ -536,7 +571,7 @@ function deletePlaylist(playlistId) {
 }
 
 function closeDropdown(e) {
-  $(e.target).closest(".dropdown-toggle").dropdown("hide");
+  $(e.target).closest(".dropdown").find(".dropdown-toggle").dropdown("toggle");
 }
 
 function prevSong() {

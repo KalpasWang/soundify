@@ -5,27 +5,27 @@ include_once("Playlist.php");
 
 class User
 {
-  private mysqli $con;
+  private mysqli $db;
+  private array $mysqliData;
   private string $userEmail;
 
-  public function __construct(mysqli $con, string $email)
+  public function __construct(mysqli $db, string $email)
   {
-    $this->con = $con;
+    $this->db = $db;
+    $query = $db->query("SELECT * FROM users WHERE email='$email'");
+    $row = $query->fetch_assoc();
     $this->userEmail = $email;
+    $this->mysqliData = $row;
   }
 
   public function getId()
   {
-    $query = mysqli_query($this->con, "SELECT id FROM users WHERE email='$this->userEmail'");
-    $row = mysqli_fetch_array($query);
-    return $row['id'];
+    return $this->mysqliData['id'];
   }
 
   public function getUsername()
   {
-    $query = mysqli_query($this->con, "SELECT username FROM users WHERE email='$this->userEmail'");
-    $row = mysqli_fetch_array($query);
-    return $row['username'];
+    return $this->mysqliData['username'];
   }
 
   public function getEmail()
@@ -35,19 +35,30 @@ class User
 
   public function getAvatar()
   {
-    $query = mysqli_query($this->con, "SELECT avatar FROM users WHERE email='$this->userEmail'");
-    $row = mysqli_fetch_array($query);
-    return $row['avatar'];
+    return $this->mysqliData['avatar'];
   }
 
   public function getPlaylists(): array
   {
     $id = $this->getId();
-    $query = $this->con->query("SELECT * FROM playlists WHERE owner='$id'");
+    $query = $this->db->query("SELECT * FROM playlists WHERE owner='$id'");
     $playlists = array();
     while ($row = $query->fetch_assoc()) {
-      array_push($playlists, Playlist::createByRow($this->con, $row));
+      array_push($playlists, Playlist::createByRow($this->db, $row));
     }
     return $playlists;
+  }
+
+  public function createNewPlaylist(string $name): Playlist
+  {
+    // create new playlist with $name
+    $id = $this->getId();
+    $stmt = $this->db->prepare("INSERT INTO playlists (name, owner) VALUES (?, ?)");
+    $stmt->bind_param("ss", $name, $id);
+    $stmt->execute();
+    // get new created playlist
+    $query = $this->db->query("SELECT * FROM playlists WHERE owner='$id' ORDER BY id DESC LIMIT 1");
+    $row = $query->fetch_assoc();
+    return Playlist::createByRow($this->db, $row);
   }
 }
