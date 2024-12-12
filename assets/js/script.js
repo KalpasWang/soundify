@@ -449,22 +449,35 @@ function openPage(url) {
   return false;
 }
 
+function refreshTheSamePage() {
+  // get scroll position
+  let scrollPosition = $(window).scrollTop();
+  // re-render current page by open same page
+  openPage(window.location.href);
+  // restore scroll position
+  $(window).scrollTop(scrollPosition);
+}
+
 function addToLikedSongs(songId, userId) {
-  $.post("handlers/addToLikedSongs.php", {
-    songId: songId,
-    userId: userId,
-  })
-    .done(function () {
+  $(`#song-${songId}-add-like-btn`).attr("disabled", true);
+  $.post(
+    "handlers/addToLikedSongs.php",
+    {
+      songId: songId,
+      userId: userId,
+    },
+    function () {
       let $addLikeBtn = $(`#song-${songId}-add-like-btn`);
       let $dropdown = $(`#song-${songId}-edit-playlist-dropdown`);
       $addLikeBtn.hide();
       $dropdown.css("display", "inline-block");
+      $(`#song-${songId}-add-like-btn`).attr("disabled", false);
       $(`#song-${songId}-liked-checkbox`).prop("checked", true);
-    })
-    .fail(function () {
-      $("#toast-body").text("出現錯誤，請稍後再試");
-      $("#toast").toast("show");
-    });
+    }
+  ).fail(function () {
+    $(`#song-${songId}-add-like-btn`).attr("disabled", false);
+    showNotification("出現錯誤，請稍後再試");
+  });
 }
 
 function removeFromLikedSongs(songId, userId) {
@@ -502,6 +515,7 @@ function removeFromPlaylist(playlistId, songId) {
 }
 
 function updateUserPlaylists(e, songId) {
+  $(e.target).find("button").attr("disabled", true);
   if (e.submitter.id == "create-btn") {
     // create new playlist with this song
     $.post(
@@ -512,25 +526,40 @@ function updateUserPlaylists(e, songId) {
       function (data) {
         let response = JSON.parse(data);
         if (response.success) {
-          // get scroll position
-          let scrollPosition = $(window).scrollTop();
-          // re-render current page by open same page
-          openPage(window.location.href);
-          // restore scroll position
-          $(window).scrollTop(scrollPosition);
+          refreshTheSamePage();
         }
-        $("#toast-body").text(response.message);
-        $("#toast").toast("show");
+        $(e.target).find("button").attr("disabled", false);
+        showNotification(response.message);
       }
-    );
-    return;
+    ).fail(function () {
+      $(e.target).find("button").attr("disabled", false);
+      showNotification("出現錯誤，請稍後再試");
+    });
   }
 
   if (e.submitter.id == "update-btn") {
     // update user's playlists
     let form = $(e.target).serializeArray();
-    console.log("update");
-    closeDropdown(e);
+    console.log(form);
+    $.post(
+      "handlers/updateUserPlaylists.php",
+      {
+        form: form,
+        songId: songId,
+      },
+      function (data) {
+        console.log(data);
+        let response = JSON.parse(data);
+        if (response.success) {
+          refreshTheSamePage();
+        }
+        $(e.target).find("button").attr("disabled", false);
+        showNotification(response.message);
+      }
+    ).fail(function () {
+      $(e.target).find("button").attr("disabled", false);
+      showNotification("出現錯誤，請稍後再試");
+    });
   }
 }
 
@@ -750,4 +779,9 @@ function updateVolumeProgressBar(audio) {
 
 function playFirstSong() {
   setTrack(tempPlaylist[0], tempPlaylist, true);
+}
+
+function showNotification(text) {
+  $("#toast-body").text(text);
+  $("#toast").toast("show");
 }

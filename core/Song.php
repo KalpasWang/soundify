@@ -90,7 +90,22 @@ class Song
     $stmt->bind_param("ss", $songId, $userId);
     $stmt->execute();
     $result = $stmt->get_result();
-    return $result->num_rows === 1;
+    return $result->num_rows >= 1;
+  }
+
+  public function isInUserPlaylists(string $userId)
+  {
+    $songId = $this->getId();
+    // first get user playlists id
+    $query = $this->db->query("SELECT id FROM playlists WHERE owner='$userId'");
+    $rows = $query->fetch_all(MYSQLI_ASSOC);
+    // check every playlist if song is in it
+    $stmt = $this->db->prepare("SELECT * FROM playlistsongs WHERE songId=? AND playlistId IN (?)");
+    $listIds = implode(",", array_column($rows, "id"));
+    $stmt->bind_param("ss", $songId, $listIds);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return $result->num_rows >= 1;
   }
 
   public function addToLikes(string $userId)

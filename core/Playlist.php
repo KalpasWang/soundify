@@ -74,7 +74,7 @@ class Playlist
     $stmt->bind_param("ss", $id, $songId);
     $stmt->execute();
     $result = $stmt->get_result();
-    return $result->num_rows === 1;
+    return $result->num_rows >= 1;
   }
 
   public function addNewSongToPlaylist(string $songId): void
@@ -87,6 +87,14 @@ class Playlist
     // insert song into playlistsongs table
     $stmt = $this->db->prepare("INSERT INTO playlistSongs (songId, playlistId, playlistOrder) VALUES (?, ?, ?)");
     $stmt->bind_param("sss", $songId, $id, $order);
+    $stmt->execute();
+  }
+
+  public function removeSongFromPlaylist(string $songId): void
+  {
+    $id = $this->getId();
+    $stmt = $this->db->prepare("DELETE FROM playlistsongs WHERE playlistId=? AND songId=?");
+    $stmt->bind_param("ss", $id, $songId);
     $stmt->execute();
   }
 }

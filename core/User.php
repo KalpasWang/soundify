@@ -61,4 +61,20 @@ class User
     $row = $query->fetch_assoc();
     return Playlist::createByRow($this->db, $row);
   }
+
+  public function addToLikedSongs(string $songId): void
+  {
+    $id = $this->getId();
+    $stmt = $this->db->prepare("INSERT INTO likedsongs (user, song) VALUES (?, ?)");
+    $stmt->bind_param("ss", $id, $songId);
+    $stmt->execute();
+  }
+
+  public function removeFromLikedSongs(string $songId): void
+  {
+    $id = $this->getId();
+    $stmt = $this->db->prepare("DELETE FROM likedsongs WHERE user=? AND song=?");
+    $stmt->bind_param("ss", $id, $songId);
+    $stmt->execute();
+  }
 }

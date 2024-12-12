@@ -169,6 +169,8 @@ if (!$isAjax) {
       <?php foreach ($album->getAllSongs() as $key => $song) { ?>
         <?php
         $isLiked = $song->isLikedBy($userId);
+        $isInUserPlaylists = $song->isInUserPlaylists($userId);
+        $isSaved = $isLiked || $isInUserPlaylists;
         $songId = $song->getId();
         ?>
         <li class="list-group-item list-group-item-action border-0">
@@ -231,7 +233,7 @@ if (!$isAjax) {
                     data-bs-title="加入按讚清單"
                     type="button"
                     class="btn btn-sm border-0"
-                    style="display: <?= $isLiked ? 'none' : 'inline-block'; ?>;">
+                    style="display: <?= $isSaved ? 'none' : 'inline-block'; ?>;">
                     <i class="bi bi-plus-circle fs-5"></i>
                   </button>
                   <!-- 加入其他撥放清單 -->
@@ -241,7 +243,7 @@ if (!$isAjax) {
                     data-bs-title="加入其他播放清單"
                     id="song-<?= $songId; ?>-edit-playlist-dropdown"
                     class="dropdown dropup"
-                    style="display: <?= $isLiked ? 'inline-block' : 'none'; ?>;">
+                    style="display: <?= $isSaved ? 'inline-block' : 'none'; ?>;">
                     <button
                       id="song-<?= $songId; ?>-edit-playlist-btn"
                       data-bs-toggle="dropdown"
@@ -251,7 +253,10 @@ if (!$isAjax) {
                       class="btn btn-sm border-0 dropdown-toggle">
                       <i class="bi bi-check-circle-fill fs-5 text-primary"></i>
                     </button>
-                    <form id="song-<?= $songId; ?>-update-form" onsubmit="event.preventDefault(); updateUserPlaylists(event, '<?= $songId; ?>');">
+                    <form
+                      id="song-<?= $songId; ?>-update-form"
+                      onsubmit="event.preventDefault(); updateUserPlaylists(event, '<?= $songId; ?>');"
+                      class="m-0">
                       <ul class="dropdown-menu dropdown-menu-dark">
                         <li class="bg-success">
                           <h6 class="dropdown-header fs-8">新增至撥放清單</h6>
