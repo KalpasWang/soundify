@@ -449,7 +449,7 @@ function openPage(url) {
   return false;
 }
 
-function refreshTheSamePage() {
+function refreshMainContent() {
   // get scroll position
   let scrollPosition = $(window).scrollTop();
   // re-render current page by open same page
@@ -526,7 +526,7 @@ function updateUserPlaylists(e, songId) {
       function (data) {
         let response = JSON.parse(data);
         if (response.success) {
-          refreshTheSamePage();
+          refreshMainContent();
         }
         $(e.target).find("button").attr("disabled", false);
         showNotification(response.message);
@@ -540,7 +540,6 @@ function updateUserPlaylists(e, songId) {
   if (e.submitter.id == "update-btn") {
     // update user's playlists
     let form = $(e.target).serializeArray();
-    console.log(form);
     $.post(
       "handlers/updateUserPlaylists.php",
       {
@@ -548,10 +547,9 @@ function updateUserPlaylists(e, songId) {
         songId: songId,
       },
       function (data) {
-        console.log(data);
         let response = JSON.parse(data);
         if (response.success) {
-          refreshTheSamePage();
+          refreshMainContent();
         }
         $(e.target).find("button").attr("disabled", false);
         showNotification(response.message);
