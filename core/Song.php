@@ -8,6 +8,7 @@ include_once("Artist.php");
 class Song
 {
   private mysqli $db;
+  private string $id;
   private array $mysqliData;
   private Artist $artist;
   private Album $album;
@@ -17,65 +18,79 @@ class Song
   {
     $this->db = $db;
     $this->mysqliData = $row;
+    $this->id = (string) $row['id'];
   }
 
-  public static function createById(mysqli $db, string $id)
+  public static function createById(mysqli $db, string $id): Song
   {
     $query = $db->query("SELECT * FROM songs WHERE id='$id'");
     $row = $query->fetch_assoc();
     return new Song($db, $row);
   }
 
-  public static function createByRow(mysqli $db, array $row)
+  public static function createByRow(mysqli $db, array $row): Song
   {
     return new Song($db, $row);
   }
 
-  public function getTitle()
+  public function getTitle(): string
   {
     return $this->mysqliData['title'];
   }
 
-  public function getId()
+  public function getId(): string
   {
-    return $this->mysqliData['id'];
+    return $this->id;
   }
 
-  public function getArtist()
+  public function getArtist(): Artist
   {
     if (empty($this->artist)) {
-      $this->artist = new Artist($this->db, $this->mysqliData['artist']);
+      $this->artist = new Artist($this->db, $this->mysqliData['artist_id']);
     }
     return $this->artist;
   }
 
-  public function getAlbum()
+  public function getAlbum(): Album
   {
     if (empty($this->album)) {
-      $this->album = Album::createById($this->db, $this->mysqliData['album']);
+      $this->album = Album::createById($this->db, $this->mysqliData['album_id']);
     }
     return $this->album;
   }
 
-  public function getPath()
+  public function getPath(): string
   {
     return $this->mysqliData['path'];
   }
 
-  public function getDuration()
+  public function getDuration(bool $raw = false): int|string
   {
-    return $this->mysqliData['duration'];
+    if ($raw) {
+      return (int) $this->mysqliData['duration'];
+    }
+    $duration = (int) $this->mysqliData['duration'];
+    $hour = floor($duration / 3600);
+    $minute = floor($duration / 60);
+    $second = $duration % 60;
+    if ($hour > 0) {
+      return sprintf("%02d:%02d:%02d", $hour, $minute, $second);
+    }
+    if ($minute > 0) {
+      return sprintf("%d:%02d", $minute, $second);
+    }
+    return sprintf("%d", $second);
   }
 
-  public function getMysqliData()
+  public function getMysqliData(): array
   {
     return $this->mysqliData;
   }
 
-  public function getGenre()
+  public function getGenre(): string
   {
     if (empty($this->genre)) {
-      $genreId = $this->mysqliData['genre'];
+      $genreId = $this->mysqliData['genre_id'];
       $query = $this->db->query("SELECT * FROM genres WHERE id='$genreId'");
       $row = $query->fetch_assoc();
       $this->genre = $row['name'];
@@ -83,24 +98,24 @@ class Song
     return $this->genre;
   }
 
-  public function isLikedBy(string $userId)
+  public function isLikedBy(string $userId): bool
   {
     $songId = $this->getId();
-    $stmt = $this->db->prepare("SELECT * FROM likedsongs WHERE song=? AND user=?");
+    $stmt = $this->db->prepare("SELECT * FROM liked_songs WHERE song_id=? AND user_id=?");
     $stmt->bind_param("ss", $songId, $userId);
     $stmt->execute();
     $result = $stmt->get_result();
     return $result->num_rows >= 1;
   }
 
-  public function isInUserPlaylists(string $userId)
+  public function isInUserPlaylists(string $userId): bool
   {
     $songId = $this->getId();
     // first get user playlists id
-    $query = $this->db->query("SELECT id FROM playlists WHERE owner='$userId'");
+    $query = $this->db->query("SELECT id FROM playlists WHERE owner_id='$userId'");
     $rows = $query->fetch_all(MYSQLI_ASSOC);
     // check every playlist if song is in it
-    $stmt = $this->db->prepare("SELECT * FROM playlistsongs WHERE songId=? AND playlistId IN (?)");
+    $stmt = $this->db->prepare("SELECT * FROM playlist_songs WHERE song_id=? AND playlist_id IN (?)");
     $listIds = implode(",", array_column($rows, "id"));
     $stmt->bind_param("ss", $songId, $listIds);
     $stmt->execute();
@@ -108,18 +123,18 @@ class Song
     return $result->num_rows >= 1;
   }
 
-  public function addToLikes(string $userId)
+  public function addToLikes(string $userId): bool
   {
     $songId = $this->getId();
-    $stmt = $this->db->prepare("INSERT INTO likedsongs VALUES('', ?, ?)");
+    $stmt = $this->db->prepare("INSERT INTO liked_songs VALUES('', ?, ?)");
     $stmt->bind_param("ss", $songId, $userId);
     return $stmt->execute();
   }
 
-  public function removeFromLikes(string $userId)
+  public function removeFromLikes(string $userId): bool
   {
     $songId = $this->getId();
-    $stmt = $this->db->prepare("DELETE FROM likedsongs WHERE song=? AND user=?");
+    $stmt = $this->db->prepare("DELETE FROM liked_songs WHERE song_id=? AND user_id=?");
     $stmt->bind_param("ss", $songId, $userId);
     return $stmt->execute();
   }

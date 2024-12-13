@@ -16,8 +16,8 @@ class Playlist
 
   public static function createById(mysqli $db, string $id)
   {
-    $result = $db->query("SELECT * FROM playlists WHERE id='$id'");
-    $row = $result->fetch_assoc();
+    $query = $db->query("SELECT * FROM playlists WHERE id='$id'");
+    $row = $query->fetch_assoc();
     return new Playlist($db, $row);
   }
 
@@ -36,9 +36,9 @@ class Playlist
     return $this->mysqliData['name'];
   }
 
-  public function getOwner()
+  public function getOwnerId()
   {
-    return $this->mysqliData['owner'];
+    return $this->mysqliData['owner_id'];
   }
 
   public function getCover()
@@ -52,17 +52,17 @@ class Playlist
   public function getNumberOfSongs()
   {
     $id = $this->getId();
-    $query = $this->db->query("SELECT songId FROM playlistSongs WHERE playlistId='$id'");
+    $query = $this->db->query("SELECT song_Id FROM playlist_songs WHERE playlist_id='$id'");
     return $query->num_rows;
   }
 
   public function getSongIds()
   {
     $id = $this->getId();
-    $query = mysqli_query($this->db, "SELECT songId FROM playlistSongs WHERE playlistId='$id' ORDER BY playlistOrder ASC");
+    $query = mysqli_query($this->db, "SELECT song_id FROM playlist_songs WHERE playlist_id='$id' ORDER BY playlist_order ASC");
     $array = array();
     while ($row = mysqli_fetch_array($query)) {
-      array_push($array, $row['songId']);
+      array_push($array, $row['song_id']);
     }
     return $array;
   }
@@ -70,7 +70,7 @@ class Playlist
   public function isInPlaylist(string $songId): bool
   {
     $id = $this->getId();
-    $stmt = $this->db->prepare("SELECT id FROM playlistSongs WHERE playlistId=? AND songId=?");
+    $stmt = $this->db->prepare("SELECT id FROM playlist_songs WHERE playlist_id=? AND song_id=?");
     $stmt->bind_param("ss", $id, $songId);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -81,11 +81,11 @@ class Playlist
   {
     $id = $this->getId();
     // get current playlist order by get max order + 1
-    $query = $this->db->query("SELECT COALESCE(MAX(playlistOrder), 0) + 1 as nextOrder FROM playlistSongs WHERE playlistId='$id'");
+    $query = $this->db->query("SELECT COALESCE(MAX(playlist_order), 0) + 1 as next_order FROM playlist_songs WHERE playlist_id='$id'");
     $row = $query->fetch_assoc();
-    $order = $row['nextOrder'];
+    $order = $row['next_order'];
     // insert song into playlistsongs table
-    $stmt = $this->db->prepare("INSERT INTO playlistSongs (songId, playlistId, playlistOrder) VALUES (?, ?, ?)");
+    $stmt = $this->db->prepare("INSERT INTO playlist_songs (song_id, playlist_id, playlist_order) VALUES (?, ?, ?)");
     $stmt->bind_param("sss", $songId, $id, $order);
     $stmt->execute();
   }
@@ -93,7 +93,7 @@ class Playlist
   public function removeSongFromPlaylist(string $songId): void
   {
     $id = $this->getId();
-    $stmt = $this->db->prepare("DELETE FROM playlistsongs WHERE playlistId=? AND songId=?");
+    $stmt = $this->db->prepare("DELETE FROM playlist_songs WHERE playlist_id=? AND song_id=?");
     $stmt->bind_param("ss", $id, $songId);
     $stmt->execute();
   }

@@ -7,20 +7,22 @@ class User
 {
   private mysqli $db;
   private array $mysqliData;
-  private string $userEmail;
+  private string $email;
+  private string $id;
 
   public function __construct(mysqli $db, string $email)
   {
     $this->db = $db;
     $query = $db->query("SELECT * FROM users WHERE email='$email'");
     $row = $query->fetch_assoc();
-    $this->userEmail = $email;
+    $this->email = $email;
     $this->mysqliData = $row;
+    $this->id = $row['id'];
   }
 
   public function getId()
   {
-    return $this->mysqliData['id'];
+    return $this->id;
   }
 
   public function getUsername()
@@ -30,7 +32,7 @@ class User
 
   public function getEmail()
   {
-    return $this->userEmail;
+    return $this->email;
   }
 
   public function getAvatar()
@@ -41,7 +43,7 @@ class User
   public function getPlaylists(): array
   {
     $id = $this->getId();
-    $query = $this->db->query("SELECT * FROM playlists WHERE owner='$id'");
+    $query = $this->db->query("SELECT * FROM playlists WHERE owner_id='$id'");
     $playlists = array();
     while ($row = $query->fetch_assoc()) {
       array_push($playlists, Playlist::createByRow($this->db, $row));
@@ -53,11 +55,11 @@ class User
   {
     // create new playlist with $name
     $id = $this->getId();
-    $stmt = $this->db->prepare("INSERT INTO playlists (name, owner) VALUES (?, ?)");
+    $stmt = $this->db->prepare("INSERT INTO playlists (name, owner_id) VALUES (?, ?)");
     $stmt->bind_param("ss", $name, $id);
     $stmt->execute();
     // get new created playlist
-    $query = $this->db->query("SELECT * FROM playlists WHERE owner='$id' ORDER BY id DESC LIMIT 1");
+    $query = $this->db->query("SELECT * FROM playlists WHERE owner_id='$id' ORDER BY id DESC LIMIT 1");
     $row = $query->fetch_assoc();
     return Playlist::createByRow($this->db, $row);
   }
@@ -65,7 +67,7 @@ class User
   public function addToLikedSongs(string $songId): void
   {
     $id = $this->getId();
-    $stmt = $this->db->prepare("INSERT INTO likedsongs (user, song) VALUES (?, ?)");
+    $stmt = $this->db->prepare("INSERT INTO liked_songs (user_id, song_id) VALUES (?, ?)");
     $stmt->bind_param("ss", $id, $songId);
     $stmt->execute();
   }
@@ -73,7 +75,7 @@ class User
   public function removeFromLikedSongs(string $songId): void
   {
     $id = $this->getId();
-    $stmt = $this->db->prepare("DELETE FROM likedsongs WHERE user=? AND song=?");
+    $stmt = $this->db->prepare("DELETE FROM liked_songs WHERE user_id=? AND song_id=?");
     $stmt->bind_param("ss", $id, $songId);
     $stmt->execute();
   }

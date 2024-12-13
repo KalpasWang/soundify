@@ -9,6 +9,7 @@ class Album
 {
   private mysqli $db;
   private array $mysqliData;
+  private string $id;
   private Artist $artist;
   private string $genre;
   private int $songCount;
@@ -18,6 +19,7 @@ class Album
   {
     $this->db = $db;
     $this->mysqliData = $row;
+    $this->id = $row['id'];
   }
 
   public static function createById(mysqli $db, string $id)
@@ -46,20 +48,20 @@ class Album
 
   public function getId()
   {
-    return $this->mysqliData["id"];
+    return $this->id;
   }
 
   public function getArtist()
   {
     if (empty($this->artist)) {
-      $this->artist = new Artist($this->db, $this->mysqliData['artist']);
+      $this->artist = new Artist($this->db, $this->mysqliData['artist_id']);
     }
     return $this->artist;
   }
 
-  public function getArtworkPath()
+  public function getCover()
   {
-    return $this->mysqliData["artworkPath"];
+    return $this->mysqliData["cover"];
   }
 
   public function getTitle()
@@ -70,7 +72,7 @@ class Album
   public function getGenre()
   {
     if (empty($this->genre)) {
-      $genreId = $this->mysqliData['genre'];
+      $genreId = $this->mysqliData['genre_id'];
       $query = $this->db->query("SELECT * FROM genres WHERE id='$genreId'");
       $row = $query->fetch_assoc();
       $this->genre = $row['name'];
@@ -80,19 +82,31 @@ class Album
 
   public function getReleaseDate()
   {
-    return "2005";
+    return (int) $this->mysqliData["release_year"];
   }
 
-  public function getSongsTotalDuration()
+  public function getSongsTotalDuration(): string
   {
-    return '52 分鐘 1 秒';
+    // get all song durations
+    $songs = $this->getAllSongs();
+    $totalDuration = 0;
+    foreach ($songs as $song) {
+      $totalDuration += $song->getDuration(true);
+    }
+    $hour = floor($totalDuration / 3600);
+    $minute = floor($totalDuration / 60);
+    $second = $totalDuration % 60;
+    $hour = $hour == 0 ? '' : "$hour 小時";
+    $minute = $minute == 0 ? '' : " $minute 分鐘";
+    $second = $second == 0 ? '' : " $second 秒";
+    return "{$hour}{$minute}{$second}";
   }
 
   public function getNumberOfSongs()
   {
     if (empty($this->songCount)) {
-      $stmt = $this->db->prepare("SELECT id FROM songs WHERE album=?");
-      $stmt->bind_param("s", $this->mysqliData["id"]);
+      $stmt = $this->db->prepare("SELECT id FROM songs WHERE album_id=?");
+      $stmt->bind_param("s", $this->id);
       $stmt->execute();
       $stmt->store_result();
       $this->songCount = $stmt->num_rows;
@@ -105,7 +119,7 @@ class Album
     if (isset($this->songs)) {
       return $this->songs;
     }
-    $stmt = $this->db->prepare("SELECT * FROM songs WHERE album=? ORDER BY albumOrder ASC");
+    $stmt = $this->db->prepare("SELECT * FROM songs WHERE album_id=? ORDER BY album_order ASC");
     $stmt->bind_param("s", $this->mysqliData["id"]);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -127,7 +141,10 @@ class Album
       "title" => $this->getTitle(),
       "artist" => $this->getArtist()->getName(),
       "genre" => $this->getGenre(),
-      "cover" => $this->getArtworkPath(),
+      "cover" => $this->getCover(),
+      "release_year" => $this->getReleaseDate(),
+      "song_count" => $this->getNumberOfSongs(),
+      "duration" => $this->getSongsTotalDuration(),
       "songs" => []
     ];
     $songs = $this->getAllSongs();
@@ -145,7 +162,7 @@ class Album
 
   public function getSongIds()
   {
-    $stmt = $this->db->prepare("SELECT id FROM songs WHERE album=? ORDER BY albumOrder ASC");
+    $stmt = $this->db->prepare("SELECT id FROM songs WHERE album_id=? ORDER BY album_order ASC");
     $stmt->bind_param("s", $this->mysqliData["id"]);
     $stmt->execute();
     $result = $stmt->get_result();

@@ -8,7 +8,7 @@ if (isset($_GET['id'])) {
 }
 $playlist = new Playlist($con, $playlistId);
 $playlistName = $playlist->getName();
-$owner = new User($con, $playlist->getOwner());
+$owner = new User($con, $playlist->getOwnerId());
 $ownerName = $owner->getUsername();
 
 $title = "$playlistName - playlist by $ownerName | Soundify";
@@ -25,7 +25,7 @@ if (!$isAjax) {
   </div>
   <div class="rightSection">
     <h2><?php echo $playlist->getName(); ?></h2>
-    <p>By <?php echo $playlist->getOwner(); ?></p>
+    <p>By <?php echo $playlist->getOwnerId(); ?></p>
     <p><?php echo $playlist->getNumberOfSongs(); ?> songs</p>
     <button class="button" onclick="deletePlaylist('<?php echo $playlistId; ?>')">DELETE PLAYLIST</button>
   </div>

@@ -39,7 +39,7 @@ if (!$isAjax) {
   <!-- 專輯資訊 -->
   <section id="album-header" class="d-flex w-100 p-3 bg-success bg-gradient rounded-3">
     <div id="cover" class="flex-shrink-1 d-flex align-items-center">
-      <img width="145px" height="145px" src="<?= $album->getArtworkPath(); ?>" alt="<?= $albumTitle; ?>">
+      <img width="145px" height="145px" src="<?= $album->getCover(); ?>" alt="<?= $albumTitle; ?>">
     </div>
     <div id="details" class="flex-grow-1 ps-4">
       <h2 class="fs-5"><span class="badge text-bg-primary">專輯</span></h2>
