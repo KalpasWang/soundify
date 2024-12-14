@@ -18,7 +18,7 @@ $jsonArray = json_encode($resultArray);
     <div id="bar-left" class="w-30">
       <div class="d-flex align-items-center">
         <button type="button" class="btn btn-dark btn-sm me-3">
-          <img id="music-cover" src="assets/images/artwork/clearday.jpg" width="56px" height="56px" class="bg-dark">
+          <img id="music-cover" src="<?= BASE_URL; ?>assets/images/artwork/clearday.jpg" width="56px" height="56px" class="bg-dark">
         </button>
         <div>
           <p class="fs-6 mb-0">

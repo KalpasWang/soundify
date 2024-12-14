@@ -19,24 +19,30 @@ class Album
   {
     $this->db = $db;
     $this->mysqliData = $row;
-    $this->id = $row['id'];
+    $this->id = (string) $row['id'];
   }
 
-  public static function createById(mysqli $db, string $id)
+  public static function createById(mysqli $db, string $id): Album
   {
     $result = $db->query("SELECT * FROM albums WHERE id='$id'");
+    if ($result->num_rows === 0) {
+      throw new Exception("Album id $id not found");
+    }
     $row = $result->fetch_assoc();
     return new Album($db, $row);
   }
 
-  public static function createByRow(mysqli $db, array $row)
+  public static function createByRow(mysqli $db, array $row): Album
   {
     return new Album($db, $row);
   }
 
-  public static function getRandomAlbums(mysqli $db, int $number)
+  public static function getRandomAlbums(mysqli $db, int $number): array
   {
     $result = $db->query("SELECT * FROM albums ORDER BY RAND() LIMIT $number");
+    if ($result->num_rows === 0) {
+      throw new Exception("No albums found");
+    }
     $rows = $result->fetch_all(MYSQLI_ASSOC);
     $albums = array();
     foreach ($rows as $row) {
@@ -61,7 +67,7 @@ class Album
 
   public function getCover()
   {
-    return $this->mysqliData["cover"];
+    return BASE_URL . $this->mysqliData["cover"];
   }
 
   public function getTitle()
@@ -74,6 +80,9 @@ class Album
     if (empty($this->genre)) {
       $genreId = $this->mysqliData['genre_id'];
       $query = $this->db->query("SELECT * FROM genres WHERE id='$genreId'");
+      if ($query->num_rows === 0) {
+        throw new Exception("Genre id $genreId not found");
+      }
       $row = $query->fetch_assoc();
       $this->genre = $row['name'];
     }
@@ -105,11 +114,8 @@ class Album
   public function getNumberOfSongs()
   {
     if (empty($this->songCount)) {
-      $stmt = $this->db->prepare("SELECT id FROM songs WHERE album_id=?");
-      $stmt->bind_param("s", $this->id);
-      $stmt->execute();
-      $stmt->store_result();
-      $this->songCount = $stmt->num_rows;
+      $query = $this->db->query("SELECT id FROM songs WHERE album_id='$this->id'");
+      $this->songCount = $query->num_rows;
     }
     return $this->songCount;
   }
@@ -120,6 +126,9 @@ class Album
       return $this->songs;
     }
     $stmt = $this->db->prepare("SELECT * FROM songs WHERE album_id=? ORDER BY album_order ASC");
+    if ($stmt === false) {
+      throw new Exception($this->db->error);
+    }
     $stmt->bind_param("s", $this->mysqliData["id"]);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -163,6 +172,9 @@ class Album
   public function getSongIds()
   {
     $stmt = $this->db->prepare("SELECT id FROM songs WHERE album_id=? ORDER BY album_order ASC");
+    if ($stmt === false) {
+      throw new Exception($this->db->error);
+    }
     $stmt->bind_param("s", $this->mysqliData["id"]);
     $stmt->execute();
     $result = $stmt->get_result();

@@ -24,6 +24,9 @@ class Song
   public static function createById(mysqli $db, string $id): Song
   {
     $query = $db->query("SELECT * FROM songs WHERE id='$id'");
+    if ($query->num_rows === 0) {
+      throw new Exception("Song id $id not found");
+    }
     $row = $query->fetch_assoc();
     return new Song($db, $row);
   }
@@ -61,7 +64,7 @@ class Song
 
   public function getPath(): string
   {
-    return $this->mysqliData['path'];
+    return BASE_URL . $this->mysqliData['path'];
   }
 
   public function getDuration(bool $raw = false): int|string
@@ -92,6 +95,9 @@ class Song
     if (empty($this->genre)) {
       $genreId = $this->mysqliData['genre_id'];
       $query = $this->db->query("SELECT * FROM genres WHERE id='$genreId'");
+      if ($query->num_rows === 0) {
+        throw new Exception("Genre id $genreId not found");
+      }
       $row = $query->fetch_assoc();
       $this->genre = $row['name'];
     }
@@ -102,6 +108,9 @@ class Song
   {
     $songId = $this->getId();
     $stmt = $this->db->prepare("SELECT * FROM liked_songs WHERE song_id=? AND user_id=?");
+    if ($stmt === false) {
+      throw new Exception($this->db->error);
+    }
     $stmt->bind_param("ss", $songId, $userId);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -113,9 +122,15 @@ class Song
     $songId = $this->getId();
     // first get user playlists id
     $query = $this->db->query("SELECT id FROM playlists WHERE owner_id='$userId'");
+    if ($query->num_rows === 0) {
+      return false;
+    }
     $rows = $query->fetch_all(MYSQLI_ASSOC);
     // check every playlist if song is in it
     $stmt = $this->db->prepare("SELECT * FROM playlist_songs WHERE song_id=? AND playlist_id IN (?)");
+    if ($stmt === false) {
+      throw new Exception($this->db->error);
+    }
     $listIds = implode(",", array_column($rows, "id"));
     $stmt->bind_param("ss", $songId, $listIds);
     $stmt->execute();
@@ -127,6 +142,9 @@ class Song
   {
     $songId = $this->getId();
     $stmt = $this->db->prepare("INSERT INTO liked_songs VALUES('', ?, ?)");
+    if ($stmt === false) {
+      throw new Exception($this->db->error);
+    }
     $stmt->bind_param("ss", $songId, $userId);
     return $stmt->execute();
   }
@@ -135,6 +153,9 @@ class Song
   {
     $songId = $this->getId();
     $stmt = $this->db->prepare("DELETE FROM liked_songs WHERE song_id=? AND user_id=?");
+    if ($stmt === false) {
+      throw new Exception($this->db->error);
+    }
     $stmt->bind_param("ss", $songId, $userId);
     return $stmt->execute();
   }

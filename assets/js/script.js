@@ -13,6 +13,7 @@ var sliderWidth;
 var cardWidth;
 var scrollPosition = 0;
 var listType;
+const BASE_URL = "http://localhost/soundify/";
 
 class PlaylistPlayer {
   constructor() {
@@ -120,10 +121,10 @@ class PlaylistPlayer {
     let postUrl;
     let postData;
     if (type == "playlist") {
-      postUrl = "handlers/getPlaylistJson.php";
+      postUrl = BASE_URL + "handlers/getPlaylistJson.php";
       postData = { playlistId: id };
     } else if (type == "album") {
-      postUrl = "handlers/getAlbumJson.php";
+      postUrl = BASE_URL + "handlers/getAlbumJson.php";
       postData = { albumId: id };
     } else {
       console.error("Invalid playlist type: " + type);
@@ -381,7 +382,8 @@ $(document).on("change", "select.playlist", function () {
 // Handle back to previous page
 window.onpopstate = function (e) {
   const route = window.location.pathname;
-  openPage(route);
+  let page = route.split("/").at(-1);
+  openPage(page);
 };
 
 function updateUsername(usernameClass) {
@@ -437,7 +439,7 @@ function openPage(url) {
   if (url.indexOf("?") == -1) {
     url = url + "?";
   }
-  url = encodeURI(`${url}&ajax=true`);
+  url = encodeURI(`${BASE_URL}${url}&ajax=true`);
   $("#main-content").load(url, function (response, status, xhr) {
     if (status == "error") {
       console.error("Error: " + xhr.status + " " + xhr.statusText);
@@ -445,7 +447,7 @@ function openPage(url) {
     }
   });
   $("body").scrollTop(0);
-  history.pushState({}, "", originalUrl);
+  history.pushState({}, "", BASE_URL + originalUrl);
   return false;
 }
 

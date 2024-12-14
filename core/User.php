@@ -14,10 +14,13 @@ class User
   {
     $this->db = $db;
     $query = $db->query("SELECT * FROM users WHERE email='$email'");
+    if ($query->num_rows === 0) {
+      throw new Exception("User $email not found");
+    }
     $row = $query->fetch_assoc();
     $this->email = $email;
     $this->mysqliData = $row;
-    $this->id = $row['id'];
+    $this->id = (string) $row['id'];
   }
 
   public function getId()
@@ -37,13 +40,16 @@ class User
 
   public function getAvatar()
   {
-    return $this->mysqliData['avatar'];
+    return BASE_URL . $this->mysqliData['avatar'];
   }
 
   public function getPlaylists(): array
   {
     $id = $this->getId();
     $query = $this->db->query("SELECT * FROM playlists WHERE owner_id='$id'");
+    if ($query->num_rows === 0) {
+      return [];
+    }
     $playlists = array();
     while ($row = $query->fetch_assoc()) {
       array_push($playlists, Playlist::createByRow($this->db, $row));
@@ -54,29 +60,32 @@ class User
   public function createNewPlaylist(string $name): Playlist
   {
     // create new playlist with $name
-    $id = $this->getId();
     $stmt = $this->db->prepare("INSERT INTO playlists (name, owner_id) VALUES (?, ?)");
-    $stmt->bind_param("ss", $name, $id);
+    $stmt->bind_param("ss", $name, $this->id);
     $stmt->execute();
+    $result = $stmt->get_result();
     // get new created playlist
-    $query = $this->db->query("SELECT * FROM playlists WHERE owner_id='$id' ORDER BY id DESC LIMIT 1");
-    $row = $query->fetch_assoc();
+    $row = $result->fetch_assoc();
     return Playlist::createByRow($this->db, $row);
   }
 
   public function addToLikedSongs(string $songId): void
   {
-    $id = $this->getId();
     $stmt = $this->db->prepare("INSERT INTO liked_songs (user_id, song_id) VALUES (?, ?)");
-    $stmt->bind_param("ss", $id, $songId);
-    $stmt->execute();
+    $stmt->bind_param("ss", $this->id, $songId);
+    $result = $stmt->execute();
+    if ($result === false) {
+      throw new Exception($this->db->error);
+    }
   }
 
   public function removeFromLikedSongs(string $songId): void
   {
-    $id = $this->getId();
     $stmt = $this->db->prepare("DELETE FROM liked_songs WHERE user_id=? AND song_id=?");
-    $stmt->bind_param("ss", $id, $songId);
-    $stmt->execute();
+    $stmt->bind_param("ss", $this->id, $songId);
+    $result = $stmt->execute();
+    if ($result === false) {
+      throw new Exception($this->db->error);
+    }
   }
 }

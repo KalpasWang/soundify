@@ -30,14 +30,17 @@ class Artist
   public function getAvatar()
   {
     if ($this->mysqliData['avatar']) {
-      return $this->mysqliData['avatar'];
+      return BASE_URL . $this->mysqliData['avatar'];
     }
-    return "assets/images/artist-avatars/jay.jpg";
+    return BASE_URL . "assets/images/artist-avatars/jay.jpg";
   }
 
   public function getSongIds()
   {
     $query = mysqli_query($this->db, "SELECT id FROM songs WHERE artist_id='$this->id' ORDER BY play_times ASC");
+    if ($query === false) {
+      return [];
+    }
     $array = array();
     while ($row = mysqli_fetch_array($query)) {
       array_push($array, $row['id']);

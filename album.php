@@ -281,7 +281,7 @@ if (!$isAjax) {
                               <li class="d-flex justify-content-between align-items-center dropdown-item">
                                 <div class="d-flex align-items-center">
                                   <img
-                                    src="assets/images/icons/liked-songs.png"
+                                    src="<?= BASE_URL; ?>assets/images/icons/liked-songs.png"
                                     alt="清單封面"
                                     class="w-2rem h-2rem object-fit-cover rounded">
                                   <span class="ps-3 text-truncate">已按讚的歌曲</span>

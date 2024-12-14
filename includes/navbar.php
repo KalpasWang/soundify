@@ -7,7 +7,7 @@ $page = basename($_SERVER['PHP_SELF'], '.php');
   <div class="d-flex flex-nowrap justify-content-between align-items-center">
     <a
       href="/soundify"
-      onclick="event.preventDefault(); openPage('/soundify')"
+      onclick="event.preventDefault(); openPage('index.php')"
       title="Soundify"
       class="d-flex justify-content-center align-items-center w-72px">
       <img src="assets/images/icons/logo-white.svg" alt="Soundify logo" height="32">
