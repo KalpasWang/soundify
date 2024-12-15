@@ -88,4 +88,31 @@ class User
       throw new Exception($this->db->error);
     }
   }
+
+  public function isSaved(string $type, string $id): bool
+  {
+    if ($type == "album") {
+      $tableName = "saved_albums";
+      $typeId = "album_id";
+    }
+    $stmt = $this->db->prepare("SELECT * FROM $tableName WHERE user_id=? AND $typeId=?");
+    $stmt->bind_param("ss", $this->id, $id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    return $result->num_rows >= 1;
+  }
+
+  public function addToFavorite(string $type, string $id): void
+  {
+    if ($type == "album") {
+      $tableName = "saved_albums";
+      $typeId = "album_id";
+    }
+    $stmt = $this->db->prepare("INSERT INTO $tableName (user_id, $typeId) VALUES (?, ?)");
+    $stmt->bind_param("ss", $this->id, $id);
+    $result = $stmt->execute();
+    if ($result === false) {
+      throw new Exception($this->db->error);
+    }
+  }
 }

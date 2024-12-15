@@ -455,7 +455,9 @@ function refreshMainContent() {
   // get scroll position
   let scrollPosition = $(window).scrollTop();
   // re-render current page by open same page
-  openPage(window.location.href);
+  let route = window.location.pathname;
+  let page = route.split("/").at(-1);
+  openPage(page);
   // restore scroll position
   $(window).scrollTop(scrollPosition);
 }
@@ -496,6 +498,34 @@ function removeFromLikedSongs(songId, userId) {
     .fail(function () {
       alert("出現錯誤，請稍後再試");
     });
+}
+
+function addToFavoriteAlbums(id, target) {
+  if (target.nodeName !== "BUTTON") {
+    target = target.closest("button");
+  }
+  let $addBtn = $(target);
+  let $editBtn = $addBtn.siblings(`#album-${id}-remove-favorites-btn`);
+  $addBtn.attr("disabled", true);
+  $.post(
+    "handlers/addToFavorites.php",
+    {
+      type: "album",
+      id: id,
+    },
+    function (data) {
+      let response = JSON.parse(data);
+      if (response.success) {
+        $editBtn.show();
+        $addBtn.hide();
+      }
+      $addBtn.attr("disabled", false);
+      showNotification(response.message);
+    }
+  ).fail(function () {
+    $addBtn.attr("disabled", false);
+    showNotification("出現錯誤，請稍後再試");
+  });
 }
 
 function addToPlaylist(playlistId, songId) {

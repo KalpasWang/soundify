@@ -24,9 +24,7 @@ if (isset($_COOKIE['listType'])) {
 
 // get playlists
 $playlists = $userLoggedIn->getPlaylists();
-// echo "<pre>";
-// print_r($playlists);
-// echo "</pre>";
+$isSavedAlbum = $userLoggedIn->isSaved('album', $albumId);
 
 // set title
 $title = "$albumTitle - Album by $artistName | Soundify";
@@ -88,36 +86,27 @@ if (!$isAjax) {
       <div class="ms-3">
         <!-- 加入收藏 button -->
         <button
+          id="album-<?= $albumId ?>-add-favorites-btn"
+          onclick="addToFavoriteAlbums('<?= $albumId ?>', event.target)"
           type="button"
-          onclick="addToFavorites('album', <?= $albumId ?>)"
           data-bs-toggle="tooltip"
           data-bs-placement="bottom"
           data-bs-title="儲存至你的音樂庫"
-          class="btn btn-info">
+          class="btn btn-info"
+          style="display: <?= $isSavedAlbum ? 'none' : 'inline-block'; ?>;">
           <i class="bi bi-plus-circle fs-3"></i>
         </button>
-        <!-- 更多選項下拉選單 -->
-        <div class="dropdown d-inline-block">
-          <button
-            type="button"
-            data-bs-toggle="dropdown"
-            data-bs-toggle-second="tooltip"
-            data-bs-placement="bottom"
-            data-bs-title="更多選項"
-            aria-expanded="false"
-            class="btn btn-info">
-            <i class="bi bi-three-dots fs-3"></i>
-          </button>
-          <ul class="dropdown-menu dropdown-menu-dark">
-            <li><a class="dropdown-item active" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
-            <li>
-              <hr class="dropdown-divider">
-            </li>
-            <li><a class="dropdown-item" href="#">Separated link</a></li>
-          </ul>
-        </div>
+        <!-- 移除收藏 button -->
+        <button
+          id="album-<?= $albumId; ?>-remove-favorites-btn"
+          data-bs-toggle="tooltip"
+          data-bs-placement="bottom"
+          data-bs-title="從你的音樂庫中移除"
+          type="button"
+          class="btn btn-info"
+          style="display: <?= $isSavedAlbum ? 'inline-block' : 'none'; ?>;">
+          <i class="bi bi-check-circle-fill fs-3 text-primary"></i>
+        </button>
       </div>
     </div>
     <div id="right-controls">
