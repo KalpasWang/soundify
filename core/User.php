@@ -115,4 +115,18 @@ class User
       throw new Exception($this->db->error);
     }
   }
+
+  public function removeFromLibrary(string $type, string $id): void
+  {
+    if ($type == "album") {
+      $tableName = "saved_albums";
+      $typeId = "album_id";
+    }
+    $stmt = $this->db->prepare("DELETE FROM $tableName WHERE user_id=? AND $typeId=?");
+    $stmt->bind_param("ss", $this->id, $id);
+    $result = $stmt->execute();
+    if ($result === false) {
+      throw new Exception($this->db->error);
+    }
+  }
 }

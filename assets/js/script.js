@@ -504,9 +504,9 @@ function saveAlbumToLibrary(id, target) {
   if (target.nodeName !== "BUTTON") {
     target = target.closest("button");
   }
-  let $addBtn = $(target);
-  $addBtn.attr("disabled", true);
-  let $editBtn = $addBtn.siblings();
+  let $saveBtn = $(target);
+  $saveBtn.attr("disabled", true);
+  let $removeBtn = $saveBtn.siblings();
   $.post(
     "handlers/saveToLibrary.php",
     {
@@ -516,14 +516,42 @@ function saveAlbumToLibrary(id, target) {
     function (data) {
       let response = JSON.parse(data);
       if (response.success) {
-        $editBtn.show();
-        $addBtn.hide();
+        $removeBtn.show();
+        $saveBtn.hide();
       }
-      $addBtn.attr("disabled", false);
+      $saveBtn.attr("disabled", false);
       showNotification(response.message);
     }
   ).fail(function () {
-    $addBtn.attr("disabled", false);
+    $saveBtn.attr("disabled", false);
+    showNotification("出現錯誤，請稍後再試");
+  });
+}
+
+function removeAlbumFromLibrary(id, target) {
+  if (target.nodeName !== "BUTTON") {
+    target = target.closest("button");
+  }
+  let $removeBtn = $(target);
+  $removeBtn.attr("disabled", true);
+  let $saveBtn = $removeBtn.siblings();
+  $.post(
+    "handlers/removeFromLibrary.php",
+    {
+      type: "album",
+      id: id,
+    },
+    function (data) {
+      let response = JSON.parse(data);
+      if (response.success) {
+        $saveBtn.show();
+        $removeBtn.hide();
+      }
+      $removeBtn.attr("disabled", false);
+      showNotification(response.message);
+    }
+  ).fail(function () {
+    $removeBtn.attr("disabled", false);
     showNotification("出現錯誤，請稍後再試");
   });
 }

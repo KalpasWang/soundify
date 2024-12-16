@@ -99,6 +99,7 @@ if (!$isAjax) {
         <!-- 移除收藏 button -->
         <button
           id="album-<?= $albumId; ?>-remove-btn"
+          onclick="removeAlbumFromLibrary('<?= $albumId ?>', event.target)"
           data-bs-toggle="tooltip"
           data-bs-placement="bottom"
           data-bs-title="從你的音樂庫中移除"
