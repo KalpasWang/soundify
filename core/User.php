@@ -129,4 +129,25 @@ class User
       throw new Exception($this->db->error);
     }
   }
+
+  public function getLibraryCollection(): array
+  {
+    $collection = array();
+    $stmt = $this->db->prepare("SELECT * FROM saved_albums WHERE user_id=?");
+    $stmt->bind_param("s", $this->id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    if ($result->num_rows === 0) {
+      return $collection;
+    }
+    while ($row = $result->fetch_assoc()) {
+      $saved = [
+        "type" => "album",
+        "data" => Album::createById($this->db, $row['album_id']),
+        "createdTime" => strtotime($row['created_at'])
+      ];
+      array_push($collection, $saved);
+    }
+    return $collection;
+  }
 }

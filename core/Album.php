@@ -22,7 +22,7 @@ class Album
     $this->id = (string) $row['id'];
   }
 
-  public static function createById(mysqli $db, string $id): Album
+  public static function createById(mysqli $db, string | int $id): Album
   {
     $result = $db->query("SELECT * FROM albums WHERE id='$id'");
     if ($result->num_rows === 0) {
@@ -92,6 +92,12 @@ class Album
   public function getReleaseDate()
   {
     return (int) $this->mysqliData["release_year"];
+  }
+
+  public function getCreatedAt()
+  {
+    $time = strtotime($this->mysqliData["created_at"]);
+    return $time;
   }
 
   public function getSongsTotalDuration(): string
