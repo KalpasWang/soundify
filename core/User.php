@@ -102,7 +102,7 @@ class User
     return $result->num_rows >= 1;
   }
 
-  public function addToFavorite(string $type, string $id): void
+  public function saveToLibrary(string $type, string $id): void
   {
     if ($type == "album") {
       $tableName = "saved_albums";

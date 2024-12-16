@@ -18,7 +18,7 @@ if (isset($_POST['type']) && isset($_POST['id'])) {
   $id = $_POST['id'];
   $user = new User($con, $_SESSION['user']);
   try {
-    $user->addToFavorite($type, $id);
+    $user->saveToLibrary($type, $id);
   } catch (\Throwable $th) {
     $response["message"] = "發生錯誤：" . $th->getMessage();
     echo json_encode($response);

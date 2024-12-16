@@ -500,15 +500,15 @@ function removeFromLikedSongs(songId, userId) {
     });
 }
 
-function addToFavoriteAlbums(id, target) {
+function saveAlbumToLibrary(id, target) {
   if (target.nodeName !== "BUTTON") {
     target = target.closest("button");
   }
   let $addBtn = $(target);
-  let $editBtn = $addBtn.siblings(`#album-${id}-remove-favorites-btn`);
   $addBtn.attr("disabled", true);
+  let $editBtn = $addBtn.siblings();
   $.post(
-    "handlers/addToFavorites.php",
+    "handlers/saveToLibrary.php",
     {
       type: "album",
       id: id,
