@@ -17,7 +17,7 @@ $primary: #19e68c;
 $secondary: #b3b3b3;
 $success: #1f1f1f;
 $info: #121212;
-$warning: #ffc107;
+$warning: #703e36;
 $danger: #e91429;
 $light: #fff;
 $dark: #000;
@@ -117,6 +117,26 @@ $utilities: (
       64px: 64px,
       2rem: 2rem,
       3rem: 3rem,
+    ),
+  ),
+  "flex-grow": (
+    responsive: true,
+    property: flex-grow,
+    class: flex,
+    values: (
+      grow-0: 0,
+      grow-1: 1,
+      grow-2: 2,
+      grow-3: 3,
+      grow-4: 4,
+      grow-5: 5,
+      grow-6: 6,
+      grow-7: 7,
+      grow-8: 8,
+      grow-9: 9,
+      grow-10: 10,
+      grow-11: 11,
+      grow-12: 12,
     ),
   ),
 );

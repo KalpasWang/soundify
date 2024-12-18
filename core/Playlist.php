@@ -133,6 +133,20 @@ class Playlist
     return $array;
   }
 
+  public function getSongAddedDate(string $songId): string
+  {
+    $stmt = $this->db->prepare("SELECT created_at FROM playlist_songs WHERE playlist_id=? AND song_id=?");
+    if ($stmt === false) {
+      throw new Exception($this->db->error);
+    }
+    $stmt->bind_param("ss", $this->id, $songId);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $row = $result->fetch_assoc();
+    $timestamp = strtotime($row['created_at']);
+    return date("Y年m月d日", $timestamp);
+  }
+
   public function isInPlaylist(string $songId): bool
   {
     $stmt = $this->db->prepare("SELECT id FROM playlist_songs WHERE playlist_id=? AND song_id=?");
