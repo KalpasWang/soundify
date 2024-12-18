@@ -16,7 +16,7 @@ if (empty($_SESSION['user'])) {
 }
 
 if (is_array($_POST['form']) && isset($_POST['songId'])) {
-  $user = new User($con, $_SESSION['user']);
+  $user = User::createByEmail($con, $_SESSION['user']);
   $userId = $user->getId();
   $form = $_POST['form'];
   $songId = $_POST['songId'];

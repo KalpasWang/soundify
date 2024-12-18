@@ -21,7 +21,7 @@ class Song
     $this->id = (string) $row['id'];
   }
 
-  public static function createById(mysqli $db, string $id): Song
+  public static function createById(mysqli $db, string | int $id): Song
   {
     $query = $db->query("SELECT * FROM songs WHERE id='$id'");
     if ($query->num_rows === 0) {

@@ -7,6 +7,7 @@ class Playlist
   private mysqli $db;
   private array $mysqliData;
   private string $id;
+  private array $songs;
 
   public function __construct(mysqli $db, array $data)
   {
@@ -49,9 +50,28 @@ class Playlist
   public function getCover()
   {
     if (empty($this->mysqliData['cover'])) {
-      return "assets/images/icons/playlist.png";
+      // get fist song's id in playlist
+      $stmt = $this->db->prepare("SELECT song_id FROM playlist_songs WHERE playlist_id=? ORDER BY playlist_order ASC LIMIT 1");
+      if ($stmt === false) {
+        throw new Exception($this->db->error);
+      }
+      $stmt->bind_param("s", $this->id);
+      $stmt->execute();
+      $result = $stmt->get_result();
+      $row = $result->fetch_assoc();
+      // get song
+      $songId = $row['song_id'];
+      $song = Song::createById($this->db, $songId);
+      // get album
+      $album = $song->getAlbum();
+      return $album->getCover();
     }
     return $this->mysqliData['cover'];
+  }
+
+  public function getIcon()
+  {
+    return "assets/images/icons/playlist.png";
   }
 
   public function getNumberOfSongs()
@@ -59,6 +79,47 @@ class Playlist
     $id = $this->getId();
     $query = $this->db->query("SELECT song_Id FROM playlist_songs WHERE playlist_id='$id'");
     return $query->num_rows;
+  }
+
+  public function getAllSongs(): array
+  {
+    if (isset($this->songs)) {
+      return $this->songs;
+    }
+    $stmt = $this->db->prepare("SELECT * FROM playlist_songs WHERE playlist_id=? ORDER BY playlist_order ASC");
+    if ($stmt === false) {
+      throw new Exception($this->db->error);
+    }
+    $stmt->bind_param("s", $this->id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $rows = $result->fetch_all(MYSQLI_ASSOC);
+    $array = array();
+    foreach ($rows as $row) {
+      $songId = $row['song_id'];
+      $songRow = $this->db->query("SELECT * FROM songs WHERE id='$songId'")->fetch_assoc();
+      $song = Song::createByRow($this->db, $songRow);
+      array_push($array, $song);
+    }
+    $this->songs = $array;
+    return $this->songs;
+  }
+
+  public function getSongsTotalDuration(): string
+  {
+    // get all song durations
+    $songs = $this->getAllSongs();
+    $totalDuration = 0;
+    foreach ($songs as $song) {
+      $totalDuration += $song->getDuration(true);
+    }
+    $hour = floor($totalDuration / 3600);
+    $minute = floor($totalDuration / 60);
+    $second = $totalDuration % 60;
+    $hour = $hour == 0 ? '' : "$hour 小時";
+    $minute = $minute == 0 ? '' : " $minute 分鐘";
+    $second = $second == 0 ? '' : " $second 秒";
+    return "{$hour}{$minute}{$second}";
   }
 
   public function getSongIds()

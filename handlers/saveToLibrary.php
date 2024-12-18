@@ -16,7 +16,7 @@ if (empty($_SESSION['user'])) {
 if (isset($_POST['type']) && isset($_POST['id'])) {
   $type = $_POST['type'];
   $id = $_POST['id'];
-  $user = new User($con, $_SESSION['user']);
+  $user = User::createByEmail($con, $_SESSION['user']);
   try {
     $user->saveToLibrary($type, $id);
   } catch (\Throwable $th) {

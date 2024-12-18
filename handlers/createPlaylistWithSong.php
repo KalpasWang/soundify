@@ -18,7 +18,7 @@ if (empty($_SESSION['user'])) {
 if (isset($_POST['songId'])) {
   $songId = $_POST['songId'];
   $userEmail = $_SESSION['user'];
-  $user = new User($con, $userEmail);
+  $user = User::createByEmail($con, $userEmail);
   $song = Song::createById($con, $songId);
   $playlistTitle = $song->getTitle();
   $playlist = $user->createNewPlaylist($playlistTitle);

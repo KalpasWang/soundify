@@ -10,7 +10,7 @@ include_once("core/Playlist.php");
 if (empty($_SESSION['user'])) {
   header("Location: login.php");
 }
-$userLoggedIn = new User($con, $_SESSION['user']);
+$userLoggedIn = User::createByEmail($con, $_SESSION['user']);
 
 $isAjax = false;
 if (isset($_GET['ajax']) && $_GET['ajax'] == "true") {

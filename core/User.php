@@ -10,17 +10,32 @@ class User
   private string $email;
   private string $id;
 
-  public function __construct(mysqli $db, string $email)
+  public function __construct(mysqli $db, array $row)
   {
     $this->db = $db;
-    $query = $db->query("SELECT * FROM users WHERE email='$email'");
+    $this->email = $row['email'];
+    $this->id = (string) $row['id'];
+    $this->mysqliData = $row;
+  }
+
+  public static function createById(mysqli $db, string $id)
+  {
+    $query = $db->query("SELECT * FROM users WHERE id='$id'");
     if ($query->num_rows === 0) {
-      throw new Exception("User $email not found");
+      throw new Exception("User id $id not found");
     }
     $row = $query->fetch_assoc();
-    $this->email = $email;
-    $this->mysqliData = $row;
-    $this->id = (string) $row['id'];
+    return new User($db, $row);
+  }
+
+  public static function createByEmail(mysqli $db, string $email)
+  {
+    $query = $db->query("SELECT * FROM users WHERE email='$email'");
+    if ($query->num_rows === 0) {
+      throw new Exception("User email $email not found");
+    }
+    $row = $query->fetch_assoc();
+    return new User($db, $row);
   }
 
   public function getId()
@@ -93,9 +108,12 @@ class User
   {
     if ($type == "album") {
       $tableName = "saved_albums";
-      $typeId = "album_id";
+      $idName = "album_id";
+    } elseif ($type == "playlist") {
+      $tableName = "saved_playlists";
+      $idName = "playlist_id";
     }
-    $stmt = $this->db->prepare("SELECT * FROM $tableName WHERE user_id=? AND $typeId=?");
+    $stmt = $this->db->prepare("SELECT * FROM $tableName WHERE user_id=? AND $idName=?");
     $stmt->bind_param("ss", $this->id, $id);
     $stmt->execute();
     $result = $stmt->get_result();
@@ -106,9 +124,9 @@ class User
   {
     if ($type == "album") {
       $tableName = "saved_albums";
-      $typeId = "album_id";
+      $idName = "album_id";
     }
-    $stmt = $this->db->prepare("INSERT INTO $tableName (user_id, $typeId) VALUES (?, ?)");
+    $stmt = $this->db->prepare("INSERT INTO $tableName (user_id, $idName) VALUES (?, ?)");
     $stmt->bind_param("ss", $this->id, $id);
     $result = $stmt->execute();
     if ($result === false) {
@@ -120,9 +138,9 @@ class User
   {
     if ($type == "album") {
       $tableName = "saved_albums";
-      $typeId = "album_id";
+      $idName = "album_id";
     }
-    $stmt = $this->db->prepare("DELETE FROM $tableName WHERE user_id=? AND $typeId=?");
+    $stmt = $this->db->prepare("DELETE FROM $tableName WHERE user_id=? AND $idName=?");
     $stmt->bind_param("ss", $this->id, $id);
     $result = $stmt->execute();
     if ($result === false) {
