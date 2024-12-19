@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+include_once("User.php");
+include_once("Song.php");
+
 class Playlist
 {
   private mysqli $db;
@@ -45,6 +48,14 @@ class Playlist
   public function getOwnerId()
   {
     return $this->mysqliData['owner_id'];
+  }
+
+  public function getOwner()
+  {
+    $ownerId = $this->getOwnerId();
+    $query = $this->db->query("SELECT * FROM users WHERE id='$ownerId'");
+    $row = $query->fetch_assoc();
+    return User::createByRow($this->db, $row);
   }
 
   public function getCover()
@@ -185,5 +196,28 @@ class Playlist
     if ($result === false) {
       throw new Exception($this->db->error);
     }
+  }
+
+  public function getPlaylistData()
+  {
+    $array = [
+      "type" => "playlist",
+      "id" => $this->getId(),
+      "title" => $this->getName(),
+      "owner" => $this->getOwner()->getUsername(),
+      "cover" => $this->getCover(),
+      "songs" => []
+    ];
+    $songs = $this->getAllSongs();
+    foreach ($songs as $song) {
+      $songData = [
+        "id" => $song->getId(),
+        "title" => $song->getTitle(),
+        "duration" => $song->getDuration(),
+        "path" => $song->getPath()
+      ];
+      array_push($array["songs"], $songData);
+    }
+    return $array;
   }
 }

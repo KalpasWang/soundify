@@ -55,7 +55,7 @@ if (!$isAjax) {
       <!-- 播放播放清單 button -->
       <button
         type="button"
-        id="playlist-play-btn"
+        id="big-play-btn"
         onclick="player.loadPlaylist('playlist', <?= $playlistId ?>)"
         data-bs-toggle="tooltip"
         data-bs-placement="bottom"
@@ -66,7 +66,7 @@ if (!$isAjax) {
       <!-- 暫停播放 button -->
       <button
         type="button"
-        id="playlist-pause-btn"
+        id="big-pause-btn"
         onclick="player.pause()"
         data-bs-toggle="tooltip"
         data-bs-placement="bottom"
@@ -75,7 +75,7 @@ if (!$isAjax) {
         class="btn btn-primary btn-lg rounded-circle p-2">
         <i class="bi bi-pause-fill fs-1"></i>
       </button>
-      <?php if ($ownerId != $userLoggedIn->getId()): ?>
+      <?php if ($ownerId != $userId): ?>
         <div class="ms-3">
           <!-- 加入收藏 button -->
           <button
@@ -218,7 +218,7 @@ if (!$isAjax) {
                 <button
                   type="button"
                   id="song-<?= $songId; ?>-play-btn"
-                  onclick="player.loadPlaylistOrPause('playlist', '<?= $playlistId; ?>', <?= $key; ?>);"
+                  onclick="player.loadPlaylistOrUpdate('playlist', '<?= $playlistId; ?>', <?= $key; ?>);"
                   data-bs-toggle="tooltip"
                   data-bs-placement="bottom"
                   data-bs-title="播放 <?= $song->getTitle(); ?>"

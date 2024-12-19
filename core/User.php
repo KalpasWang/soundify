@@ -38,6 +38,11 @@ class User
     return new User($db, $row);
   }
 
+  public static function createByRow(mysqli $db, array $row)
+  {
+    return new User($db, $row);
+  }
+
   public function getId()
   {
     return $this->id;

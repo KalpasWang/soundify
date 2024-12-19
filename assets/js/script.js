@@ -98,16 +98,12 @@ class PlaylistPlayer {
     this.volumeProgress.val(100);
   }
 
-  loadPlaylistOrPause(type, id, index = 0) {
+  loadPlaylistOrUpdate(type, id, index = 0) {
     if (this.playlistInfo?.type !== type || this.playlistInfo?.id !== id) {
       this.loadPlaylist(type, id, index);
       return;
     }
-    if (this.isPlaying && this.currentIndex === index) {
-      this.pause();
-      return;
-    }
-    if (!this.isPlaying && this.currentIndex === index) {
+    if (this.currentIndex === index) {
       this.play();
       return;
     }
@@ -127,7 +123,7 @@ class PlaylistPlayer {
       postUrl = BASE_URL + "handlers/getAlbumJson.php";
       postData = { albumId: id };
     } else {
-      console.error("Invalid playlist type: " + type);
+      showNotification("錯誤：invalid playlist type " + type);
       return;
     }
     $.post(postUrl, postData, (data) => {
@@ -292,8 +288,8 @@ class PlaylistPlayer {
   togglePlayingBtn() {
     let id = this.getCurrentPlayingSongId();
     let prevId = this.getPreviosPlayingSongId();
-    let $albumPlayBtn = $("#album-play-btn");
-    let $albumPauseBtn = $("#album-pause-btn");
+    let $albumPlayBtn = $("#big-play-btn");
+    let $albumPauseBtn = $("#big-pause-btn");
     let $songPlayBtn = $(`#song-${id}-play-btn`);
     let $songPauseBtn = $(`#song-${id}-pause-btn`);
     // toggle play/pause button

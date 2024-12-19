@@ -157,9 +157,6 @@ class Album
       "artist" => $this->getArtist()->getName(),
       "genre" => $this->getGenre(),
       "cover" => $this->getCover(),
-      "release_year" => $this->getReleaseDate(),
-      "song_count" => $this->getNumberOfSongs(),
-      "duration" => $this->getSongsTotalDuration(),
       "songs" => []
     ];
     $songs = $this->getAllSongs();

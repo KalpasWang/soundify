@@ -63,7 +63,7 @@ if (!$isAjax) {
       <!-- 播放專輯 button -->
       <button
         type="button"
-        id="album-play-btn"
+        id="big-play-btn"
         onclick="player.loadPlaylist('album', <?= $albumId ?>)"
         data-bs-toggle="tooltip"
         data-bs-placement="bottom"
@@ -74,7 +74,7 @@ if (!$isAjax) {
       <!-- 暫停播放 button -->
       <button
         type="button"
-        id="album-pause-btn"
+        id="big-pause-btn"
         onclick="player.pause()"
         data-bs-toggle="tooltip"
         data-bs-placement="bottom"
@@ -195,7 +195,7 @@ if (!$isAjax) {
                   <button
                     type="button"
                     id="song-<?= $songId; ?>-play-btn"
-                    onclick="player.loadPlaylistOrPause('album', '<?= $albumId; ?>', <?= $key; ?>);"
+                    onclick="player.loadPlaylistOrUpdate('album', '<?= $albumId; ?>', <?= $key; ?>);"
                     data-bs-toggle="tooltip"
                     data-bs-placement="bottom"
                     data-bs-title="播放 <?= $song->getTitle(); ?>"
