@@ -438,8 +438,10 @@ function openPage(url) {
   const originalUrl = url;
   if (url.indexOf("?") == -1) {
     url = url + "?";
+  } else {
+    url = url + "&";
   }
-  url = encodeURI(`${BASE_URL}${url}&ajax=true`);
+  url = encodeURI(`${BASE_URL}${url}ajax=true`);
   $("#main-content").load(url, function (response, status, xhr) {
     if (status == "error") {
       console.error("Error: " + xhr.status + " " + xhr.statusText);
@@ -455,7 +457,7 @@ function refreshMainContent() {
   // get scroll position
   let scrollPosition = $(window).scrollTop();
   // re-render current page by open same page
-  let route = window.location.pathname;
+  let route = window.location.href;
   let page = route.split("/").at(-1);
   openPage(page);
   // restore scroll position
@@ -610,8 +612,9 @@ function updateUserPlaylists(e, songId) {
         let response = JSON.parse(data);
         if (response.success) {
           refreshMainContent();
+        } else {
+          $(e.target).find("button").attr("disabled", false);
         }
-        $(e.target).find("button").attr("disabled", false);
         showNotification(response.message);
       }
     ).fail(function () {

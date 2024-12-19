@@ -16,8 +16,9 @@ $ownerId = $owner->getId();
 $ownerName = $owner->getUsername();
 $isSavedPlaylist = $userLoggedIn->isSaved('playlist', $playlistId);
 
-// get current user playlists
+// get current user data
 $userPlaylists = $userLoggedIn->getPlaylists();
+$userId = $userLoggedIn->getId();
 
 // get cookie list type
 $listType = "normal";
