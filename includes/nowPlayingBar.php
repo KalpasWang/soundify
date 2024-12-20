@@ -32,19 +32,21 @@ $jsonArray = json_encode($resultArray);
     </div>
     <div id="bar-center" class="w-40 d-flex flex-column align-items-center">
       <div class="d-flex w-100 flex-column align-items-center">
-        <div class="fs-3">
+        <div class="fs-3 mb-2">
           <button id="shuffle-btn" class="btn btn-dark btn-sm" title="隨機播放">
             <i class="bi bi-shuffle fs-5"></i>
           </button>
           <button id="prev-btn" class="btn btn-dark btn-sm" title="上一步">
             <i class="bi bi-skip-start-fill fs-5"></i>
           </button>
-          <button id="play-btn" class="btn btn-light rounded-circle p-1" title="播放">
-            <i class="bi bi-play-fill fs-3"></i>
-          </button>
-          <button id="pause-btn" class="btn btn-light rounded-circle p-1" title="暫停" style="display: none;">
-            <i class="bi bi-pause-fill fs-3"></i>
-          </button>
+          <div class="d-inline-block mx-3">
+            <button id="play-btn" class="btn btn-light rounded-circle p-1" title="播放">
+              <i class="bi bi-play-fill fs-3"></i>
+            </button>
+            <button id="pause-btn" class="btn btn-light rounded-circle p-1" title="暫停" style="display: none;">
+              <i class="bi bi-pause-fill fs-3"></i>
+            </button>
+          </div>
           <button id="next-btn" class="btn btn-dark btn-sm" title="下一步">
             <i class="bi bi-skip-end-fill fs-5"></i>
           </button>
