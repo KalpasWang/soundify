@@ -8,12 +8,12 @@ class Artist
   private string $id;
   private array $mysqliData;
 
-  public function __construct(mysqli $db, string $id)
+  public function __construct(mysqli $db, string | int $id)
   {
     $this->db = $db;
     $query = $this->db->query("SELECT * FROM artists WHERE id='$id'");
     $row = $query->fetch_assoc();
-    $this->id = $id;
+    $this->id = (string) $id;
     $this->mysqliData = $row;
   }
 
@@ -46,5 +46,31 @@ class Artist
       array_push($array, $row['id']);
     }
     return $array;
+  }
+
+  public function getHotestSongs()
+  {
+    $stmt = $this->db->prepare("SELECT * FROM songs WHERE artist_id=? ORDER BY play_times DESC LIMIT 10");
+    $stmt->bind_param("s", $this->id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    $array = array();
+    while ($row = $result->fetch_assoc()) {
+      array_push($array, Song::createByRow($this->db, $row));
+    }
+    return $array;
+  }
+
+  public function getNumberOfAudiences()
+  {
+    // get songs play times that artist id is in
+    $query = $this->db->query("SELECT play_times FROM songs WHERE artist_id='$this->id'");
+    $array = array();
+    while ($row = $query->fetch_assoc()) {
+      array_push($array, (int) $row['play_times']);
+    }
+    $sum = array_sum($array);
+    // format number
+    return number_format($sum);
   }
 }

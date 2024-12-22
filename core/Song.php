@@ -85,6 +85,12 @@ class Song
     return sprintf("%d", $second);
   }
 
+  public function getPlayTimes(): string
+  {
+    $num = (int) $this->mysqliData['play_times'];
+    return number_format($num);
+  }
+
   public function getMysqliData(): array
   {
     return $this->mysqliData;
