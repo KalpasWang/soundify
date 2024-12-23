@@ -11,6 +11,7 @@ $userId = $userLoggedIn->getId();
 $artist = new Artist($con, $artistId);
 $artistName = $artist->getName();
 $artistSongs = $artist->getHotestSongs();
+$artistAlbums = $artist->getAllAlbums();
 $isFollowing = $userLoggedIn->isSaved('artist', $artistId);
 
 $title = "$artistName - Soundify";
@@ -268,6 +269,41 @@ if (!$isAjax) {
                 </div>
               </div>
               <span class="ps-4"><?= $song->getDuration(); ?></span>
+            </div>
+          </div>
+        </li>
+      <?php endforeach; ?>
+    </ul>
+  </section>
+  <section id="artist-albums" class="p-3 pb-5">
+    <h3 class="hs-2 fw-bold">音樂作品</h3>
+    <ul class="list-unstyled d-flex flex-wrap align-items-center">
+      <?php foreach ($artistAlbums as $album): ?>
+        <?php
+        $albumId = $album->getId();
+        $albumCover = $album->getCover();
+        $albumTitle = $album->getTitle();
+        ?>
+        <li class="align-self-stretch">
+          <div
+            role="button"
+            onclick="(function(e){ albumClickHandler(e, 'album.php?id=<?= $albumId; ?>'); })(event)"
+            class="btn btn-info p-3 h-100">
+            <div class="card border-0 bg-transparent h-100" style="width: 9rem;">
+              <img src="<?= $album->getCover(); ?>" class="card-img-top" alt="<?= $album->getTitle(); ?>">
+              <div class="card-body text-start p-0 pt-2">
+                <h5 class="card-title fs-6 fw-bold mb-0">
+                  <a
+                    href="album.php?id=<?= $albumId; ?>"
+                    onclick="event.preventDefault(); openPage('album.php?id=<?= $albumId; ?>')"
+                    class="link-secondary link-underline link-underline-opacity-0 link-underline-opacity-100-hover">
+                    <?= $album->getTitle(); ?>
+                  </a>
+                </h5>
+                <p class="card-text fs-7 text-secondary">
+                  <?= $album->getReleaseDate(); ?>．專輯
+                </p>
+              </div>
             </div>
           </div>
         </li>

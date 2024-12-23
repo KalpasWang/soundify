@@ -377,7 +377,7 @@ $(document).on("change", "select.playlist", function () {
 
 // Handle back to previous page
 window.onpopstate = function (e) {
-  const route = window.location.pathname;
+  const route = window.location.href;
   let page = route.split("/").at(-1);
   openPage(page);
 };

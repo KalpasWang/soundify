@@ -48,6 +48,16 @@ class Artist
     return $array;
   }
 
+  public function getAllAlbums()
+  {
+    $query = $this->db->query("SELECT * FROM albums WHERE artist_id='$this->id' ORDER BY release_year DESC");
+    $array = array();
+    while ($row = $query->fetch_assoc()) {
+      array_push($array, Album::createByRow($this->db, $row));
+    }
+    return $array;
+  }
+
   public function getHotestSongs()
   {
     $stmt = $this->db->prepare("SELECT * FROM songs WHERE artist_id=? ORDER BY play_times DESC LIMIT 10");
