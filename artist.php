@@ -288,7 +288,7 @@ if (!$isAjax) {
           <div
             role="button"
             onclick="(function(e){ albumClickHandler(e, 'album.php?id=<?= $albumId; ?>'); })(event)"
-            class="btn btn-info p-3 h-100">
+            class="btn btn-custom p-3 h-100">
             <div class="card border-0 bg-transparent h-100" style="width: 9rem;">
               <img src="<?= $album->getCover(); ?>" class="card-img-top" alt="<?= $album->getTitle(); ?>">
               <div class="card-body text-start p-0 pt-2">

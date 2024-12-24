@@ -22,6 +22,9 @@ $danger: #e91429;
 $light: #fff;
 $dark: #000;
 
+$enable-grid-classes: false;
+$enable-cssgrid: true;
+
 $enable-shadows: false;
 $input-focus-box-shadow: none;
 
@@ -147,13 +150,21 @@ $utilities: (
   letter-spacing: 1.5px;
 }
 
-.btn {
-  opacity: 0.8;
-  transition: all 0.15s ease;
+.btn-scale {
+  transform: scale(1);
+  transition: all 0.15s ease-in-out;
 
   &:hover {
-    opacity: 1;
     transform: scale(1.02);
+  }
+}
+
+.btn-custom {
+  background-color: transparent;
+  transition: all 0.15s ease-in-out;
+
+  &:hover {
+    background-color: $success;
   }
 }
 
