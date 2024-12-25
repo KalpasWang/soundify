@@ -2,54 +2,85 @@
 include_once("includes/core.php");
 
 if (isset($_GET['id'])) {
-  $artistId = $_GET['id'];
+  $songId = $_GET['id'];
 } else {
   header("Location: index.php");
 }
 
 $userId = $userLoggedIn->getId();
+$song = Song::createById($con, $songId);
+$songName = $song->getTitle();
+$songDuration = $song->getDuration();
+$songPlayTimes = $song->getPlayTimes();
+
+$artist = $song->getArtist();
+$artistId = $artist->getId();
+$artistName = $artist->getName();
+$artistAvatar = $artist->getAvatar();
+$artistSongs = $artist->getHotestSongs();
+
+$album = $song->getAlbum();
+$albumId = $album->getId();
+$albumCover = $album->getCover();
+$albumTitle = $album->getTitle();
+$albumReleaseDate = $album->getReleaseDate();
+
+$userId = $userLoggedIn->getId();
 $userPlaylists = $userLoggedIn->getPlaylists();
 
-$artist = new Artist($con, $artistId);
-$artistName = $artist->getName();
-$artistSongs = $artist->getHotestSongs();
-$artistAlbums = $artist->getAllAlbums();
-$isFollowing = $userLoggedIn->isSaved('artist', $artistId);
+$isLiked = $song->isLikedBy($userId);
+$isInUserPlaylists = $song->isInUserPlaylists($userId);
+$isSaved = $isLiked || $isInUserPlaylists;
 
-$title = "$artistName - Soundify";
+$title = "$songName | song by $artistName - Soundify";
 if (!$isAjax) {
   include_once("includes/header.php");
 }
 ?>
 
 <div class="container-xxl px-3">
-  <!-- 撥放清單資訊 -->
-  <section id="artist-header" class="d-flex w-100 p-3 bg-gradient rounded-3" style="background-color: #074951;">
+  <!--歌曲資訊 -->
+  <section id="song-header" class="d-flex w-100 p-3 bg-gradient rounded-3" style="background-color: #074951;">
     <div id="cover" class="flex-shrink-1 d-flex align-items-center">
       <img
         width="145px"
         height="145px"
-        src="<?= $artist->getAvatar(); ?>"
-        alt="<?= $artistTitle; ?>"
-        class="rounded-circle">
+        src="<?= $albumCover; ?>"
+        alt="<?= $songTitle; ?>"
+        class="rounded">
     </div>
     <div id="details" class="flex-grow-1 ps-4">
-      <h2 class="fs-5"><span class="badge text-bg-primary">藝人</span></h2>
-      <h1 id="artist-<?= $artistId; ?>" class="display-1 fw-bold my-3"><?= $artistName; ?></h1>
+      <h2 class="fs-5"><span class="badge text-bg-primary">歌曲</span></h2>
+      <h1 id="song-<?= $songId; ?>" class="display-1 fw-bold my-3"><?= $songName; ?></h1>
       <!-- 播放清單資訊 -->
-      <p class="fs-5">
-        <span class="text-secondary">總共 <?= $artist->getNumberOfAudiences(); ?> 名聽眾</span>
+      <p class="fs-6">
+        <img class="rounded-circle w-2rem h-2rem align-bottom" src="<?= $artistAvatar; ?>" alt="<?= $artistName; ?>">
+        <a
+          href="artist.php?id=<?= $artistId; ?>"
+          onclick="event.preventDefault(); openPage('artist.php?id=<?= $artistId; ?>')"
+          class="fw-bold link-light link-underline link-underline-opacity-0 link-underline-opacity-100-hover">
+          <?= $artistName; ?>
+        </a>
+        <a
+          href="album.php?id=<?= $albumId; ?>"
+          onclick="event.preventDefault(); openPage('album.php?id=<?= $albumId; ?>')"
+          class="link-light link-underline link-underline-opacity-0 link-underline-opacity-100-hover">
+          <?= $albumTitle; ?>
+        </a>
+        <span class="text-secondary">‧ <?= $albumReleaseDate; ?></span>
+        <span class="text-secondary">‧ <?= $songDuration; ?></span>
+        <span class="text-secondary">‧ <?= $songPlayTimes; ?></span>
       </p>
     </div>
   </section>
-  <!-- 播放清單控制選項 -->
-  <section id="artist-controls" class="d-flex justify-content-between align-items-center w-100 p-3">
+  <!-- 歌曲控制選項 -->
+  <section id="song-controls" class="d-flex justify-content-between align-items-center w-100 p-3">
     <div id="left-controls" class="d-flex align-items-center">
       <!-- 播放播放清單 button -->
       <button
         type="button"
         id="big-play-btn"
-        onclick="player.loadPlaylist('artist', <?= $artistId ?>)"
+        onclick="player.loadPlaylist('song', <?= $songId ?>)"
         data-bs-toggle="tooltip"
         data-bs-placement="bottom"
         data-bs-title="播放"
@@ -68,61 +99,105 @@ if (!$isAjax) {
         class="btn btn-primary btn-lg rounded-circle p-2">
         <i class="bi bi-pause-fill fs-1"></i>
       </button>
-      <div class="ms-5">
-        <!-- 追蹤 button -->
+      <div class="ms-3">
+        <!-- 加入收藏 button -->
         <button
-          id="artist-<?= $artistId ?>-save-btn"
-          onclick="followArtist('<?= $artistId ?>', event.target)"
+          id="song-<?= $songId ?>-save-btn"
+          onclick="followsong('<?= $songId ?>', event.target)"
           type="button"
-          class="btn btn-info rounded-pill border-1 border-light"
-          style="display: <?= $isFollowing ? 'none' : 'inline-block'; ?>;">
-          追蹤
+          data-bs-toggle="tooltip"
+          data-bs-placement="bottom"
+          data-bs-title="儲存至你的音樂庫"
+          class="btn btn-info"
+          style="display: <?= $isSaved ? 'none' : 'inline-block'; ?>;">
+          <i class="bi bi-plus-circle fs-3"></i>
         </button>
         <!-- 取消追蹤 button -->
         <button
-          id="artist-<?= $artistId; ?>-remove-btn"
-          onclick="unfollowArtist('<?= $artistId ?>', event.target)"
+          id="song-<?= $songId; ?>-remove-btn"
+          onclick="unfollowsong('<?= $songId ?>', event.target)"
           type="button"
+          data-bs-toggle="tooltip"
+          data-bs-placement="bottom"
+          data-bs-title="從你的音樂庫中移除"
           class="btn btn-info"
-          style="display: <?= $isFollowing ? 'inline-block' : 'none'; ?>;">
-          追蹤中
+          style="display: <?= $isSaved ? 'inline-block' : 'none'; ?>;">
+          <i class="bi bi-check-circle-fill fs-3 text-primary"></i>
         </button>
       </div>
     </div>
   </section>
+  <!-- 藝人資訊 -->
+  <section id="song-artist" class="p-3 pb-5">
+    <div class="list-group list-group-flush">
+      <button
+        onclick="openPage('artist.php?id=<?= $artistId; ?>')"
+        type="button"
+        class="list-group-item list-group-item-action">
+        <div class="d-flex w-100">
+          <div class="flex-shrink-0">
+            <img
+              width="80"
+              height="80"
+              src="<?= $artistAvatar; ?>"
+              alt="<?= $artistName; ?>"
+              class="rounded-circle">
+          </div>
+          <div class="flex-grow-1 ms-3">
+            <div class="h-100 d-flex flex-column justify-content-center">
+              <p class="mb-0 fs-7">藝人</p>
+              <h4 class="mb-0 fs-6 fw-bold">
+                <a
+                  href="artist.php?id=<?= $artistId; ?>"
+                  onclick="event.preventDefault(); openPage('artist.php?id=<?= $artistId; ?>')"
+                  class="link-light link-underline link-underline-opacity-0 link-underline-opacity-100-hover">
+                  <?= $artistName; ?>
+                </a>
+              </h4>
+            </div>
+          </div>
+      </button>
+    </div>
+  </section>
   <!-- 藝人熱門歌曲 -->
   <section id="artist-songs-list" class="p-3 pb-5">
+    <p class="text-secondary fs-7 mb-2">此藝人的熱門曲目：</p>
+    <h4 class="fs-4 fw-bold mb-3"><?= $artistName; ?></h4>
     <ul id="songs-list" class="list-group list-group-flush">
-      <?php foreach ($artistSongs as $key => $song): ?>
+      <?php foreach ($artistSongs as $key => $hotSong): ?>
         <?php
-        $isLiked = $song->isLikedBy($userId);
-        $isInUserPlaylists = $song->isInUserPlaylists($userId);
-        $isSaved = $isLiked || $isInUserPlaylists;
-        $songId = $song->getId();
-        $songPlayTimes = $song->getPlayTimes();
-        $albumCover = $song->getAlbum()->getCover();
+        $isHotSongLiked = $hotSong->isLikedBy($userId);
+        $isHotSongInUserPlaylists = $hotSong->isInUserPlaylists($userId);
+        $isHotSongSaved = $isHotSongLiked || $isHotSongInUserPlaylists;
+        $hotSongId = $hotSong->getId();
+        $hotSongTitle = $hotSong->getTitle();
+        $hotSongDuration = $hotSong->getDuration();
+        $hotSongPlayTimes = $hotSong->getPlayTimes();
+        $hotSongAlbumCover = $hotSong->getAlbum()->getCover();
+        // echo $isHotSongLiked ? "song $hotSongId Like<br>" : "song $hotSongId dislike<br>";
+        // echo $isHotSongInUserPlaylists ? "song $hotSongId in playlist<br>" : "song $hotSongId not in playlist<br>";
         ?>
         <li class="list-group-item list-group-item-action border-0">
           <div class="d-flex align-items-center">
             <!-- 播放編號 -->
             <div class="flex-shrink-1">
-              <span id="song-<?= $songId; ?>-number"><?= $key + 1; ?></span>
+              <span id="song-<?= $hotSongId; ?>-number"><?= $key + 1; ?></span>
             </div>
             <!-- 歌名 & 專輯封面 -->
             <div class="flex-grow-1 d-flex align-items-center w-30 px-3">
               <img
-                src="<?= $albumCover; ?>"
+                src="<?= $hotSongAlbumCover; ?>"
                 width="40"
                 height="40"
                 alt="專輯封面"
                 class="rounded">
-              <span id="song-<?= $songId; ?>-title" class="ms-3">
-                <?= $song->getTitle(); ?>
+              <span id="song-<?= $hotSongId; ?>-title" class="ms-3">
+                <?= $hotSongTitle; ?>
               </span>
             </div>
             <div class="flex-grow-1 w-30 px-3">
               <p class="mb-0 text-light text-end">
-                <?= $songPlayTimes; ?>
+                <?= $hotSongPlayTimes; ?>
               </p>
             </div>
             <!-- 控制按鈕 & 歌曲時長 -->
@@ -132,18 +207,18 @@ if (!$isAjax) {
                 <!-- 播放 -->
                 <button
                   type="button"
-                  id="song-<?= $songId; ?>-play-btn"
+                  id="song-<?= $hotSongId; ?>-play-btn"
                   onclick="player.loadPlaylistOrUpdate('artist', '<?= $artistId; ?>', <?= $key; ?>);"
                   data-bs-toggle="tooltip"
                   data-bs-placement="bottom"
-                  data-bs-title="播放 <?= $song->getTitle(); ?>"
+                  data-bs-title="播放 <?= $hotSongTitle; ?>"
                   class="btn btn-sm border-0">
                   <i class="bi bi-play-fill fs-5"></i>
                 </button>
                 <!-- 暫停 -->
                 <button
                   type="button"
-                  id="song-<?= $songId; ?>-pause-btn"
+                  id="song-<?= $hotSongId; ?>-pause-btn"
                   onclick="player.pause();"
                   data-bs-toggle="tooltip"
                   data-bs-placement="bottom"
@@ -154,14 +229,14 @@ if (!$isAjax) {
                 </button>
                 <!-- 加入按讚清單 -->
                 <button
-                  id="song-<?= $songId; ?>-add-like-btn"
-                  onclick="addToLikedSongs('<?= $songId; ?>', '<?= $userId; ?>')"
+                  id="song-<?= $hotSongId; ?>-add-like-btn"
+                  onclick="addToLikedSongs('<?= $hotSongId; ?>', '<?= $userId; ?>')"
                   data-bs-toggle="tooltip"
                   data-bs-placement="bottom"
                   data-bs-title="加入按讚清單"
                   type="button"
                   class="btn btn-sm border-0"
-                  style="display: <?= $isSaved ? 'none' : 'inline-block'; ?>;">
+                  style="display: <?= $isHotSongSaved ? 'none' : 'inline-block'; ?>;">
                   <i class="bi bi-plus-circle fs-5"></i>
                 </button>
                 <!-- 加入其他撥放清單 -->
@@ -169,11 +244,11 @@ if (!$isAjax) {
                   data-bs-toggle="tooltip"
                   data-bs-placement="bottom"
                   data-bs-title="加入其他播放清單"
-                  id="song-<?= $songId; ?>-edit-artist-dropdown"
+                  id="song-<?= $hotSongId; ?>-edit-artist-dropdown"
                   class="dropdown dropup"
-                  style="display: <?= $isSaved ? 'inline-block' : 'none'; ?>;">
+                  style="display: <?= $isHotSongSaved ? 'inline-block' : 'none'; ?>;">
                   <button
-                    id="song-<?= $songId; ?>-edit-artist-btn"
+                    id="song-<?= $hotSongId; ?>-edit-artist-btn"
                     data-bs-toggle="dropdown"
                     data-bs-auto-close="outside"
                     aria-expanded=" false"
@@ -182,8 +257,8 @@ if (!$isAjax) {
                     <i class="bi bi-check-circle-fill fs-5 text-primary"></i>
                   </button>
                   <form
-                    id="song-<?= $songId; ?>-update-form"
-                    onsubmit="event.preventDefault(); updateUserPlaylists(event, '<?= $songId; ?>');"
+                    id="song-<?= $hotSongId; ?>-update-form"
+                    onsubmit="event.preventDefault(); updateUserPlaylists(event, '<?= $hotSongId; ?>');"
                     class="m-0">
                     <ul class="dropdown-menu dropdown-menu-dark">
                       <li class="bg-success">
@@ -205,7 +280,7 @@ if (!$isAjax) {
                       <li class="overflow-y-auto" style="max-height: 5.5rem;">
                         <!-- 已按讚的歌曲 -->
                         <div>
-                          <ul id="song-<?= $songId; ?>-artists" class="list-unstyled">
+                          <ul id="song-<?= $hotSongId; ?>-artists" class="list-unstyled">
                             <li class="d-flex justify-content-between align-items-center dropdown-item">
                               <div class="d-flex align-items-center">
                                 <img
@@ -216,9 +291,9 @@ if (!$isAjax) {
                               </div>
                               <div class="form-check ps-3">
                                 <input
-                                  id="song-<?= $songId; ?>-liked-checkbox"
-                                  name="song-<?= $songId; ?>-liked-checkbox"
-                                  <?= $isLiked ? 'checked' : ''; ?>
+                                  id="song-<?= $hotSongId; ?>-liked-checkbox"
+                                  name="song-<?= $hotSongId; ?>-liked-checkbox"
+                                  <?= $isHotSongLiked ? 'checked' : ''; ?>
                                   class="form-check-input rounded-circle"
                                   type="checkbox"
                                   value="is-liked">
@@ -226,8 +301,9 @@ if (!$isAjax) {
                             </li>
                             <?php foreach ($userPlaylists as $list): ?>
                               <?php
-                              $isSongInList = $list->isInPlaylist($songId);
+                              $isSongInList = $list->isInPlaylist($hotSongId);
                               $listId = $list->getId();
+                              $listName = $list->getName();
                               ?>
                               <li class="d-flex justify-content-between align-items-center dropdown-item">
                                 <div class="d-flex align-items-center pe-3">
@@ -235,12 +311,12 @@ if (!$isAjax) {
                                     src="<?= $list->getCover(); ?>"
                                     alt="清單封面"
                                     class="w-2rem h-2rem object-fit-cover rounded">
-                                  <span class="ps-3 text-truncate"><?= $list->getName(); ?></span>
+                                  <span class="ps-3 text-truncate"><?= $listName; ?></span>
                                 </div>
                                 <div class="form-check ps-3">
                                   <input
-                                    id="song-<?= $songId; ?>-artist-<?= $listId; ?>-checkbox"
-                                    name="song-<?= $songId; ?>-artist-<?= $listId; ?>-checkbox"
+                                    id="song-<?= $hotSongId; ?>-artist-<?= $listId; ?>-checkbox"
+                                    name="song-<?= $hotSongId; ?>-artist-<?= $listId; ?>-checkbox"
                                     <?= $isSongInList ? 'checked' : ''; ?>
                                     class="form-check-input rounded-circle"
                                     type="checkbox"
@@ -269,42 +345,7 @@ if (!$isAjax) {
                   </form>
                 </div>
               </div>
-              <span class="ps-4"><?= $song->getDuration(); ?></span>
-            </div>
-          </div>
-        </li>
-      <?php endforeach; ?>
-    </ul>
-  </section>
-  <section id="artist-albums" class="p-3 pb-5">
-    <h3 class="hs-2 fw-bold">音樂作品</h3>
-    <ul class="list-unstyled d-flex flex-wrap align-items-center">
-      <?php foreach ($artistAlbums as $album): ?>
-        <?php
-        $albumId = $album->getId();
-        $albumCover = $album->getCover();
-        $albumTitle = $album->getTitle();
-        ?>
-        <li class="align-self-stretch">
-          <div
-            role="button"
-            onclick="(function(e){ albumClickHandler(e, 'album.php?id=<?= $albumId; ?>'); })(event)"
-            class="btn btn-custom p-3 h-100">
-            <div class="card border-0 bg-transparent h-100" style="width: 9rem;">
-              <img src="<?= $album->getCover(); ?>" class="card-img-top" alt="<?= $album->getTitle(); ?>">
-              <div class="card-body text-start p-0 pt-2">
-                <h5 class="card-title fs-6 fw-bold mb-0">
-                  <a
-                    href="album.php?id=<?= $albumId; ?>"
-                    onclick="event.preventDefault(); openPage('album.php?id=<?= $albumId; ?>')"
-                    class="link-secondary link-underline link-underline-opacity-0 link-underline-opacity-100-hover">
-                    <?= $album->getTitle(); ?>
-                  </a>
-                </h5>
-                <p class="card-text fs-7 text-secondary">
-                  <?= $album->getReleaseDate(); ?>．專輯
-                </p>
-              </div>
+              <span class="ps-4"><?= $hotSongDuration; ?></span>
             </div>
           </div>
         </li>

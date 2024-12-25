@@ -133,15 +133,14 @@ class Song
     }
     $rows = $query->fetch_all(MYSQLI_ASSOC);
     // check every playlist if song is in it
-    $stmt = $this->db->prepare("SELECT * FROM playlist_songs WHERE song_id=? AND playlist_id IN (?)");
-    if ($stmt === false) {
+    $listIds = implode(",", array_column($rows, "id"));
+    $queryStr = "SELECT * FROM playlist_songs WHERE song_id=$songId AND playlist_id IN ($listIds)";
+    $query = $this->db->query($queryStr);
+    // check error
+    if ($query === false) {
       throw new Exception($this->db->error);
     }
-    $listIds = implode(",", array_column($rows, "id"));
-    $stmt->bind_param("ss", $songId, $listIds);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    return $result->num_rows >= 1;
+    return $query->num_rows >= 1;
   }
 
   public function addToLikes(string $userId): bool

@@ -380,6 +380,7 @@ window.onpopstate = function (e) {
   const route = window.location.href;
   let page = route.split("/").at(-1);
   openPage(page);
+  document.documentElement.scrollTop = 0;
 };
 
 function updateUsername(usernameClass) {
@@ -444,7 +445,7 @@ function openPage(url) {
       return;
     }
   });
-  $("body").scrollTop(0);
+  document.documentElement.scrollTop = 0;
   history.pushState({}, "", BASE_URL + originalUrl);
   return false;
 }
