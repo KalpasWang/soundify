@@ -7,9 +7,25 @@ if (empty($_SESSION['user'])) {
   exit("not authenticated");
 }
 
+$response = [
+  "success" => false,
+  "message" => "",
+];
+
 if (isset($_POST['songId']) && isset($_POST['userId'])) {
-  $songId = $_POST['songId'];
-  $userId = $_POST['userId'];
-  $song = Song::createById($con, $songId);
-  $song->addToLikes($userId);
+  try {
+    $songId = $_POST['songId'];
+    $userId = $_POST['userId'];
+    $user = User::createById($con, $userId);
+    $user->addToLikedSongs($songId);
+    $response["success"] = true;
+    $response["message"] = "已將歌曲加入已按讚歌曲清單";
+    echo json_encode($response);
+  } catch (\Throwable $th) {
+    $response["message"] = "發生錯誤: " . $th->getMessage();
+    echo json_encode($response);
+  }
+} else {
+  $response["message"] = "缺少必要參數";
+  echo json_encode($response);
 }

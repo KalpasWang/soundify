@@ -461,24 +461,31 @@ function refreshMainContent() {
   $(window).scrollTop(scrollPosition);
 }
 
-function addToLikedSongs(songId, userId) {
-  $(`#song-${songId}-add-like-btn`).attr("disabled", true);
+function addToLikedSongs(songId, userId, target) {
+  if (target.nodeName !== "BUTTON") {
+    target = target.closest("button");
+  }
+  let $addLikeBtn = $(target);
+  $addLikeBtn.attr("disabled", true);
   $.post(
     "handlers/addToLikedSongs.php",
     {
       songId: songId,
       userId: userId,
     },
-    function () {
-      let $addLikeBtn = $(`#song-${songId}-add-like-btn`);
-      let $dropdown = $(`#song-${songId}-edit-playlist-dropdown`);
-      $addLikeBtn.hide();
-      $dropdown.css("display", "inline-block");
-      $(`#song-${songId}-add-like-btn`).attr("disabled", false);
-      $(`#song-${songId}-liked-checkbox`).prop("checked", true);
+    function (data) {
+      let response = JSON.parse(data);
+      if (response.success) {
+        let $dropdown = $addLikeBtn.siblings(".dropdown");
+        $addLikeBtn.hide();
+        $dropdown.css("display", "inline-block");
+        $dropdown.find(`#song-${songId}-liked-checkbox`).prop("checked", true);
+      }
+      $addLikeBtn.attr("disabled", false);
+      showNotification(response.message);
     }
   ).fail(function () {
-    $(`#song-${songId}-add-like-btn`).attr("disabled", false);
+    $addLikeBtn.attr("disabled", false);
     showNotification("出現錯誤，請稍後再試");
   });
 }
