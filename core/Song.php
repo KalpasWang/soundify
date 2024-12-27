@@ -142,26 +142,4 @@ class Song
     }
     return $query->num_rows >= 1;
   }
-
-  public function addToLikes(string $userId): bool
-  {
-    $songId = $this->getId();
-    $stmt = $this->db->prepare("INSERT INTO liked_songs VALUES('', ?, ?)");
-    if ($stmt === false) {
-      throw new Exception($this->db->error);
-    }
-    $stmt->bind_param("ss", $songId, $userId);
-    return $stmt->execute();
-  }
-
-  public function removeFromLikes(string $userId): bool
-  {
-    $songId = $this->getId();
-    $stmt = $this->db->prepare("DELETE FROM liked_songs WHERE song_id=? AND user_id=?");
-    if ($stmt === false) {
-      throw new Exception($this->db->error);
-    }
-    $stmt->bind_param("ss", $songId, $userId);
-    return $stmt->execute();
-  }
 }

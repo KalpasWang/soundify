@@ -452,13 +452,13 @@ function openPage(url) {
 
 function refreshMainContent() {
   // get scroll position
-  let scrollPosition = $(window).scrollTop();
+  let scrollPosition = document.documentElement.scrollTop;
   // re-render current page by open same page
   let route = window.location.href;
   let page = route.split("/").at(-1);
   openPage(page);
   // restore scroll position
-  $(window).scrollTop(scrollPosition);
+  document.documentElement.scrollTop = scrollPosition;
 }
 
 function addToLikedSongs(songId, userId, target) {
@@ -476,10 +476,7 @@ function addToLikedSongs(songId, userId, target) {
     function (data) {
       let response = JSON.parse(data);
       if (response.success) {
-        let $dropdown = $addLikeBtn.siblings(".dropdown");
-        $addLikeBtn.hide();
-        $dropdown.css("display", "inline-block");
-        $dropdown.find(`#song-${songId}-liked-checkbox`).prop("checked", true);
+        refreshMainContent();
       }
       $addLikeBtn.attr("disabled", false);
       showNotification(response.message);
@@ -488,22 +485,6 @@ function addToLikedSongs(songId, userId, target) {
     $addLikeBtn.attr("disabled", false);
     showNotification("出現錯誤，請稍後再試");
   });
-}
-
-function removeFromLikedSongs(songId, userId) {
-  $.post("handlers/removeFromLikedSongs.php", {
-    songId: songId,
-    userId: userId,
-  })
-    .done(function (data) {
-      let $addLikeBtn = $(`#song-${songId}-add-like-btn`);
-      let $removeLikeBtn = $(`#song-${songId}-remove-like-btn`);
-      $addLikeBtn.show();
-      $removeLikeBtn.hide();
-    })
-    .fail(function () {
-      alert("出現錯誤，請稍後再試");
-    });
 }
 
 function saveAlbumToLibrary(id, target) {

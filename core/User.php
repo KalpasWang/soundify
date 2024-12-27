@@ -102,6 +102,9 @@ class User
   public function removeFromLikedSongs(string $songId): void
   {
     $stmt = $this->db->prepare("DELETE FROM liked_songs WHERE user_id=? AND song_id=?");
+    if ($stmt === false) {
+      throw new Exception($this->db->error);
+    }
     $stmt->bind_param("ss", $this->id, $songId);
     $result = $stmt->execute();
     if ($result === false) {
