@@ -142,4 +142,23 @@ class Song
     }
     return $query->num_rows >= 1;
   }
+
+  public function getSongData(): array
+  {
+    $array = [
+      "type" => "song",
+      "id" => $this->getId(),
+      "artist" => $this->getArtist()->getName(),
+      "cover" => $this->getAlbum()->getCover(),
+      "songs" => [
+        [
+          "id" => $this->getId(),
+          "title" => $this->getTitle(),
+          "duration" => $this->getDuration(),
+          "path" => $this->getPath()
+        ]
+      ]
+    ];
+    return $array;
+  }
 }

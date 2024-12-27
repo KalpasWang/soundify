@@ -83,4 +83,26 @@ class Artist
     // format number
     return number_format($sum);
   }
+
+  public function getArtistHotestSongsData(): array
+  {
+    $array = [
+      "type" => "artist",
+      "id" => $this->getId(),
+      "artist" => $this->getName(),
+      "songs" => []
+    ];
+    $songs = $this->getHotestSongs();
+    foreach ($songs as $song) {
+      $songData = [
+        "id" => $song->getId(),
+        "title" => $song->getTitle(),
+        "duration" => $song->getDuration(),
+        "cover" => $song->getAlbum()->getCover(),
+        "path" => $song->getPath()
+      ];
+      array_push($array["songs"], $songData);
+    }
+    return $array;
+  }
 }

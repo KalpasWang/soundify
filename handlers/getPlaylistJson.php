@@ -6,9 +6,25 @@ if (empty($_SESSION['user'])) {
   exit("not authenticated");
 }
 
+$response = [
+  "success" => false,
+  "message" => "",
+  "data" => null
+];
+
 if (isset($_POST['playlistId'])) {
-  $playlistId = $_POST['playlistId'];
-  $playlist = Playlist::createById($con, $playlistId);
-  $resultArray = $playlist->getPlaylistData();
-  echo json_encode($resultArray);
+  try {
+    $playlistId = $_POST['playlistId'];
+    $playlist = Playlist::createById($con, $playlistId);
+    $resultArray = $playlist->getPlaylistData();
+    $response["success"] = true;
+    $response["data"] = $resultArray;
+    echo json_encode($response);
+  } catch (\Throwable $th) {
+    $response["message"] = "發生錯誤: " . $th->getMessage();
+    echo json_encode($response);
+  }
+} else {
+  $response["message"] = "缺少必要參數";
+  echo json_encode($response);
 }

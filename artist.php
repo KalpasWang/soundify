@@ -23,7 +23,7 @@ if (!$isAjax) {
 ?>
 
 <div class="container-xxl px-3">
-  <!-- 撥放清單資訊 -->
+  <!-- 藝人資訊 -->
   <section id="artist-header" class="d-flex w-100 p-3 bg-gradient rounded-3" style="background-color: #074951;">
     <div id="cover" class="flex-shrink-1 d-flex align-items-center">
       <img
@@ -36,20 +36,19 @@ if (!$isAjax) {
     <div id="details" class="flex-grow-1 ps-4">
       <h2 class="fs-5"><span class="badge text-bg-primary">藝人</span></h2>
       <h1 id="artist-<?= $artistId; ?>" class="display-1 fw-bold my-3"><?= $artistName; ?></h1>
-      <!-- 播放清單資訊 -->
       <p class="fs-5">
         <span class="text-secondary">總共 <?= $artist->getNumberOfAudiences(); ?> 名聽眾</span>
       </p>
     </div>
   </section>
-  <!-- 播放清單控制選項 -->
+  <!-- 藝人控制選項 -->
   <section id="artist-controls" class="d-flex justify-content-between align-items-center w-100 p-3">
     <div id="left-controls" class="d-flex align-items-center">
-      <!-- 播放播放清單 button -->
+      <!-- 播放藝人熱門歌曲 button -->
       <button
         type="button"
         id="big-play-btn"
-        onclick="player.loadPlaylist('artist', <?= $artistId ?>)"
+        onclick="player.loadPlaylistOrUpdate('artist', '<?= $artistId ?>')"
         data-bs-toggle="tooltip"
         data-bs-placement="bottom"
         data-bs-title="播放"
@@ -120,6 +119,7 @@ if (!$isAjax) {
                 <?= $song->getTitle(); ?>
               </span>
             </div>
+            <!-- 總播放次數 -->
             <div class="flex-grow-1 w-30 px-3">
               <p class="mb-0 text-light text-end">
                 <?= $songPlayTimes; ?>
@@ -127,7 +127,6 @@ if (!$isAjax) {
             </div>
             <!-- 控制按鈕 & 歌曲時長 -->
             <div class="w-30 flex-grow-1 d-flex justify-content-end align-items-center">
-              <!-- 播放/暫停按鈕 加入按讚清單/加入播放清單 -->
               <div>
                 <!-- 播放 -->
                 <button

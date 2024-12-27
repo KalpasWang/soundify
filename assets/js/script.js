@@ -122,12 +122,23 @@ class PlaylistPlayer {
     } else if (type == "album") {
       postUrl = BASE_URL + "handlers/getAlbumJson.php";
       postData = { albumId: id };
+    } else if (type == "artist") {
+      postUrl = BASE_URL + "handlers/getArtistJson.php";
+      postData = { artistId: id };
+    } else if (type == "song") {
+      postUrl = BASE_URL + "handlers/getSongJson.php";
+      postData = { songId: id };
     } else {
       showNotification("錯誤：invalid playlist type " + type);
       return;
     }
     $.post(postUrl, postData, (data) => {
-      let playlist = JSON.parse(data);
+      let response = JSON.parse(data);
+      if (!response.success) {
+        showNotification(response.message);
+        return;
+      }
+      let playlist = response.data;
       this.currentPlaylist = playlist.songs.slice();
       this.playlistInfo = playlist;
       this.currentIndex = index;
@@ -167,6 +178,9 @@ class PlaylistPlayer {
   nextSong(force = false) {
     let nextIndex = (this.currentIndex + 1) % this.currentPlaylist.length;
     if (!this.isRepeat && !force && nextIndex == 0) {
+      this.previousIndex = this.currentIndex;
+      this.currentIndex = nextIndex;
+      this.loadSong();
       this.pause();
       return;
     }

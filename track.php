@@ -80,7 +80,7 @@ if (!$isAjax) {
       <button
         type="button"
         id="big-play-btn"
-        onclick="player.loadPlaylist('song', <?= $songId ?>)"
+        onclick="player.loadPlaylistOrUpdate('song', '<?= $songId ?>')"
         data-bs-toggle="tooltip"
         data-bs-placement="bottom"
         data-bs-title="播放"
@@ -292,7 +292,6 @@ if (!$isAjax) {
             </div>
             <!-- 控制按鈕 & 歌曲時長 -->
             <div class="w-30 flex-grow-1 d-flex justify-content-end align-items-center">
-              <!-- 播放/暫停按鈕 加入按讚清單/加入播放清單 -->
               <div>
                 <!-- 播放 -->
                 <button
