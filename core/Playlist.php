@@ -146,14 +146,15 @@ class Playlist
 
   public function getSongAddedDate(string $songId): string
   {
-    $stmt = $this->db->prepare("SELECT created_at FROM playlist_songs WHERE playlist_id=? AND song_id=?");
-    if ($stmt === false) {
+    $queryStr = "SELECT created_at FROM playlist_songs WHERE playlist_id='$this->id' AND song_id='$songId'";
+    $query = $this->db->query($queryStr);
+    if ($query === false) {
       throw new Exception($this->db->error);
     }
-    $stmt->bind_param("ss", $this->id, $songId);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $row = $result->fetch_assoc();
+    if ($query->num_rows === 0) {
+      return "未知日期";
+    }
+    $row = $query->fetch_assoc();
     $timestamp = strtotime($row['created_at']);
     return date("Y年m月d日", $timestamp);
   }
