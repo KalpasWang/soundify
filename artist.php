@@ -91,6 +91,7 @@ if (!$isAjax) {
   </section>
   <!-- 藝人熱門歌曲 -->
   <section id="artist-songs-list" class="p-3 pb-5">
+    <h3 class="fs-3 fw-bold mb-3">熱門</h3>
     <ul id="songs-list" class="list-group list-group-flush">
       <?php foreach ($artistSongs as $key => $song): ?>
         <?php
@@ -98,6 +99,7 @@ if (!$isAjax) {
         $isInUserPlaylists = $song->isInUserPlaylists($userId);
         $isSaved = $isLiked || $isInUserPlaylists;
         $songId = $song->getId();
+        $songTitle = $song->getTitle();
         $songPlayTimes = $song->getPlayTimes();
         $songDuration = $song->getDuration();
         $albumCover = $song->getAlbum()->getCover();
@@ -117,7 +119,12 @@ if (!$isAjax) {
                 alt="專輯封面"
                 class="rounded">
               <span id="song-<?= $songId; ?>-title" class="ms-3">
-                <?= $song->getTitle(); ?>
+                <a
+                  href="track.php?id=<?= $songId; ?>"
+                  onclick="event.preventDefault(); openPage('track.php?id=<?= $songId; ?>')"
+                  class="link-light link-underline link-underline-opacity-0 link-underline-opacity-100-hover">
+                  <?= $songTitle; ?>
+                </a>
               </span>
             </div>
             <!-- 總播放次數 -->

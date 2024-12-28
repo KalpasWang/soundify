@@ -370,31 +370,11 @@ function slide(direction) {
   }
 }
 
-$(document).on("change", "select.playlist", function () {
-  var select = $(this);
-  var playlistId = select.val();
-  var songId = select.prev(".songId").val();
-
-  $.post("handlers/addToPlaylist.php", {
-    playlistId: playlistId,
-    songId: songId,
-  }).done(function (error) {
-    if (error != "") {
-      alert(error);
-      return;
-    }
-
-    // hideOptionsMenu();
-    select.val("");
-  });
-});
-
 // Handle back to previous page
 window.onpopstate = function (e) {
   const route = window.location.href;
   let page = route.split("/").at(-1);
   openPage(page);
-  document.documentElement.scrollTop = 0;
 };
 
 function updateUsername(usernameClass) {
@@ -442,7 +422,7 @@ function albumClickHandler(e, url) {
   openPage(url);
 }
 
-function openPage(url) {
+function openPage(url, scrollPosition = 0) {
   if (timer != null) {
     clearTimeout(timer);
   }
@@ -458,21 +438,24 @@ function openPage(url) {
       console.error("Error: " + xhr.status + " " + xhr.statusText);
       return;
     }
+    window.scrollTo({
+      top: scrollPosition,
+      left: 0,
+      behavior: "instant",
+    });
   });
-  document.documentElement.scrollTop = 0;
+
   history.pushState({}, "", BASE_URL + originalUrl);
   return false;
 }
 
 function refreshMainContent() {
   // get scroll position
-  let scrollPosition = document.documentElement.scrollTop;
+  let scrollPosition = document.body.scrollTop;
   // re-render current page by open same page
   let route = window.location.href;
   let page = route.split("/").at(-1);
-  openPage(page);
-  // restore scroll position
-  document.documentElement.scrollTop = scrollPosition;
+  openPage(page, scrollPosition);
 }
 
 function addToLikedSongs(songId, userId, target) {

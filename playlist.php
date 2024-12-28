@@ -158,6 +158,7 @@ if (!$isAjax) {
         $isInUserPlaylists = $song->isInUserPlaylists($userId);
         $isSaved = $isLiked || $isInUserPlaylists;
         $songId = $song->getId();
+        $songTitle = $song->getTitle();
         $songDuration = $song->getDuration();
         $artistId = $song->getArtist()->getId();
         $artistName = $song->getArtist()->getName();
@@ -176,9 +177,12 @@ if (!$isAjax) {
                 <div id="song-info">
                   <!-- 歌名 -->
                   <p class="mb-0">
-                    <span id="song-<?= $song->getId(); ?>-title">
-                      <?= $song->getTitle(); ?>
-                    </span>
+                    <a
+                      href="track.php?id=<?= $songId; ?>"
+                      onclick="event.preventDefault(); openPage('track.php?id=<?= $songId; ?>')"
+                      class="link-light link-underline link-underline-opacity-0 link-underline-opacity-100-hover">
+                      <?= $songTitle; ?>
+                    </a>
                   </p>
                   <!-- 歌手 -->
                   <p class="mb-0">

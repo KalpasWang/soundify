@@ -146,6 +146,10 @@ $utilities: (
 
 @import "../node_modules/bootstrap/scss/bootstrap";
 
+body {
+  scroll-behavior: auto;
+}
+
 .text-wide {
   letter-spacing: 1.5px;
 }

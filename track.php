@@ -281,8 +281,13 @@ if (!$isAjax) {
                 height="40"
                 alt="專輯封面"
                 class="rounded">
-              <span id="song-<?= $hotSongId; ?>-title" class="ms-3">
-                <?= $hotSongTitle; ?>
+              <span class="ms-3">
+                <a
+                  href="track.php?id=<?= $hotSongId; ?>"
+                  onclick="event.preventDefault(); openPage('track.php?id=<?= $hotSongId; ?>')"
+                  class="link-light link-underline link-underline-opacity-0 link-underline-opacity-100-hover">
+                  <?= $hotSongTitle; ?>
+                </a>
               </span>
             </div>
             <div class="flex-grow-1 w-30 px-3">
