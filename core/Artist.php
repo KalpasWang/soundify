@@ -2,7 +2,9 @@
 
 declare(strict_types=1);
 
-class Artist
+include_once("ICollectionItem.php");
+
+class Artist implements ICollectionItem
 {
   private mysqli $db;
   private string $id;
@@ -17,7 +19,12 @@ class Artist
     $this->mysqliData = $row;
   }
 
-  public function getId()
+  public static function createById(mysqli $db, string | int $id): Artist
+  {
+    return new Artist($db, $id);
+  }
+
+  public function getId(): string
   {
     return $this->id;
   }
@@ -27,7 +34,7 @@ class Artist
     return $this->mysqliData['name'];
   }
 
-  public function getAvatar()
+  public function getAvatar(): string
   {
     if ($this->mysqliData['avatar']) {
       return BASE_URL . $this->mysqliData['avatar'];
@@ -35,17 +42,24 @@ class Artist
     return BASE_URL . "assets/images/artist-avatars/jay.jpg";
   }
 
-  public function getSongIds()
+  public function getTitle(): string
   {
-    $query = mysqli_query($this->db, "SELECT id FROM songs WHERE artist_id='$this->id' ORDER BY play_times ASC");
-    if ($query === false) {
-      return [];
-    }
-    $array = array();
-    while ($row = mysqli_fetch_array($query)) {
-      array_push($array, $row['id']);
-    }
-    return $array;
+    return $this->getName();
+  }
+
+  public function getSubtitle(): string
+  {
+    return "藝人";
+  }
+
+  public function getLink(): string
+  {
+    return "artist.php?id=" . $this->id;
+  }
+
+  public function getCover(): string
+  {
+    return $this->getAvatar();
   }
 
   public function getAllAlbums()

@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
+include_once("ICollectionItem.php");
 include_once("User.php");
 include_once("Song.php");
 
-class Playlist
+class Playlist implements ICollectionItem
 {
   private mysqli $db;
   private array $mysqliData;
@@ -20,7 +21,7 @@ class Playlist
     $this->id = (string) $data['id'];
   }
 
-  public static function createById(mysqli $db, string $id)
+  public static function createById(mysqli $db, string|int $id): Playlist
   {
     $query = $db->query("SELECT * FROM playlists WHERE id='$id'");
     if ($query->num_rows === 0) {
@@ -30,27 +31,42 @@ class Playlist
     return new Playlist($db, $row);
   }
 
-  public static function createByRow(mysqli $db, array $row)
+  public static function createByRow(mysqli $db, array $row): Playlist
   {
     return new Playlist($db, $row);
   }
 
-  public function getId()
+  public function getId(): string
   {
     return $this->id;
   }
 
-  public function getName()
+  public function getName(): string
   {
     return $this->mysqliData['name'];
   }
 
-  public function getOwnerId()
+  public function getOwnerId(): string
   {
-    return $this->mysqliData['owner_id'];
+    return (string) $this->mysqliData['owner_id'];
   }
 
-  public function getOwner()
+  public function getTitle(): string
+  {
+    return $this->getName();
+  }
+
+  public function getSubtitle(): string
+  {
+    return "播放清單．" . $this->getOwner()->getUsername();
+  }
+
+  public function getLink(): string
+  {
+    return "playlist.php?id=" . $this->id;
+  }
+
+  public function getOwner(): User
   {
     $ownerId = $this->getOwnerId();
     $query = $this->db->query("SELECT * FROM users WHERE id='$ownerId'");
@@ -58,7 +74,7 @@ class Playlist
     return User::createByRow($this->db, $row);
   }
 
-  public function getCover()
+  public function getCover(): string
   {
     if (empty($this->mysqliData['cover'])) {
       // get fist song's id in playlist
@@ -80,12 +96,7 @@ class Playlist
     return $this->mysqliData['cover'];
   }
 
-  public function getIcon()
-  {
-    return "assets/images/icons/playlist.png";
-  }
-
-  public function getNumberOfSongs()
+  public function getNumberOfSongs(): int
   {
     $id = $this->getId();
     $query = $this->db->query("SELECT song_Id FROM playlist_songs WHERE playlist_id='$id'");
@@ -131,17 +142,6 @@ class Playlist
     $minute = $minute == 0 ? '' : " $minute 分鐘";
     $second = $second == 0 ? '' : " $second 秒";
     return "{$hour}{$minute}{$second}";
-  }
-
-  public function getSongIds()
-  {
-    $id = $this->getId();
-    $query = mysqli_query($this->db, "SELECT song_id FROM playlist_songs WHERE playlist_id='$id' ORDER BY playlist_order ASC");
-    $array = array();
-    while ($row = mysqli_fetch_array($query)) {
-      array_push($array, $row['song_id']);
-    }
-    return $array;
   }
 
   public function getSongAddedDate(string $songId): string
@@ -199,7 +199,7 @@ class Playlist
     }
   }
 
-  public function getPlaylistData()
+  public function getPlaylistData(): array
   {
     $array = [
       "type" => "playlist",

@@ -162,20 +162,29 @@ class User
   public function getLibraryCollection(): array
   {
     $collection = array();
-    $stmt = $this->db->prepare("SELECT * FROM saved_albums WHERE user_id=?");
-    $stmt->bind_param("s", $this->id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    if ($result->num_rows === 0) {
-      return $collection;
-    }
-    while ($row = $result->fetch_assoc()) {
-      $saved = [
-        "type" => "album",
-        "data" => Album::createById($this->db, $row['album_id']),
-        "createdTime" => strtotime($row['created_at'])
-      ];
-      array_push($collection, $saved);
+    $types = array("album", "playlist", "artist");
+    foreach ($types as $type) {
+      $query = $this->db->query("SELECT * FROM saved_{$type}s WHERE user_id='$this->id'");
+      if ($query == false) {
+        throw new Exception($this->db->error);
+      }
+      if ($query->num_rows === 0) {
+        continue;
+      }
+      while ($row = $query->fetch_assoc()) {
+        $id = $row["{$type}_id"];
+        $className = ucfirst($type);
+        $instance = $className::createById($this->db, $id);
+        $item = [
+          "type" => $type,
+          "link" => $instance->getLink(),
+          "title" => $instance->getTitle(),
+          "subtitle" => $instance->getSubtitle(),
+          "cover" => $instance->getCover(),
+          "createdTimestamp" => strtotime($row['created_at'])
+        ];
+        array_push($collection, $item);
+      }
     }
     return $collection;
   }

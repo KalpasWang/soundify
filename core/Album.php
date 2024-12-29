@@ -2,10 +2,11 @@
 
 declare(strict_types=1);
 
+include_once("ICollectionItem.php");
 include_once("Song.php");
 include_once("Artist.php");
 
-class Album
+class Album implements ICollectionItem
 {
   private mysqli $db;
   private array $mysqliData;
@@ -52,7 +53,7 @@ class Album
     return $albums;
   }
 
-  public function getId()
+  public function getId(): string
   {
     return $this->id;
   }
@@ -65,14 +66,24 @@ class Album
     return $this->artist;
   }
 
-  public function getCover()
+  public function getCover(): string
   {
     return BASE_URL . $this->mysqliData["cover"];
   }
 
-  public function getTitle()
+  public function getTitle(): string
   {
     return $this->mysqliData["title"];
+  }
+
+  public function getSubtitle(): string
+  {
+    return "專輯．" . $this->getArtist()->getName();
+  }
+
+  public function getLink(): string
+  {
+    return "album.php?id=" . $this->id;
   }
 
   public function getGenre()
@@ -168,22 +179,6 @@ class Album
         "path" => $song->getPath()
       ];
       array_push($array["songs"], $songData);
-    }
-    return $array;
-  }
-
-  public function getSongIds()
-  {
-    $stmt = $this->db->prepare("SELECT id FROM songs WHERE album_id=? ORDER BY album_order ASC");
-    if ($stmt === false) {
-      throw new Exception($this->db->error);
-    }
-    $stmt->bind_param("s", $this->mysqliData["id"]);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    $array = array();
-    while ($row = $result->fetch_assoc()) {
-      array_push($array, $row['id']);
     }
     return $array;
   }
