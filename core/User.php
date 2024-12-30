@@ -177,6 +177,7 @@ class User
         $instance = $className::createById($this->db, $id);
         $item = [
           "type" => $type,
+          "id" => $instance->getId(),
           "link" => $instance->getLink(),
           "title" => $instance->getTitle(),
           "subtitle" => $instance->getSubtitle(),

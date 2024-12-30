@@ -96,6 +96,11 @@ class Playlist implements ICollectionItem
     return $this->mysqliData['cover'];
   }
 
+  public function getCreatedTimestamp()
+  {
+    return strtotime($this->mysqliData['created_at']);
+  }
+
   public function getNumberOfSongs(): int
   {
     $id = $this->getId();

@@ -3,13 +3,21 @@ include_once("includes/core.php");
 
 $userId = $userLoggedIn->getId();
 
-// get user created playlists
+// get user created playlists and sort by created time (latest first)
 $userPlaylists = $userLoggedIn->getPlaylists();
+uasort($userPlaylists, function ($a, $b) {
+  if ($a->getCreatedTimestamp() == $b->getCreatedTimestamp()) {
+    return intval($b->getId()) - intval($a->getId());
+  }
+  return $b->getCreatedTimestamp() - $a->getCreatedTimestamp();
+});
 
-// get collection from user library
+// get collection from user library and sort by created time (latest first)
 $collection = $userLoggedIn->getLibraryCollection();
-// sort by created time (latest first)
 uasort($collection, function ($a, $b) {
+  if ($a["createdTimestamp"] == $b["createdTimestamp"]) {
+    return intval($b["id"]) - intval($a["id"]);
+  }
   return $b["createdTimestamp"] - $a["createdTimestamp"];
 })
 ?>
