@@ -89,6 +89,29 @@ class User
     return Playlist::createByRow($this->db, $row);
   }
 
+  public function getLikedSongs(): array
+  {
+    $id = $this->getId();
+    $query = $this->db->query("SELECT * FROM liked_songs WHERE user_id='$id' ORDER BY created_at DESC");
+    if ($query === false) {
+      throw new Exception($this->db->error);
+    }
+    if ($query->num_rows === 0) {
+      return [];
+    }
+    $likedSongs = array();
+    while ($row = $query->fetch_assoc()) {
+      $song = Song::createById($this->db, $row['song_id']);
+      $item = [
+        "id" => $row['id'],
+        "song" => $song,
+        "addedDate" => date("Y年m月d日", strtotime($row['created_at']))
+      ];
+      array_push($likedSongs, $item);
+    }
+    return $likedSongs;
+  }
+
   public function addToLikedSongs(string $songId): void
   {
     $stmt = $this->db->prepare("INSERT INTO liked_songs (user_id, song_id) VALUES (?, ?)");
@@ -110,6 +133,31 @@ class User
     if ($result === false) {
       throw new Exception($this->db->error);
     }
+  }
+
+  public function getLikedSongsData()
+  {
+    $array = [
+      "type" => "playlist",
+      "id" => 'liked-songs',
+      "title" => '已按讚的歌曲',
+      "owner" => $this->getUsername(),
+      "songs" => []
+    ];
+    $likedSongs = $this->getLikedSongs();
+    foreach ($likedSongs as $item) {
+      $song = $item['song'];
+      $songData = [
+        "id" => $song->getId(),
+        "title" => $song->getTitle(),
+        "duration" => $song->getDuration(),
+        "artist" => $song->getArtist()->getName(),
+        "cover" => $song->getAlbum()->getCover(),
+        "path" => $song->getPath()
+      ];
+      array_push($array["songs"], $songData);
+    }
+    return $array;
   }
 
   public function isSaved(string $type, string $id): bool

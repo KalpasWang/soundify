@@ -30,7 +30,7 @@ uasort($collection, function ($a, $b) {
     <ul class="nav nav-pills flex-column mb-auto text-center">
       <li class="nav-item">
         <button
-          onclick="openPage('collection/tracks.php')"
+          onclick="openPage('collection-tracks.php')"
           type="button"
           class="btn btn-info p-0 w-64px h-64px"
           data-bs-toggle="tooltip"

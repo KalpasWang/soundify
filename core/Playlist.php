@@ -220,6 +220,8 @@ class Playlist implements ICollectionItem
         "id" => $song->getId(),
         "title" => $song->getTitle(),
         "duration" => $song->getDuration(),
+        "artist" => $song->getArtist()->getName(),
+        "cover" => $song->getAlbum()->getCover(),
         "path" => $song->getPath()
       ];
       array_push($array["songs"], $songData);

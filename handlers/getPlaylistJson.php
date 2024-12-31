@@ -15,8 +15,13 @@ $response = [
 if (isset($_POST['playlistId'])) {
   try {
     $playlistId = $_POST['playlistId'];
-    $playlist = Playlist::createById($con, $playlistId);
-    $resultArray = $playlist->getPlaylistData();
+    if ($playlistId == 'loved-songs') {
+      $user = User::createByEmail($con, $_SESSION['user']);
+      $resultArray = $user->getLikedSongsData();
+    } else {
+      $playlist = Playlist::createById($con, $playlistId);
+      $resultArray = $playlist->getPlaylistData();
+    }
     $response["success"] = true;
     $response["data"] = $resultArray;
     echo json_encode($response);
