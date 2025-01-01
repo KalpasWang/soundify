@@ -1,34 +1,62 @@
 <?php
-include_once("includes/header.php");
+include_once("includes/core.php");
 
-if (isset($_GET['term'])) {
-  $term = urldecode($_GET['term']);
-} else {
-  $term = "";
+try {
+  $tracks = $userLoggedIn->getLikedSongs();
+  $userName = $userLoggedIn->getUsername();
+  $userId = $userLoggedIn->getId();
+  $userPlaylists = $userLoggedIn->getPlaylists();
+} catch (\Throwable $th) {
+  header("Location: index.php");
+  exit();
 }
+
+$pageName = '搜尋';
+$title = "Soundify - " . $pageName;
+if (!$isAjax) {
+  include_once("includes/header.php");
+}
+// include_once("includes/header.php");
+
+// if (isset($_GET['term'])) {
+//   $term = urldecode($_GET['term']);
+// } else {
+//   $term = "";
+// }
 ?>
 
-<div class="searchContainer">
+<h1>search</h1>
+
+<!-- <div class="searchContainer">
   <h4>Search for an artist, album or song</h4>
   <input type="text" class="searchInput" value="<?php echo $term; ?>" placeholder="Start typing..." onfocus="this.value = this.value">
-</div>
+</div> -->
 
 <script>
-  $(".searchInput").focus();
-  $(function() {
-    $(".searchInput").keyup(function() {
-      clearTimeout(timer);
-      timer = setTimeout(function() {
-        var val = $(".searchInput").val();
-        openPage("search.php?term=" + val);
-      }, 2000);
-    })
-  })
+  // init when document ready
+  $(document).ready(function() {
+    setup();
+    $('.search-btn .bi').replaceWith('<i class="bi bi-collection-fill text-light"></i>')
+    <?php if ($isAjax): ?>
+      $('title').text('<?= $title ?>');
+    <?php endif; ?>
+  });
+  // $(".searchInput").focus();
+  // $(function() {
+  //   $(".searchInput").keyup(function() {
+  //     clearTimeout(timer);
+  //     timer = setTimeout(function() {
+  //       var val = $(".searchInput").val();
+  //       openPage("search.php?term=" + val);
+  //     }, 2000);
+  //   })
+  // })
 </script>
 
-<?php if ($term == "") exit(); ?>
+<?php //if ($term == "") exit(); 
+?>
 
-<div class="tracklistContainer borderBottom">
+<!-- <div class="tracklistContainer borderBottom">
   <h2>SONGS</h2>
   <ul class="tracklist">
     <?php
@@ -70,9 +98,9 @@ if (isset($_GET['term'])) {
       tempPlaylist = JSON.parse(tempSongIds);
     </script>
   </ul>
-</div>
+</div> -->
 
-<div class="artistsContainer borderBottom">
+<!-- <div class="artistsContainer borderBottom">
   <h2>ARTISTS</h2>
   <?php
   $artistsQuery = mysqli_query($con, "SELECT id FROM artists WHERE name LIKE '$term%' LIMIT 10");
@@ -92,9 +120,9 @@ if (isset($_GET['term'])) {
 			</div>";
   }
   ?>
-</div>
+</div> -->
 
-<div class="gridViewContainer">
+<!-- <div class="gridViewContainer">
   <h2>ALBUMS</h2>
   <?php
   $albumQuery = mysqli_query($con, "SELECT * FROM albums WHERE title LIKE '$term%' LIMIT 10");
@@ -112,9 +140,10 @@ if (isset($_GET['term'])) {
 				</div>";
   }
   ?>
-</div>
+</div> -->
 
-<nav class="optionsMenu">
-  <input type="hidden" class="songId">
-  <?php echo Playlist::getPlaylistsDropdown($con, $userLoggedIn->getUsername()); ?>
-</nav>
+<?php
+if (!$isAjax) {
+  include_once("includes/footer.php");
+}
+?>

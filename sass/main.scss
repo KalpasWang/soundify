@@ -224,30 +224,39 @@ body {
   }
 }
 
-.search-bar > .form-control,
-.search-bar > .input-group-text {
-  cursor: pointer;
-}
+#search-bar {
+  .form-control,
+  .btn,
+  .input-group-text {
+    transition: all 0.15s ease-in-out;
+  }
 
-.search-bar:hover > .form-control,
-.search-bar:hover > .input-group-text {
-  background-color: $gray-800 !important;
-}
+  .btn:hover .bi {
+    color: $light !important;
+    -webkit-text-stroke: 0.5px;
+  }
 
-.search-bar:hover .bi {
-  color: $light !important;
-}
+  &:hover > .form-control,
+  &:hover > .btn,
+  &:hover > .input-group-text {
+    background-color: $gray-800 !important;
+  }
 
-.search-bar:focus-within {
-  box-shadow: 0 0 0 2px $light;
-}
+  &:hover .bi-search {
+    color: $light !important;
+  }
 
-.search-bar:focus-within > .form-control,
-.search-bar:focus-within > .input-group-text {
-  background-color: $success !important;
-  cursor: default;
-}
+  &:focus-within {
+    box-shadow: 0 0 0 2px $light;
+  }
 
-.search-bar:focus-within .bi {
-  color: $light !important;
+  &:focus-within > .form-control,
+  &:focus-within > .btn,
+  &:focus-within > .input-group-text {
+    background-color: $success !important;
+  }
+
+  &:focus-within .bi-search {
+    color: $light !important;
+  }
 }

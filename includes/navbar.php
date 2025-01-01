@@ -14,18 +14,26 @@ $page = basename($_SERVER['PHP_SELF'], '.php');
     </a>
 
     <form class="mx-3 my-0" role="search">
-      <div class="search-bar input-group input-group-lg rounded-pill overflow-hidden">
+      <div id="search-bar" class="input-group input-group-lg rounded-pill overflow-hidden">
         <!-- search icon -->
         <span class="input-group-text bg-success border-0 pe-0" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="搜尋">
           <i class="bi bi-search text-secondary"></i>
         </span>
-        <input type="search" class="form-control form-control-lg border-0 bg-success text-white" placeholder="想播放什麼內容？" aria-label="Search">
+        <input type="search" id="search-input" class="form-control form-control-lg border-0 bg-success text-white" placeholder="想播放什麼內容？" aria-label="Search">
         <!-- seperator -->
         <span class="input-group-text bg-success border-0 text-secondary pe-0">|</span>
-        <!-- archieve icon -->
-        <span class="input-group-text bg-success border-0" data-bs-toggle="tooltip" data-bs-placement="bottom" data-bs-title="瀏覽">
-          <i class="bi bi-archive text-secondary"></i>
-        </span>
+        <!-- 瀏覽 icon -->
+        <button
+          onclick="openPage('search.php')"
+          type="button"
+          class="search-btn btn btn-success"
+          data-bs-toggle="tooltip"
+          data-bs-placement="bottom"
+          data-bs-title="瀏覽">
+          <span class="bg-success border-0">
+            <i class="bi bi-collection text-secondary"></i>
+          </span>
+        </button>
       </div>
     </form>
 
