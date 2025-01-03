@@ -2,10 +2,7 @@
 include_once("includes/core.php");
 
 try {
-  $tracks = $userLoggedIn->getLikedSongs();
-  $userName = $userLoggedIn->getUsername();
-  $userId = $userLoggedIn->getId();
-  $userPlaylists = $userLoggedIn->getPlaylists();
+  $genres = Genre::getAllGenres($con);
 } catch (\Throwable $th) {
   header("Location: index.php");
   exit();
@@ -16,21 +13,35 @@ $title = "Soundify - " . $pageName;
 if (!$isAjax) {
   include_once("includes/header.php");
 }
-// include_once("includes/header.php");
-
-// if (isset($_GET['term'])) {
-//   $term = urldecode($_GET['term']);
-// } else {
-//   $term = "";
-// }
 ?>
 
-<h1>search</h1>
+<div class="container-xxl px-3">
+  <h1 class="h3 fw-bold text-wide mb-3">瀏覽全部</h1>
+  <div class="row gy-3">
+    <?php foreach ($genres as $genre) : ?>
+      <?php
+      $id = $genre->getId();
+      $name = $genre->getZhName();
+      $bgColor = $genre->getBgColor();
+      ?>
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+        <a
+          href="genre.php?id=<?= $id; ?>"
+          class="btn w-100 fs-2 fw-bold rounded py-4"
+          style="background-color: <?= $bgColor; ?>;"
+          onclick="event.preventDefault(); openPage('genre.php?id=<?= $id; ?>')">
+          <?= $name; ?>
+        </a>
+      </div>
+    <?php endforeach; ?>
+  </div>
+</div>
 
-<!-- <div class="searchContainer">
-  <h4>Search for an artist, album or song</h4>
-  <input type="text" class="searchInput" value="<?php echo $term; ?>" placeholder="Start typing..." onfocus="this.value = this.value">
-</div> -->
+<?php
+if (!$isAjax) {
+  include_once("includes/footer.php");
+}
+?>
 
 <script>
   // init when document ready
@@ -52,98 +63,3 @@ if (!$isAjax) {
   //   })
   // })
 </script>
-
-<?php //if ($term == "") exit(); 
-?>
-
-<!-- <div class="tracklistContainer borderBottom">
-  <h2>SONGS</h2>
-  <ul class="tracklist">
-    <?php
-    $songsQuery = mysqli_query($con, "SELECT id FROM songs WHERE title LIKE '$term%' LIMIT 10");
-    if (mysqli_num_rows($songsQuery) == 0) {
-      echo "<span class='noResults'>No songs found matching " . $term . "</span>";
-    }
-    $songIdArray = array();
-    $i = 1;
-    while ($row = mysqli_fetch_array($songsQuery)) {
-      if ($i > 15) {
-        break;
-      }
-      array_push($songIdArray, $row['id']);
-      $albumSong = new Song($con, $row['id']);
-      $albumArtist = $albumSong->getArtist();
-      echo "<li class='tracklistRow'>
-					<div class='trackCount'>
-						<img class='play' src='assets/images/icons/play-white.png' onclick='setTrack(\"" . $albumSong->getId() . "\", tempPlaylist, true)'>
-						<span class='trackNumber'>$i</span>
-					</div>
-					<div class='trackInfo'>
-						<span class='trackName'>" . $albumSong->getTitle() . "</span>
-						<span class='artistName'>" . $albumArtist->getName() . "</span>
-					</div>
-					<div class='trackOptions'>
-						<input type='hidden' class='songId' value='" . $albumSong->getId() . "'>
-						<img class='optionsButton' src='assets/images/icons/more.png' onclick='showOptionsMenu(this)'>
-					</div>
-					<div class='trackDuration'>
-						<span class='duration'>" . $albumSong->getDuration() . "</span>
-					</div>
-				</li>";
-      $i = $i + 1;
-    }
-    ?>
-    <script>
-      var tempSongIds = '<?php echo json_encode($songIdArray); ?>';
-      tempPlaylist = JSON.parse(tempSongIds);
-    </script>
-  </ul>
-</div> -->
-
-<!-- <div class="artistsContainer borderBottom">
-  <h2>ARTISTS</h2>
-  <?php
-  $artistsQuery = mysqli_query($con, "SELECT id FROM artists WHERE name LIKE '$term%' LIMIT 10");
-  if (mysqli_num_rows($artistsQuery) == 0) {
-    echo "<span class='noResults'>No artists found matching " . $term . "</span>";
-  }
-  while ($row = mysqli_fetch_array($artistsQuery)) {
-    $artistFound = new Artist($con, $row['id']);
-    echo "<div class='searchResultRow'>
-				<div class='artistName'>
-					<span role='link' tabindex='0' onclick='openPage(\"artist.php?id=" . $artistFound->getId() . "\")'>
-					"
-      . $artistFound->getName() .
-      "
-					</span>
-				</div>
-			</div>";
-  }
-  ?>
-</div> -->
-
-<!-- <div class="gridViewContainer">
-  <h2>ALBUMS</h2>
-  <?php
-  $albumQuery = mysqli_query($con, "SELECT * FROM albums WHERE title LIKE '$term%' LIMIT 10");
-  if (mysqli_num_rows($albumQuery) == 0) {
-    echo "<span class='noResults'>No albums found matching " . $term . "</span>";
-  }
-  while ($row = mysqli_fetch_array($albumQuery)) {
-    echo "<div class='gridViewItem'>
-					<span role='link' tabindex='0' onclick='openPage(\"album.php?id=" . $row['id'] . "\")'>
-						<img src='" . $row['artworkPath'] . "'>
-						<div class='gridViewInfo'>"
-      . $row['title'] .
-      "</div>
-					</span>
-				</div>";
-  }
-  ?>
-</div> -->
-
-<?php
-if (!$isAjax) {
-  include_once("includes/footer.php");
-}
-?>
