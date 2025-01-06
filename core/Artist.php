@@ -10,18 +10,41 @@ class Artist implements ICollectionItem
   private string $id;
   private array $mysqliData;
 
-  public function __construct(mysqli $db, string | int $id)
+  public function __construct(mysqli $db, array $row)
   {
     $this->db = $db;
-    $query = $this->db->query("SELECT * FROM artists WHERE id='$id'");
-    $row = $query->fetch_assoc();
-    $this->id = (string) $id;
+    $this->id = (string) $row['id'];
     $this->mysqliData = $row;
   }
 
   public static function createById(mysqli $db, string | int $id): Artist
   {
-    return new Artist($db, $id);
+    $query = $db->query("SELECT * FROM artists WHERE id='$id'");
+    if ($query->num_rows === 0) {
+      throw new Exception("Artist id $id not found");
+    }
+    $row = $query->fetch_assoc();
+    return new Artist($db, $row);
+  }
+
+  public static function createByRow(mysqli $db, array $row): Artist
+  {
+    return new Artist($db, $row);
+  }
+
+  public static function search(mysqli $db, string $query): array
+  {
+    $query = $db->query("SELECT * FROM artists WHERE name LIKE '%$query%'");
+    if ($query === false) {
+      throw new Exception($db->error);
+    }
+    $rows = $query->fetch_all(MYSQLI_ASSOC);
+    $artists = [];
+    foreach ($rows as $row) {
+      $artist = self::createByRow($db, $row);
+      array_push($artists, $artist);
+    }
+    return $artists;
   }
 
   public function getId(): string

@@ -38,6 +38,21 @@ class Album implements ICollectionItem
     return new Album($db, $row);
   }
 
+  public static function search(mysqli $db, string $query): array
+  {
+    $query = $db->query("SELECT * FROM albums WHERE title LIKE '%$query%'");
+    if ($query === false) {
+      throw new Exception($db->error);
+    }
+    $rows = $query->fetch_all(MYSQLI_ASSOC);
+    $albums = [];
+    foreach ($rows as $row) {
+      $album = self::createByRow($db, $row);
+      array_push($albums, $album);
+    }
+    return $albums;
+  }
+
   public static function getRandomAlbums(mysqli $db, int $number): array
   {
     $result = $db->query("SELECT * FROM albums ORDER BY RAND() LIMIT $number");
@@ -61,7 +76,7 @@ class Album implements ICollectionItem
   public function getArtist()
   {
     if (empty($this->artist)) {
-      $this->artist = new Artist($this->db, $this->mysqliData['artist_id']);
+      $this->artist = Artist::createById($this->db, $this->mysqliData['artist_id']);
     }
     return $this->artist;
   }

@@ -4,8 +4,9 @@ declare(strict_types=1);
 
 include_once("Album.php");
 include_once("Artist.php");
+include_once("ICollectionItem.php");
 
-class Song
+class Song implements ICollectionItem
 {
   private mysqli $db;
   private string $id;
@@ -36,9 +37,39 @@ class Song
     return new Song($db, $row);
   }
 
+  public static function search(mysqli $db, string $query): array
+  {
+    $query = $db->query("SELECT * FROM songs WHERE title LIKE '%$query%'");
+    if ($query === false) {
+      throw new Exception($db->error);
+    }
+    $rows = $query->fetch_all(MYSQLI_ASSOC);
+    $songs = [];
+    foreach ($rows as $row) {
+      $song = self::createByRow($db, $row);
+      array_push($songs, $song);
+    }
+    return $songs;
+  }
+
   public function getTitle(): string
   {
     return $this->mysqliData['title'];
+  }
+
+  public function getSubtitle(): string
+  {
+    return "歌曲．" . $this->getArtist()->getName();
+  }
+
+  public function getLink(): string
+  {
+    return "song.php?id=" . $this->id;
+  }
+
+  public function getCover(): string
+  {
+    return $this->getAlbum()->getCover();
   }
 
   public function getId(): string
@@ -49,7 +80,7 @@ class Song
   public function getArtist(): Artist
   {
     if (empty($this->artist)) {
-      $this->artist = new Artist($this->db, $this->mysqliData['artist_id']);
+      $this->artist = Artist::createById($this->db, $this->mysqliData['artist_id']);
     }
     return $this->artist;
   }

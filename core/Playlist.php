@@ -36,6 +36,21 @@ class Playlist implements ICollectionItem
     return new Playlist($db, $row);
   }
 
+  public static function search(mysqli $db, string $query): array
+  {
+    $query = $db->query("SELECT * FROM playlists WHERE name LIKE '%$query%'");
+    if ($query === false) {
+      throw new Exception($db->error);
+    }
+    $rows = $query->fetch_all(MYSQLI_ASSOC);
+    $playlists = [];
+    foreach ($rows as $row) {
+      $playlist = self::createByRow($db, $row);
+      array_push($playlists, $playlist);
+    }
+    return $playlists;
+  }
+
   public function getId(): string
   {
     return $this->id;
@@ -78,22 +93,23 @@ class Playlist implements ICollectionItem
   {
     if (empty($this->mysqliData['cover'])) {
       // get fist song's id in playlist
-      $stmt = $this->db->prepare("SELECT song_id FROM playlist_songs WHERE playlist_id=? ORDER BY playlist_order ASC LIMIT 1");
-      if ($stmt === false) {
+      $query = $this->db->query("SELECT song_id FROM playlist_songs WHERE playlist_id='$this->id' ORDER BY playlist_order ASC LIMIT 1");
+      if ($query === false) {
         throw new Exception($this->db->error);
       }
-      $stmt->bind_param("s", $this->id);
-      $stmt->execute();
-      $result = $stmt->get_result();
-      $row = $result->fetch_assoc();
+      // check song exists
+      if ($query->num_rows === 0) {
+        return BASE_URL . "assets/images/icons/playlist.png";
+      }
       // get song
+      $row = $query->fetch_assoc();
       $songId = $row['song_id'];
       $song = Song::createById($this->db, $songId);
       // get album
       $album = $song->getAlbum();
       return $album->getCover();
     }
-    return $this->mysqliData['cover'];
+    return BASE_URL . $this->mysqliData['cover'];
   }
 
   public function getCreatedTimestamp()

@@ -9,6 +9,7 @@ var isRepeat = false;
 var isRandom = false;
 var isMuted = false;
 var timer;
+var searchAjax;
 var sliderWidth;
 var cardWidth;
 var scrollPosition = 0;
@@ -827,4 +828,68 @@ function playFirstSong() {
 function showNotification(text) {
   $("#toast-body").text(text);
   $("#toast").toast("show");
+}
+
+function searchInput(value) {
+  if (timer) {
+    clearTimeout(timer);
+  }
+  if (searchAjax) {
+    searchAjax.abort();
+  }
+  timer = setTimeout(function () {
+    let val = value;
+    if (!val) {
+      $("#search-results ul").empty();
+      return;
+    }
+    searchAjax = $.post("handlers/search.php", { query: val }, function (data) {
+      console.log(data);
+      let response = JSON.parse(data);
+      if (response.success) {
+        let searchResults = response.data;
+        if (searchResults.length === 0) {
+          $("#search-results ul").empty();
+          return;
+        }
+        let lists = searchResults.map((item) => {
+          return `
+          <li class="list-group-item list-group-item-action border-0">
+            <div
+              role="button"
+              onclick="(function(e){ albumClickHandler(e, '${item.link}'); })(event)"
+              class="btn h-100 w-100 text-start"
+            >
+              <div class="d-flex align-items-center">
+                <div class="me-2">
+                  <img src="${item.cover}" width="48px" height="48px" class="rounded">
+                </div>
+                <div>
+                  <p class="fs-6 mb-0">
+                    <a href="${item.link}" onclick="event.preventDefault();" class="link-light link-underline link-underline-opacity-0 link-underline-opacity-100-hover">
+                      ${item.title}
+                    </a>
+                  </p>
+                  <p class="fs-7 mb-0 text-secondary">
+                    ${item.subtitle}      
+                  </p>
+                </div>
+              </div>
+            </div>
+          </li>`;
+        });
+        $("#search-results ul").html(lists);
+      }
+    }).fail(function () {
+      console.error("error");
+    });
+  }, 200);
+}
+
+function showSearchMenu() {
+  $("#search-results").show();
+}
+
+function hideSearchMenu() {
+  $("#search-results").hide();
 }

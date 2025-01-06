@@ -139,6 +139,16 @@ $utilities: (
       grow-12: 12,
     ),
   ),
+  "translate-middle": (
+    property: transform,
+    class: translate-middle,
+    values: (
+      null: translate(-50%, -50%),
+      x: translateX(-50%),
+      y: translateY(-50%),
+      y-full: translateY(100%),
+    ),
+  ),
 );
 
 @import "../node_modules/bootstrap/scss/bootstrap";
@@ -163,9 +173,11 @@ body {
 .btn-custom {
   background-color: transparent;
   transition: all 0.15s ease-in-out;
+  opacity: 0.75;
 
   &:hover {
     background-color: $success;
+    opacity: 1;
   }
 }
 
@@ -256,4 +268,10 @@ body {
   &:focus-within .bi-search {
     color: $light !important;
   }
+}
+
+#search-results .list-group-item {
+  --bs-list-group-bg: #2a2a2a;
+  --bs-list-group-action-hover-bg: #404040;
+  --bs-list-group-action-active-bg: #404040;
 }
