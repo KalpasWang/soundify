@@ -3,6 +3,11 @@ include_once("includes/core.php");
 
 $userId = $userLoggedIn->getId();
 
+// get user liked songs number
+$tracks = $userLoggedIn->getLikedSongs();
+$likedSongsNumber = count($tracks);
+$likedSongTooltip = "播放清單．$likedSongsNumber 首歌曲";
+
 // get user created playlists and sort by created time (latest first)
 $userPlaylists = $userLoggedIn->getPlaylists();
 uasort($userPlaylists, function ($a, $b) {
@@ -35,7 +40,8 @@ uasort($collection, function ($a, $b) {
           class="btn btn-info p-0 w-64px h-64px"
           data-bs-toggle="tooltip"
           data-bs-placement="right"
-          data-bs-title="已按讚的歌曲"
+          data-bs-html="true"
+          data-bs-title="<span class='fs-6 text-light fw-bold'>已按讚的歌曲</span><br><span class='fs-7 text-secondary'><i class='bi bi-pin-angle-fill text-primary me-1'></i><?= $likedSongTooltip; ?></span>"
           aria-label="已按讚的歌曲">
           <img src="<?= BASE_URL; ?>assets/images/icons/liked-songs.png" alt="已按讚的歌曲" width="48" height="48" class="object-fit-cover rounded">
         </button>

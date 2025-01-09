@@ -9,6 +9,8 @@ class User
   private array $mysqliData;
   private string $email;
   private string $id;
+  private array $playlists;
+  private array $likedSongs;
 
   public function __construct(mysqli $db, array $row)
   {
@@ -65,6 +67,9 @@ class User
 
   public function getPlaylists(): array
   {
+    if (isset($this->playlists)) {
+      return $this->playlists;
+    }
     $id = $this->getId();
     $query = $this->db->query("SELECT * FROM playlists WHERE owner_id='$id'");
     if ($query->num_rows === 0) {
@@ -74,6 +79,7 @@ class User
     while ($row = $query->fetch_assoc()) {
       array_push($playlists, Playlist::createByRow($this->db, $row));
     }
+    $this->playlists = $playlists;
     return $playlists;
   }
 
@@ -91,6 +97,9 @@ class User
 
   public function getLikedSongs(): array
   {
+    if (isset($this->likedSongs)) {
+      return $this->likedSongs;
+    }
     $id = $this->getId();
     $query = $this->db->query("SELECT * FROM liked_songs WHERE user_id='$id' ORDER BY created_at DESC");
     if ($query === false) {
@@ -109,6 +118,7 @@ class User
       ];
       array_push($likedSongs, $item);
     }
+    $this->likedSongs = $likedSongs;
     return $likedSongs;
   }
 
