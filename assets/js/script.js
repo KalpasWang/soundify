@@ -19,7 +19,7 @@ const BASE_URL = "http://localhost/soundify/";
 class PlaylistPlayer {
   constructor() {
     this.audio = document.createElement("audio");
-    this.musicCover = $("#music-cover");
+    this.musicCover = $("#playing-cover");
     this.songNameLabel = $("#song-name");
     this.artistNameLabel = $("#artist-name");
     this.playProgress = $("#play-progress");
@@ -45,6 +45,7 @@ class PlaylistPlayer {
     this.isRandom = false;
     this.isRepeat = false;
     this.isMuted = false;
+    this.playerDisabled = true;
 
     this.init();
   }
@@ -96,12 +97,16 @@ class PlaylistPlayer {
       this.toggleVolumeMute();
     });
 
-    this.volumeProgress.val(100);
+    // disable playing bar by default
+    this.playProgress.val(0);
+    this.togglePlayingBar();
   }
 
   loadPlaylistOrUpdate(type, id, index = 0) {
+    this.playerDisabled = false;
+    this.togglePlayingBar();
     if (this.playlistInfo?.type !== type || this.playlistInfo?.id !== id) {
-      this.loadPlaylist(type, id, index);
+      this.fetchNewPlaylist(type, id, index);
       return;
     }
     if (this.currentIndex === index) {
@@ -114,7 +119,7 @@ class PlaylistPlayer {
     this.play();
   }
 
-  loadPlaylist(type, id, index = 0, play = true) {
+  fetchNewPlaylist(type, id, index = 0, play = true) {
     let postUrl;
     let postData;
     if (type == "playlist") {
@@ -152,17 +157,16 @@ class PlaylistPlayer {
 
   loadSong() {
     let newSong = this.currentPlaylist[this.currentIndex];
-    let cover = newSong.cover ?? this.playlistInfo.cover;
-    let artist = newSong.artist ?? this.playlistInfo.artist;
     this.audio.src = newSong.path;
     this.audio.load();
-    this.musicCover[0].src = cover;
-    this.songNameLabel.text(newSong.title);
-    this.artistNameLabel.text(artist);
+    this.updateSongInfo(newSong);
     this.playProgress.val(0);
   }
 
   play() {
+    if (this.playerDisabled) {
+      return console.error("player disabled");
+    }
     this.audio.play();
     this.isPlaying = true;
     this.togglePlayingBtn();
@@ -170,6 +174,9 @@ class PlaylistPlayer {
   }
 
   pause() {
+    if (this.playerDisabled) {
+      return console.error("player disabled");
+    }
     this.audio.pause();
     this.isPlaying = false;
     this.togglePlayingBtn();
@@ -219,6 +226,32 @@ class PlaylistPlayer {
     this.shuffleBtn.toggleClass("text-primary", this.isRandom);
   }
 
+  togglePlayingBar() {
+    if (this.playerDisabled) {
+      $("#playing-bar").css("cursor", "not-allowed");
+      this.musicCover.hide();
+      this.nextBtn.hide();
+      this.prevBtn.hide();
+      this.playBtn.attr("disabled", true);
+      this.playProgress.attr("disabled", true);
+      this.volumeProgress.hide();
+      this.repeatBtn.hide();
+      this.shuffleBtn.hide();
+      this.volumeBtn.hide();
+    } else {
+      $("#playing-bar").css("cursor", "default");
+      this.musicCover.show();
+      this.nextBtn.show();
+      this.prevBtn.show();
+      this.playBtn.attr("disabled", false);
+      this.playProgress.attr("disabled", false);
+      this.volumeProgress.show();
+      this.repeatBtn.show();
+      this.shuffleBtn.show();
+      this.volumeBtn.show();
+    }
+  }
+
   toggleVolumeMute() {
     this.isMuted = !this.isMuted;
     this.audio.volume = this.isMuted ? 0 : 1;
@@ -237,17 +270,41 @@ class PlaylistPlayer {
     return minutes + ":" + extraZero + seconds;
   }
 
+  updateSongInfo(newSong) {
+    let cover = newSong.cover ?? this.playlistInfo.cover;
+    let artist = newSong.artist ?? this.playlistInfo.artist;
+    let artistId = newSong.artistId ?? this.playlistInfo.artistId;
+    this.musicCover[0].src = cover;
+    this.songNameLabel.text(newSong.title);
+    this.songNameLabel[0].href = `${BASE_URL}song.php?id=${newSong.id}`;
+    this.songNameLabel[0].onclick = function (e) {
+      e.preventDefault();
+      openPage("track.php?id=" + newSong.id);
+    };
+    this.artistNameLabel.text(artist);
+    this.artistNameLabel[0].href = `${BASE_URL}artist.php?id=${artistId}`;
+    this.artistNameLabel[0].onclick = function (e) {
+      e.preventDefault();
+      openPage("artist.php?id=" + artistId);
+    };
+  }
+
   updateTimeProgressBar() {
     let progress = (this.audio.currentTime / this.audio.duration) * 100;
     this.playProgress.val(progress);
   }
 
   updateAudioCurrentTime() {
-    let inputTime = this.audio.duration * (this.playProgress.val() / 100);
-    this.audio.currentTime = inputTime;
+    if (this.audio.duration > 0) {
+      let inputTime = this.audio.duration * (this.playProgress.val() / 100);
+      this.audio.currentTime = inputTime;
+    }
   }
 
   updateTimeProgressText() {
+    if (this.audio.duration == 0) {
+      return;
+    }
     let elapsedTime = this.formatTime(this.audio.currentTime);
     let remainingTime = this.formatTime(
       this.audio.duration - this.audio.currentTime
@@ -424,9 +481,6 @@ function albumClickHandler(e, url) {
 }
 
 function openPage(url, scrollPosition = 0) {
-  if (timer != null) {
-    clearTimeout(timer);
-  }
   const originalUrl = url;
   if (url.indexOf("?") == -1) {
     url = url + "?";

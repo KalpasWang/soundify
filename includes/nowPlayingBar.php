@@ -1,31 +1,19 @@
-<?php
-$songQuery = mysqli_query($con, "SELECT id FROM songs ORDER BY RAND() LIMIT 10");
-$resultArray = array();
-
-while ($row = mysqli_fetch_array($songQuery)) {
-  array_push($resultArray, $row['id']);
-}
-
-$jsonArray = json_encode($resultArray);
-?>
-
-<script>
-  var newPlaylist = <?= $jsonArray; ?>;
-</script>
-
-<footer class="position-fixed bottom-0 start-0 w-100 bg-black" style="z-index: 8000;">
+<div id="playing-bar" class="position-fixed bottom-0 start-0 w-100 bg-black" style="z-index: 8000;">
   <div class="d-flex justify-content-between align-items-center p-2">
     <div id="bar-left" class="w-30">
       <div class="d-flex align-items-center">
-        <button type="button" class="btn btn-dark btn-sm me-3">
-          <img id="music-cover" src="<?= BASE_URL; ?>assets/images/artwork/clearday.jpg" width="56px" height="56px" class="bg-dark">
-        </button>
-        <div>
+        <img
+          id="playing-cover"
+          src="<?= BASE_URL; ?>assets/images/icons/playlist.png"
+          width="56px"
+          height="56px"
+          class="rounded">
+        <div class="ms-2">
           <p class="fs-6 mb-0">
-            <a id="song-name" href="album.php" onclick="event.preventDefault();" class="link-light link-underline link-underline-opacity-0 link-underline-opacity-100-hover">Test</a>
+            <a id="song-name" href="track.php" onclick="event.preventDefault();" class="link-light link-underline link-underline-opacity-0 link-underline-opacity-100-hover"></a>
           </p>
           <p class="fs-7 mb-0">
-            <a id="artist-name" href="" class="link-secondary link-underline link-underline-opacity-0 link-underline-opacity-100-hover">Test</a>
+            <a id="artist-name" href="artist.php" onclick="event.preventDefault();" class="link-secondary link-underline link-underline-opacity-0 link-underline-opacity-100-hover"></a>
           </p>
         </div>
       </div>
@@ -55,7 +43,7 @@ $jsonArray = json_encode($resultArray);
           </button>
         </div>
         <div class="d-flex align-items-center w-100">
-          <span id="time-elapsed" class="text-secondary fs-8 text-end">0:00</span>
+          <span id="time-elapsed" class="text-secondary fs-8 text-end"></span>
           <div id="play-progressBar" class="position-relative w-100 px-1">
             <input
               type="range"
@@ -66,7 +54,7 @@ $jsonArray = json_encode($resultArray);
               max="100"
               step="0.1">
           </div>
-          <span id="time-remaining" class="text-secondary fs-8 text-start">0:00</span>
+          <span id="time-remaining" class="text-secondary fs-8 text-start"></span>
         </div>
       </div>
     </div>
@@ -81,4 +69,4 @@ $jsonArray = json_encode($resultArray);
       </div>
     </div>
   </div>
-</footer>
+  </footer>

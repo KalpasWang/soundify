@@ -61,6 +61,7 @@ if (!$isAjax) {
           class="fw-bold link-light link-underline link-underline-opacity-0 link-underline-opacity-100-hover">
           <?= $artistName; ?>
         </a>
+        <span class="text-secondary">‧</span>
         <a
           href="album.php?id=<?= $albumId; ?>"
           onclick="event.preventDefault(); openPage('album.php?id=<?= $albumId; ?>')"

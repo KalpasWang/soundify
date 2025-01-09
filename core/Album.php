@@ -181,6 +181,7 @@ class Album implements ICollectionItem
       "id" => $this->getId(),
       "title" => $this->getTitle(),
       "artist" => $this->getArtist()->getName(),
+      "artistId" => $this->getArtist()->getId(),
       "genre" => $this->getGenre(),
       "cover" => $this->getCover(),
       "songs" => []

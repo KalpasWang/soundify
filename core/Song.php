@@ -180,6 +180,7 @@ class Song implements ICollectionItem
       "type" => "song",
       "id" => $this->getId(),
       "artist" => $this->getArtist()->getName(),
+      "artistId" => $this->getArtist()->getId(),
       "cover" => $this->getAlbum()->getCover(),
       "songs" => [
         [

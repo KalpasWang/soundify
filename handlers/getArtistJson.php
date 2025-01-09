@@ -16,7 +16,7 @@ $response = [
 if (isset($_POST['artistId'])) {
   try {
     $artistId = $_POST['artistId'];
-    $artist = new Artist($con, $artistId);
+    $artist = Artist::createById($con, $artistId);
     $resultArray = $artist->getArtistHotestSongsData();
     $response["success"] = true;
     $response["data"] = $resultArray;

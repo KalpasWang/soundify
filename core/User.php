@@ -162,6 +162,7 @@ class User
         "title" => $song->getTitle(),
         "duration" => $song->getDuration(),
         "artist" => $song->getArtist()->getName(),
+        "artistId" => $song->getArtist()->getId(),
         "cover" => $song->getAlbum()->getCover(),
         "path" => $song->getPath()
       ];

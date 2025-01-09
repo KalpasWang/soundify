@@ -10,7 +10,7 @@ if (isset($_GET['id'])) {
 $userId = $userLoggedIn->getId();
 $userPlaylists = $userLoggedIn->getPlaylists();
 
-$artist = new Artist($con, $artistId);
+$artist = Artist::createById($con, $artistId);
 $artistName = $artist->getName();
 $artistSongs = $artist->getHotestSongs();
 $artistAlbums = $artist->getAllAlbums();
