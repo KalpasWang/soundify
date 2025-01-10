@@ -4,8 +4,6 @@
   $sliderTitle: string
   $items: ICollectionItem
 -->
-
-
 <div class="slider-container">
   <div class="d-flex justify-content-between align-items-center">
     <h1 class="h3 fw-bold text-wide mb-3"><?= $sliderTitle; ?></h1>
@@ -21,24 +19,29 @@
     </div>
   </div>
   <ul class="slider list-unstyled">
-    <?php foreach ($albums as $album): ?>
+    <?php foreach ($items as $item): ?>
+      <?php $CoverClassName = $item->getType() === 'artist' ? 'rounded-circle' : 'rounded'; ?>
       <li class="slider-item">
         <div
           role="button"
-          onclick="(function(e){ albumClickHandler(e, 'album.php?id=<?= $album->getId(); ?>'); })(event)"
-          class="btn btn-info h-100">
+          onclick="(function(e){ albumClickHandler(e, '<?= $item->getLink(); ?>'); })(event)"
+          class="btn btn-custom h-100">
           <div class="card border-0 bg-transparent h-100" style="width: 9rem;">
-            <img src="<?= $album->getCover(); ?>" class="card-img-top" alt="<?= $album->getTitle(); ?>">
+            <img
+              src="<?= $item->getCover(); ?>"
+              class="card-img-top <?= $CoverClassName; ?>"
+              alt="<?= $item->getTitle(); ?>">
             <div class="card-body text-start p-0 pt-2">
-              <h5 class="card-title fs-6 fw-bold mb-0"><?= $album->getTitle(); ?></h5>
-              <p class="card-text fs-7 text-secondary">
-                <?php $artistId = $album->getArtist()->getId(); ?>
+              <h5 class="card-title fs-6 fw-bold mb-0">
                 <a
-                  href="artist.php?id=<?= $artistId; ?>"
-                  onclick="openPage('artist.php?id=<?= $artistId; ?>')"
-                  class="link-secondary link-underline link-underline-opacity-0 link-underline-opacity-100-hover">
-                  <?= $album->getArtist()->getName(); ?>
+                  href="<?= $item->getLink(); ?>"
+                  onclick="event.preventDefault(); openPage('<?= $item->getLink(); ?>')"
+                  class="link-light link-underline link-underline-opacity-0 link-underline-opacity-100-hover">
+                  <?= $item->getTitle(); ?>
                 </a>
+              </h5>
+              <p class="card-text fs-7 text-secondary">
+                <?= $item->getSliderSubtitle(); ?>
               </p>
             </div>
           </div>

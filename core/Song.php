@@ -62,6 +62,11 @@ class Song implements ICollectionItem
     return "歌曲．" . $this->getArtist()->getName();
   }
 
+  public function getSliderSubtitle(): string
+  {
+    return $this->getArtist()->getName();
+  }
+
   public function getLink(): string
   {
     return "song.php?id=" . $this->id;
@@ -75,6 +80,11 @@ class Song implements ICollectionItem
   public function getId(): string
   {
     return $this->id;
+  }
+
+  public function getType(): string
+  {
+    return "song";
   }
 
   public function getArtist(): Artist
@@ -152,6 +162,15 @@ class Song implements ICollectionItem
     $stmt->execute();
     $result = $stmt->get_result();
     return $result->num_rows >= 1;
+  }
+
+  public function updatePlayTimes(): bool
+  {
+    $this->db->query("UPDATE songs SET play_times=play_times+1 WHERE id='$this->id'");
+    if ($this->db->error) {
+      return false;
+    }
+    return true;
   }
 
   public function isInUserPlaylists(string $userId): bool

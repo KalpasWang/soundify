@@ -41,6 +41,7 @@ class PlaylistPlayer {
     this.queue = [];
     this.currentIndex = 0;
     this.previousIndex = -1;
+    this.previousUpdatedPlaysIndex = -1;
     this.isPlaying = false;
     this.isRandom = false;
     this.isRepeat = false;
@@ -148,6 +149,8 @@ class PlaylistPlayer {
       this.currentPlaylist = playlist.songs.slice();
       this.playlistInfo = playlist;
       this.currentIndex = index;
+      this.previousIndex = -1;
+      this.previousUpdatedPlaysIndex = -1;
       this.loadSong();
       if (play) {
         this.play();
@@ -171,6 +174,18 @@ class PlaylistPlayer {
     this.isPlaying = true;
     this.togglePlayingBtn();
     this.highlightActiveSong();
+    if (this.previousUpdatedPlaysIndex === this.currentIndex) {
+      return;
+    }
+    $.post(
+      "handlers/updatePlays.php",
+      {
+        songId: this.currentPlaylist[this.currentIndex].id,
+      },
+      () => {
+        this.previousUpdatedPlaysIndex = this.currentIndex;
+      }
+    );
   }
 
   pause() {

@@ -56,6 +56,11 @@ class Playlist implements ICollectionItem
     return $this->id;
   }
 
+  public function getType(): string
+  {
+    return "playlist";
+  }
+
   public function getName(): string
   {
     return $this->mysqliData['name'];
@@ -74,6 +79,11 @@ class Playlist implements ICollectionItem
   public function getSubtitle(): string
   {
     return "播放清單．" . $this->getOwner()->getUsername();
+  }
+
+  public function getSliderSubtitle(): string
+  {
+    return $this->getOwner()->getUsername();
   }
 
   public function getLink(): string

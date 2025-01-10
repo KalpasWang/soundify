@@ -52,6 +52,11 @@ class Artist implements ICollectionItem
     return $this->id;
   }
 
+  public function getType(): string
+  {
+    return "artist";
+  }
+
   public function getName(): string
   {
     return $this->mysqliData['name'];
@@ -71,6 +76,11 @@ class Artist implements ICollectionItem
   }
 
   public function getSubtitle(): string
+  {
+    return "藝人";
+  }
+
+  public function getSliderSubtitle(): string
   {
     return "藝人";
   }

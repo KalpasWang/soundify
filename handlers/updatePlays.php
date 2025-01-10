@@ -1,5 +1,6 @@
 <?php
 include_once("../includes/config.php");
+include_once("../core/Song.php");
 
 if (empty($_SESSION['user'])) {
   exit("not authenticated");
@@ -7,5 +8,6 @@ if (empty($_SESSION['user'])) {
 
 if (isset($_POST['songId'])) {
   $songId = $_POST['songId'];
-  $query = mysqli_query($con, "UPDATE songs SET play_times = play_times + 1 WHERE id='$songId'");
+  $song = Song::createById($con, $songId);
+  $song->updatePlayTimes();
 }

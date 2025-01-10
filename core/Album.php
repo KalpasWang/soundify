@@ -73,6 +73,11 @@ class Album implements ICollectionItem
     return $this->id;
   }
 
+  public function getType(): string
+  {
+    return "album";
+  }
+
   public function getArtist()
   {
     if (empty($this->artist)) {
@@ -94,6 +99,11 @@ class Album implements ICollectionItem
   public function getSubtitle(): string
   {
     return "專輯．" . $this->getArtist()->getName();
+  }
+
+  public function getSliderSubtitle(): string
+  {
+    return $this->getArtist()->getName();
   }
 
   public function getLink(): string
