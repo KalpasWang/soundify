@@ -169,6 +169,7 @@ if (!$isAjax) {
         $artistName = $song->getArtist()->getName();
         $albumId = $song->getAlbum()->getId();
         $albumTitle = $song->getAlbum()->getTitle();
+        $albumCover = $song->getAlbum()->getCover();
         ?>
         <li class="list-group-item list-group-item-action border-0">
           <div class="d-flex align-items-center">
@@ -176,10 +177,16 @@ if (!$isAjax) {
             <div class="flex-shrink-1">
               <span id="song-<?= $songId; ?>-number"><?= $key + 1; ?></span>
             </div>
-            <!-- 歌曲資訊 -->
+            <!-- 歌曲資訊 & 封面圖片-->
             <div class="flex-grow-6 w-30 px-3">
-              <div class="d-flex justify-content-between align-items-center">
-                <div id="song-info">
+              <div class="d-flex align-items-center">
+                <img
+                  src="<?= $albumCover; ?>"
+                  width="40"
+                  height="40"
+                  alt="專輯封面"
+                  class="rounded">
+                <div id="song-info" class="ms-3">
                   <!-- 歌名 -->
                   <p class="mb-0">
                     <a
