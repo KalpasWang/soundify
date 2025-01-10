@@ -273,7 +273,14 @@ class PlaylistPlayer {
   updateSongInfo(newSong) {
     let cover = newSong.cover ?? this.playlistInfo.cover;
     let artist = newSong.artist ?? this.playlistInfo.artist;
-    let artistId = newSong.artistId ?? this.playlistInfo.artistId;
+    let artistId;
+    // get artist id
+    if (this.playlistInfo.type === "artist") {
+      artistId = this.playlistInfo.id;
+    } else {
+      artistId = newSong.artistId ?? this.playlistInfo.artistId;
+    }
+    // setup playing bar info
     this.musicCover[0].src = cover;
     this.songNameLabel.text(newSong.title);
     this.songNameLabel[0].href = `${BASE_URL}song.php?id=${newSong.id}`;
