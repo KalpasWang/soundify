@@ -80,7 +80,7 @@ if (!$isAjax) {
       <!-- 播放播放清單 button -->
       <button
         type="button"
-        id="big-play-btn"
+        id="song-<?= $songId; ?>-play-btn"
         onclick="player.loadPlaylistOrUpdate('song', '<?= $songId ?>')"
         data-bs-toggle="tooltip"
         data-bs-placement="bottom"
@@ -286,6 +286,7 @@ if (!$isAjax) {
                 <a
                   href="track.php?id=<?= $hotSongId; ?>"
                   onclick="event.preventDefault(); openPage('track.php?id=<?= $hotSongId; ?>')"
+                  id="song-<?= $hotSongId; ?>-title"
                   class="link-light link-underline link-underline-opacity-0 link-underline-opacity-100-hover">
                   <?= $hotSongTitle; ?>
                 </a>

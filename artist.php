@@ -122,6 +122,7 @@ if (!$isAjax) {
                 <a
                   href="track.php?id=<?= $songId; ?>"
                   onclick="event.preventDefault(); openPage('track.php?id=<?= $songId; ?>')"
+                  id="song-<?= $songId; ?>-title"
                   class="link-light link-underline link-underline-opacity-0 link-underline-opacity-100-hover">
                   <?= $songTitle; ?>
                 </a>

@@ -214,8 +214,6 @@ class PlaylistPlayer {
     this.currentIndex = nextIndex;
     this.loadSong();
     this.play();
-    this.togglePlayingBtn();
-    this.highlightActiveSong();
   }
 
   prevSong() {
@@ -227,8 +225,6 @@ class PlaylistPlayer {
     this.currentIndex = nextIndex;
     this.loadSong();
     this.play();
-    this.togglePlayingBtn();
-    this.highlightActiveSong();
   }
 
   repeat() {
@@ -361,11 +357,6 @@ class PlaylistPlayer {
   }
 
   highlightActiveSong() {
-    let playlistType = this.playlistInfo?.type;
-    let playlistId = this.playlistInfo?.id;
-    if ($(`#${playlistType}-${playlistId}`).length <= 0) {
-      return;
-    }
     let currentSongId = this.getCurrentPlayingSongId();
     let previousSongId = this.getPreviosPlayingSongId();
     $(`#song-${currentSongId}-number`).addClass("text-primary");
@@ -374,9 +365,6 @@ class PlaylistPlayer {
       $(`#song-${previousSongId}-number`).removeClass("text-primary");
       $(`#song-${previousSongId}-title`).removeClass("text-primary");
     }
-    // if (this.isPlaying) {
-    //   $(`#song-${currentSongId}-number`).html();
-    // }
   }
 
   togglePlayingBtn() {
