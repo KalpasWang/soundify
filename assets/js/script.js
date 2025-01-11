@@ -13,7 +13,6 @@ var searchAjax;
 var sliderWidth;
 var cardWidth;
 var scrollPosition = 0;
-var listType;
 const BASE_URL = "http://localhost/soundify/";
 
 class PlaylistPlayer {
@@ -341,9 +340,9 @@ class PlaylistPlayer {
 
   getCurrentPlayingSongId() {
     if (isRandom) {
-      return this.shufflePlaylist[this.currentIndex].id;
+      return this.shufflePlaylist[this.currentIndex]?.id;
     }
-    return this.currentPlaylist[this.currentIndex].id;
+    return this.currentPlaylist[this.currentIndex]?.id;
   }
 
   getPreviosPlayingSongId() {
@@ -351,17 +350,19 @@ class PlaylistPlayer {
       return null;
     }
     if (isRandom) {
-      return this.shufflePlaylist[this.previousIndex].id;
+      return this.shufflePlaylist[this.previousIndex]?.id;
     }
-    return this.currentPlaylist[this.previousIndex].id;
+    return this.currentPlaylist[this.previousIndex]?.id;
   }
 
   highlightActiveSong() {
     let currentSongId = this.getCurrentPlayingSongId();
     let previousSongId = this.getPreviosPlayingSongId();
-    $(`#song-${currentSongId}-number`).addClass("text-primary");
-    $(`#song-${currentSongId}-title`).addClass("text-primary");
-    if (previousSongId) {
+    if (currentSongId) {
+      $(`#song-${currentSongId}-number`).addClass("text-primary");
+      $(`#song-${currentSongId}-title`).addClass("text-primary");
+    }
+    if (previousSongId && previousSongId != currentSongId) {
       $(`#song-${previousSongId}-number`).removeClass("text-primary");
       $(`#song-${previousSongId}-title`).removeClass("text-primary");
     }
@@ -370,27 +371,40 @@ class PlaylistPlayer {
   togglePlayingBtn() {
     let id = this.getCurrentPlayingSongId();
     let prevId = this.getPreviosPlayingSongId();
-    let $albumPlayBtn = $("#big-play-btn");
-    let $albumPauseBtn = $("#big-pause-btn");
+    if (!id) {
+      return;
+    }
+    let $bigPlayBtn = $("#big-play-btn");
+    let $bigPauseBtn = $("#big-pause-btn");
+    let $bigSongPlayBtn = $(`#big-song-${id}-play-btn`);
+    let $bigSongPauseBtn = $(`#big-song-${id}-pause-btn`);
     let $songPlayBtn = $(`#song-${id}-play-btn`);
     let $songPauseBtn = $(`#song-${id}-pause-btn`);
     // toggle play/pause button
     if (player.isPlaying) {
       this.playBtn.hide();
       this.pauseBtn.show();
-      $albumPlayBtn.hide();
-      $albumPauseBtn.show();
+      $bigPlayBtn.hide();
+      $bigPauseBtn.show();
+      $bigSongPlayBtn.hide();
+      $bigSongPauseBtn.show();
       $songPlayBtn.hide();
       $songPauseBtn.show();
     } else {
       this.playBtn.show();
       this.pauseBtn.hide();
-      $albumPlayBtn.show();
-      $albumPauseBtn.hide();
+      $bigPlayBtn.show();
+      $bigPauseBtn.hide();
+      $bigSongPlayBtn.show();
+      $bigSongPauseBtn.hide();
       $songPlayBtn.show();
       $songPauseBtn.hide();
     }
-    if (prevId) {
+    if (prevId && prevId !== id) {
+      let $prevSongBigPlayBtn = $(`#big-song-${prevId}-play-btn`);
+      let $prevSongBigPauseBtn = $(`#big-song-${prevId}-pause-btn`);
+      $prevSongBigPlayBtn.show();
+      $prevSongBigPauseBtn.hide();
       let $prevSongPlayBtn = $(`#song-${prevId}-play-btn`);
       let $prevSongPauseBtn = $(`#song-${prevId}-pause-btn`);
       $prevSongPlayBtn.show();
@@ -405,23 +419,8 @@ function setup() {
   if (!player) {
     player = new PlaylistPlayer();
   }
-  // check cookie for list type
-  const listTypeCookie = document.cookie
-    .split(";")
-    .find((cookie) => cookie.startsWith("listType="));
-  if (listTypeCookie) {
-    const type = listTypeCookie.split("=")[1];
-    listType = type;
-  }
-}
-
-function setListType(type) {
-  document.cookie = `listType=${type}; max-age=2592000; path=/`;
-  listType = type;
-  $("#list-type-concise").toggleClass("active", type === "concise");
-  $("#list-type-normal").toggleClass("active", type === "normal");
-  $("#list-type-concise-check").toggleClass("d-none", type !== "concise");
-  $("#list-type-normal-check").toggleClass("d-none", type !== "normal");
+  player.togglePlayingBtn();
+  player.highlightActiveSong();
 }
 
 function slide(direction) {

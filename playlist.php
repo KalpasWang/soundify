@@ -20,12 +20,6 @@ $isSavedPlaylist = $userLoggedIn->isSaved('playlist', $playlistId);
 $userPlaylists = $userLoggedIn->getPlaylists();
 $userId = $userLoggedIn->getId();
 
-// get cookie list type
-$listType = "normal";
-if (isset($_COOKIE['listType'])) {
-  $listType = $_COOKIE['listType'];
-}
-
 $title = "$playlistTitle - playlist by $ownerName | Soundify";
 if (!$isAjax) {
   include_once("includes/header.php");
@@ -108,42 +102,6 @@ if (!$isAjax) {
           </button>
         </div>
       <?php endif; ?>
-    </div>
-    <div id="right-controls">
-      <!-- 排列方式下拉選單 -->
-      <div class="dropdown">
-        <button type="button" class="btn btn-info fs-6" data-bs-toggle="dropdown" aria-expanded="false">
-          <span class="align-bottom">清單</span>
-          <i class="bi bi-list-ul"></i>
-        </button>
-        <ul class="dropdown-menu dropdown-menu-dark">
-          <li>
-            <h6 class="dropdown-header text-light fs-8">排列模式</h6>
-          </li>
-          <li
-            id="list-type-concise"
-            class="dropdown-item <?= $listType == 'concise' ? 'active' : ''; ?>"
-            <?= $listType == 'concise' ? 'aria-current="true"' : ''; ?>
-            onclick="setListType('concise')">
-            <i class="bi bi-list"></i>
-            <span class="ps-1 pe-3">緊密</span>
-            <i
-              id="list-type-concise-check"
-              class="bi bi-check2 <?= $listType == 'concise' ? '' : 'd-none'; ?>"></i>
-          </li>
-          <li
-            id="list-type-normal"
-            class="dropdown-item <?= $listType == 'normal' ? 'active' : ''; ?>"
-            <?= $listType == 'normal' ? 'aria-current="true"' : ''; ?>
-            onclick="setListType('normal')">
-            <i class="bi bi-list-ul"></i>
-            <span class="ps-1 pe-3">清單</span>
-            <i
-              id="list-type-normal-check"
-              class="bi bi-check2 <?= $listType == 'normal' ? '' : 'd-none'; ?>"></i>
-          </li>
-        </ul>
-      </div>
     </div>
   </section>
   <!-- 播放清單歌曲列表與選項 -->

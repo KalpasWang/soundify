@@ -303,7 +303,7 @@ if (!$isAjax) {
                 <!-- 播放 -->
                 <button
                   type="button"
-                  id="song-<?= $hotSongId; ?>-play-btn"
+                  id="big-song-<?= $hotSongId; ?>-play-btn"
                   onclick="player.loadPlaylistOrUpdate('artist', '<?= $artistId; ?>', <?= $key; ?>);"
                   data-bs-toggle="tooltip"
                   data-bs-placement="bottom"
@@ -314,7 +314,7 @@ if (!$isAjax) {
                 <!-- 暫停 -->
                 <button
                   type="button"
-                  id="song-<?= $hotSongId; ?>-pause-btn"
+                  id="big-song-<?= $hotSongId; ?>-pause-btn"
                   onclick="player.pause();"
                   data-bs-toggle="tooltip"
                   data-bs-placement="bottom"
