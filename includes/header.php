@@ -25,5 +25,7 @@ if (isset($title)) {
     <div id="top-container" class="min-vh-100">
       <?php include_once("includes/navbar.php"); ?>
       <div class="w-100 px-2 d-flex flex-row flex-nowrap">
-        <?php include_once("includes/sidebar.php"); ?>
+        <aside id="sidebar" class="flex-grow-0 flex-shrink-0 h-100 overflow-y-auto">
+          <?php include_once("includes/sidebar.php"); ?>
+        </aside>
         <main id="main-content" class="flex-grow-1 overflow-hidden">

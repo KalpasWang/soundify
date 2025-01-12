@@ -522,6 +522,16 @@ function refreshMainContent() {
   openPage(page, scrollPosition);
 }
 
+function refreshSidebar() {
+  let url = encodeURI(`${BASE_URL}includes/sidebar.php?ajax=true`);
+  $("#sidebar").load(url, function (response, status, xhr) {
+    if (status == "error") {
+      console.error("Error: " + xhr.status + " " + xhr.statusText);
+      return;
+    }
+  });
+}
+
 function addToLikedSongs(songId, userId, target) {
   if (target.nodeName !== "BUTTON") {
     target = target.closest("button");
@@ -548,7 +558,7 @@ function addToLikedSongs(songId, userId, target) {
   });
 }
 
-function saveAlbumToLibrary(id, target) {
+function saveToLibrary(type, id, target) {
   if (target.nodeName !== "BUTTON") {
     target = target.closest("button");
   }
@@ -558,7 +568,7 @@ function saveAlbumToLibrary(id, target) {
   $.post(
     "handlers/saveToLibrary.php",
     {
-      type: "album",
+      type: type,
       id: id,
     },
     function (data) {
@@ -566,6 +576,7 @@ function saveAlbumToLibrary(id, target) {
       if (response.success) {
         $removeBtn.show();
         $saveBtn.hide();
+        refreshSidebar();
       }
       $saveBtn.attr("disabled", false);
       showNotification(response.message);
@@ -576,7 +587,7 @@ function saveAlbumToLibrary(id, target) {
   });
 }
 
-function removeAlbumFromLibrary(id, target) {
+function removeFromLibrary(type, id, target) {
   if (target.nodeName !== "BUTTON") {
     target = target.closest("button");
   }
@@ -586,7 +597,7 @@ function removeAlbumFromLibrary(id, target) {
   $.post(
     "handlers/removeFromLibrary.php",
     {
-      type: "album",
+      type: type,
       id: id,
     },
     function (data) {
@@ -594,6 +605,7 @@ function removeAlbumFromLibrary(id, target) {
       if (response.success) {
         $saveBtn.show();
         $removeBtn.hide();
+        refreshSidebar();
       }
       $removeBtn.attr("disabled", false);
       showNotification(response.message);
@@ -601,24 +613,6 @@ function removeAlbumFromLibrary(id, target) {
   ).fail(function () {
     $removeBtn.attr("disabled", false);
     showNotification("出現錯誤，請稍後再試");
-  });
-}
-
-function addToPlaylist(playlistId, songId) {
-  console.log("add");
-}
-
-function removeFromPlaylist(playlistId, songId) {
-  $.post("handlers/removeFromPlaylist.php", {
-    playlistId: playlistId,
-    songId: songId,
-  }).done(function (error) {
-    if (error != "") {
-      alert(error);
-      return;
-    }
-    //do something when ajax returns
-    // openPage("playlist.php?id=" + playlistId);
   });
 }
 

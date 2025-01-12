@@ -85,8 +85,7 @@ if (!$isAjax) {
       <div class="ms-3">
         <!-- 加入收藏 button -->
         <button
-          id="album-<?= $albumId ?>-save-btn"
-          onclick="saveAlbumToLibrary('<?= $albumId ?>', event.target)"
+          onclick="saveToLibrary('album', '<?= $albumId ?>', event.target)"
           type="button"
           data-bs-toggle="tooltip"
           data-bs-placement="bottom"
@@ -97,8 +96,7 @@ if (!$isAjax) {
         </button>
         <!-- 移除收藏 button -->
         <button
-          id="album-<?= $albumId; ?>-remove-btn"
-          onclick="removeAlbumFromLibrary('<?= $albumId ?>', event.target)"
+          onclick="removeFromLibrary('album', '<?= $albumId ?>', event.target)"
           data-bs-toggle="tooltip"
           data-bs-placement="bottom"
           data-bs-title="從你的音樂庫中移除"

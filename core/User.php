@@ -195,6 +195,12 @@ class User
     if ($type == "album") {
       $tableName = "saved_albums";
       $idName = "album_id";
+    } elseif ($type == "artist") {
+      $tableName = "saved_artists";
+      $idName = "artist_id";
+    } elseif ($type == "playlist") {
+      $tableName = "saved_playlists";
+      $idName = "playlist_id";
     }
     $stmt = $this->db->prepare("INSERT INTO $tableName (user_id, $idName) VALUES (?, ?)");
     $stmt->bind_param("ss", $this->id, $id);
@@ -209,6 +215,12 @@ class User
     if ($type == "album") {
       $tableName = "saved_albums";
       $idName = "album_id";
+    } elseif ($type == "artist") {
+      $tableName = "saved_artists";
+      $idName = "artist_id";
+    } elseif ($type == "playlist") {
+      $tableName = "saved_playlists";
+      $idName = "playlist_id";
     }
     $stmt = $this->db->prepare("DELETE FROM $tableName WHERE user_id=? AND $idName=?");
     $stmt->bind_param("ss", $this->id, $id);

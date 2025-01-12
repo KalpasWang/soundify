@@ -67,11 +67,10 @@ if (!$isAjax) {
         class="btn btn-primary btn-lg rounded-circle p-2">
         <i class="bi bi-pause-fill fs-1"></i>
       </button>
-      <div class="ms-5">
+      <div class="ms-4">
         <!-- 追蹤 button -->
         <button
-          id="artist-<?= $artistId ?>-save-btn"
-          onclick="followArtist('<?= $artistId ?>', event.target)"
+          onclick="saveToLibrary('artist', '<?= $artistId ?>', event.target)"
           type="button"
           class="btn btn-info rounded-pill border-1 border-light"
           style="display: <?= $isFollowing ? 'none' : 'inline-block'; ?>;">
@@ -79,10 +78,9 @@ if (!$isAjax) {
         </button>
         <!-- 取消追蹤 button -->
         <button
-          id="artist-<?= $artistId; ?>-remove-btn"
-          onclick="unfollowArtist('<?= $artistId ?>', event.target)"
+          onclick="removeFromLibrary('artist', '<?= $artistId ?>', event.target)"
           type="button"
-          class="btn btn-info"
+          class="btn btn-info rounded-pill border-1 border-light"
           style="display: <?= $isFollowing ? 'inline-block' : 'none'; ?>;">
           追蹤中
         </button>

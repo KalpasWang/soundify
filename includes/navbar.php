@@ -3,7 +3,7 @@ $page = basename($_SERVER['PHP_SELF'], '.php');
 ?>
 <!-- <link rel="stylesheet" type="text/css" href="assets/css/main.css"> -->
 
-<header class="d-none d-lg-block p-2 bg-dark">
+<header class="p-2 bg-dark">
   <div class="d-flex flex-nowrap justify-content-between align-items-center">
     <a
       href="/soundify"
@@ -58,16 +58,8 @@ $page = basename($_SERVER['PHP_SELF'], '.php');
         type="button"
         data-bs-toggle="tooltip"
         data-bs-placement="bottom"
-        data-bs-title="最近發行"
-        class="btn btn-custom rounded-circle w-2rem h-2rem me-3 p-0">
-        <i class="bi bi-bell"></i>
-      </button>
-      <button
-        type="button"
-        data-bs-toggle="tooltip"
-        data-bs-placement="bottom"
         data-bs-title="<?= $userLoggedIn->getUsername() ?>"
-        class="btn btn-success rounded-circle w-3rem h-3rem p-0">
+        class="btn btn-custom rounded-circle w-3rem h-3rem p-0">
         <img
           src="<?= $userLoggedIn->getAvatar() ?>"
           class="rounded-circle"
