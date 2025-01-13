@@ -489,7 +489,7 @@ function albumClickHandler(e, url) {
   openPage(url);
 }
 
-function openPage(url, scrollPosition = 0) {
+function openPage(url, scrollPosition = 0, pushState = true) {
   const originalUrl = url;
   if (url.indexOf("?") == -1) {
     url = url + "?";
@@ -502,15 +502,15 @@ function openPage(url, scrollPosition = 0) {
       console.error("Error: " + xhr.status + " " + xhr.statusText);
       return;
     }
+    if (pushState) {
+      history.pushState({}, "", BASE_URL + originalUrl);
+    }
     window.scrollTo({
       top: scrollPosition,
       left: 0,
       behavior: "instant",
     });
   });
-
-  history.pushState({}, "", BASE_URL + originalUrl);
-  return false;
 }
 
 function refreshMainContent() {
@@ -519,7 +519,7 @@ function refreshMainContent() {
   // re-render current page by open same page
   let route = window.location.href;
   let page = route.split("/").at(-1);
-  openPage(page, scrollPosition);
+  openPage(page, scrollPosition, false);
 }
 
 function refreshSidebar() {

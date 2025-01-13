@@ -179,6 +179,10 @@ body {
     background-color: $success;
     opacity: 1;
   }
+
+  &:active {
+    border-color: transparent !important;
+  }
 }
 
 .dropdown-toggle::after,
