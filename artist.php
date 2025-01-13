@@ -116,7 +116,7 @@ if (!$isAjax) {
                 height="40"
                 alt="專輯封面"
                 class="rounded">
-              <span id="song-<?= $songId; ?>-title" class="ms-3">
+              <span class="ms-3">
                 <a
                   href="track.php?id=<?= $songId; ?>"
                   onclick="event.preventDefault(); openPage('track.php?id=<?= $songId; ?>')"
