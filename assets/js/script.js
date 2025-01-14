@@ -27,7 +27,11 @@ class PlaylistPlayer {
     this.playlistInfo = null;
     this.currentPlaylist = [];
     this.shufflePlaylist = [];
+    this.currentPlaylistType = "";
+    this.currentPlaylistId = -1;
     this.currentIndex = 0;
+    this.previousPlaylistType = "";
+    this.previousPlaylistId = -1;
     this.previousIndex = -1;
     this.previousUpdatedPlaysIndex = -1;
     this.isPlaying = false;
@@ -35,7 +39,6 @@ class PlaylistPlayer {
     this.isRepeat = false;
     this.isMuted = false;
     this.playerDisabled = true;
-
     this.init();
   }
 
@@ -92,9 +95,11 @@ class PlaylistPlayer {
   }
 
   loadPlaylistOrUpdate(type, id, index = 0) {
-    this.playerDisabled = false;
-    this.togglePlayingBar();
-    if (this.playlistInfo?.type !== type || this.playlistInfo?.id !== id) {
+    if (this.playerDisabled) {
+      this.playerDisabled = false;
+      this.togglePlayingBar();
+    }
+    if (this.currentPlaylistType !== type || this.currentPlaylistId !== id) {
       this.fetchNewPlaylist(type, id, index);
       return;
     }
@@ -136,8 +141,11 @@ class PlaylistPlayer {
       let playlist = response.data;
       this.currentPlaylist = playlist.songs.slice();
       this.playlistInfo = playlist;
+      this.previousPlaylistType = this.currentPlaylistType;
+      this.previousPlaylistId = this.currentPlaylistId;
+      this.currentPlaylistType = this.playlistInfo.type;
+      this.currentPlaylistId = this.playlistInfo.id;
       this.currentIndex = index;
-      this.previousIndex = -1;
       this.previousUpdatedPlaysIndex = -1;
       if (this.isRandom) {
         this.randomizePlaylist();
@@ -195,7 +203,12 @@ class PlaylistPlayer {
   }
 
   nextSong(force = false) {
-    let nextIndex = (this.currentIndex + 1) % this.currentPlaylist.length;
+    let nextIndex;
+    if (this.isRandom) {
+      nextIndex = (this.currentIndex + 1) % this.shufflePlaylist.length;
+    } else {
+      nextIndex = (this.currentIndex + 1) % this.currentPlaylist.length;
+    }
     if (!this.isRepeat && !force && nextIndex == 0) {
       this.previousIndex = this.currentIndex;
       this.currentIndex = nextIndex;
@@ -398,15 +411,15 @@ class PlaylistPlayer {
   }
 
   togglePlayingBtn() {
+    let type = this.currentPlaylistType;
+    let playlistId = this.currentPlaylistId;
     let id = this.getCurrentPlayingSongId();
     let prevId = this.getPreviosPlayingSongId();
     if (!id) {
       return;
     }
-    let $bigPlayBtn = $("#big-play-btn");
-    let $bigPauseBtn = $("#big-pause-btn");
-    let $bigSongPlayBtn = $(`#big-song-${id}-play-btn`);
-    let $bigSongPauseBtn = $(`#big-song-${id}-pause-btn`);
+    let $bigPlayBtn = $(`#big-${type}-${playlistId}-play-btn`);
+    let $bigPauseBtn = $(`#big-${type}-${playlistId}-pause-btn`);
     let $songPlayBtn = $(`#song-${id}-play-btn`);
     let $songPauseBtn = $(`#song-${id}-pause-btn`);
     // toggle play/pause button
@@ -415,8 +428,6 @@ class PlaylistPlayer {
       this.pauseBtn.show();
       $bigPlayBtn.hide();
       $bigPauseBtn.show();
-      $bigSongPlayBtn.hide();
-      $bigSongPauseBtn.show();
       $songPlayBtn.hide();
       $songPauseBtn.show();
     } else {
@@ -424,16 +435,16 @@ class PlaylistPlayer {
       this.pauseBtn.hide();
       $bigPlayBtn.show();
       $bigPauseBtn.hide();
-      $bigSongPlayBtn.show();
-      $bigSongPauseBtn.hide();
       $songPlayBtn.show();
       $songPauseBtn.hide();
     }
     if (prevId && prevId !== id) {
-      let $prevSongBigPlayBtn = $(`#big-song-${prevId}-play-btn`);
-      let $prevSongBigPauseBtn = $(`#big-song-${prevId}-pause-btn`);
-      $prevSongBigPlayBtn.show();
-      $prevSongBigPauseBtn.hide();
+      let prevType = this.previousPlaylistType;
+      let prevPlaylistId = this.previousPlaylistId;
+      let $prevBigPauseBtn = $(`#big-${prevType}-${prevPlaylistId}-pause-btn`);
+      let $prevBigPlayBtn = $(`#big-${prevType}-${prevPlaylistId}-play-btn`);
+      $prevBigPlayBtn.show();
+      $prevBigPauseBtn.hide();
       let $prevSongPlayBtn = $(`#song-${prevId}-play-btn`);
       let $prevSongPauseBtn = $(`#song-${prevId}-pause-btn`);
       $prevSongPlayBtn.show();

@@ -45,8 +45,8 @@ if (!$isAjax) {
       <!-- 已按讚的歌曲清單 button -->
       <button
         type="button"
-        id="big-play-btn"
-        onclick="player.loadPlaylistOrUpdate('playlist', 'loved-songs')"
+        id="big-playlist-liked-songs-play-btn"
+        onclick="player.loadPlaylistOrUpdate('playlist', 'liked-songs')"
         data-bs-toggle="tooltip"
         data-bs-placement="bottom"
         data-bs-title="播放"
@@ -56,7 +56,7 @@ if (!$isAjax) {
       <!-- 暫停播放 button -->
       <button
         type="button"
-        id="big-pause-btn"
+        id="big-playlist-liked-songs-pause-btn"
         onclick="player.pause()"
         data-bs-toggle="tooltip"
         data-bs-placement="bottom"
@@ -156,7 +156,7 @@ if (!$isAjax) {
                 <button
                   type="button"
                   id="song-<?= $songId; ?>-play-btn"
-                  onclick="player.loadPlaylistOrUpdate('playlist', '<?= $playlistId; ?>', <?= $key; ?>);"
+                  onclick="player.loadPlaylistOrUpdate('playlist', 'liked-songs', <?= $key; ?>);"
                   data-bs-toggle="tooltip"
                   data-bs-placement="bottom"
                   data-bs-title="播放 <?= $song->getTitle(); ?>"

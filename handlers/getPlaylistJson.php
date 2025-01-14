@@ -15,7 +15,7 @@ $response = [
 if (isset($_POST['playlistId'])) {
   try {
     $playlistId = $_POST['playlistId'];
-    if ($playlistId == 'loved-songs') {
+    if ($playlistId == 'liked-songs') {
       $user = User::createByEmail($con, $_SESSION['user']);
       $resultArray = $user->getLikedSongsData();
     } else {

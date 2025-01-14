@@ -80,7 +80,7 @@ if (!$isAjax) {
       <!-- 播放播放清單 button -->
       <button
         type="button"
-        id="song-<?= $songId; ?>-play-btn"
+        id="big-song-<?= $songId; ?>-play-btn"
         onclick="player.loadPlaylistOrUpdate('song', '<?= $songId ?>')"
         data-bs-toggle="tooltip"
         data-bs-placement="bottom"
@@ -91,7 +91,7 @@ if (!$isAjax) {
       <!-- 暫停播放 button -->
       <button
         type="button"
-        id="big-pause-btn"
+        id="big-song-<?= $songId; ?>-pause-btn"
         onclick="player.pause()"
         data-bs-toggle="tooltip"
         data-bs-placement="bottom"
@@ -303,7 +303,7 @@ if (!$isAjax) {
                 <!-- 播放 -->
                 <button
                   type="button"
-                  id="big-song-<?= $hotSongId; ?>-play-btn"
+                  id="song-<?= $hotSongId; ?>-play-btn"
                   onclick="player.loadPlaylistOrUpdate('artist', '<?= $artistId; ?>', <?= $key; ?>);"
                   data-bs-toggle="tooltip"
                   data-bs-placement="bottom"
@@ -314,7 +314,7 @@ if (!$isAjax) {
                 <!-- 暫停 -->
                 <button
                   type="button"
-                  id="big-song-<?= $hotSongId; ?>-pause-btn"
+                  id="song-<?= $hotSongId; ?>-pause-btn"
                   onclick="player.pause();"
                   data-bs-toggle="tooltip"
                   data-bs-placement="bottom"

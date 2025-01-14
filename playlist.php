@@ -54,7 +54,7 @@ if (!$isAjax) {
       <!-- 播放播放清單 button -->
       <button
         type="button"
-        id="big-play-btn"
+        id="big-playlist-<?= $playlistId; ?>-play-btn"
         onclick="player.loadPlaylistOrUpdate('playlist', <?= $playlistId ?>)"
         data-bs-toggle="tooltip"
         data-bs-placement="bottom"
@@ -65,7 +65,7 @@ if (!$isAjax) {
       <!-- 暫停播放 button -->
       <button
         type="button"
-        id="big-pause-btn"
+        id="big-playlist-<?= $playlistId; ?>-pause-btn"
         onclick="player.pause()"
         data-bs-toggle="tooltip"
         data-bs-placement="bottom"

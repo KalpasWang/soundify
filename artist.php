@@ -47,7 +47,7 @@ if (!$isAjax) {
       <!-- 播放藝人熱門歌曲 button -->
       <button
         type="button"
-        id="big-play-btn"
+        id="big-artist-<?= $artistId ?>-play-btn"
         onclick="player.loadPlaylistOrUpdate('artist', '<?= $artistId ?>')"
         data-bs-toggle="tooltip"
         data-bs-placement="bottom"
@@ -58,7 +58,7 @@ if (!$isAjax) {
       <!-- 暫停播放 button -->
       <button
         type="button"
-        id="big-pause-btn"
+        id="big-artist-<?= $artistId ?>-pause-btn"
         onclick="player.pause()"
         data-bs-toggle="tooltip"
         data-bs-placement="bottom"
