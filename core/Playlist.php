@@ -12,6 +12,7 @@ class Playlist implements ICollectionItem
   private array $mysqliData;
   private string $id;
   private array $songs;
+  const MAX_DESCCRIPTION_LENGTH = 500;
 
   public function __construct(mysqli $db, array $data)
   {
@@ -120,6 +121,11 @@ class Playlist implements ICollectionItem
       return $album->getCover();
     }
     return BASE_URL . $this->mysqliData['cover'];
+  }
+
+  public function getDescription(): string
+  {
+    return $this->mysqliData['description'];
   }
 
   public function getCreatedTimestamp()
