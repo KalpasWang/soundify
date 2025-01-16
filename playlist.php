@@ -268,53 +268,67 @@ if (!$isAjax) {
       <div class="modal-content">
         <div class="modal-header justify-content-between border-bottom-0 pb-0">
           <h4 class="modal-title fs-4 fw-bold" id="playlist-modal-title">編輯詳細資料</h4>
-          <button type="button" class="btn btn-custom rounded-circle" data-bs-dismiss="modal" aria-label="Close">
+          <button type="button" class="btn btn-custom rounded-circle p-1" data-bs-dismiss="modal" aria-label="Close">
             <i class="bi bi-x-lg text-secondary"></i>
           </button>
         </div>
         <div class="modal-body">
-          <div class="alert alert-danger" role="alert">
-            A simple danger alert—check it out!
+          <!-- alert if input invalid -->
+          <div id="playlist-edit-alert" class="alert alert-danger" role="alert" style="display: none;">
           </div>
-          <div class="row">
-            <div class="col-auto">
-              <nutton class="btn btn-transparent p-0">
-                <div class="position-relative">
-                  <img
-                    src="<?= $playlistCover; ?>"
-                    class="rounded"
-                    alt="封面圖片"
-                    width="180"
-                    height="180"
-                    style="filter: brightness(0.5);">
-                  <div class="position-absolute top-50 start-50 translate-middle">
-                    <p class="mb-0 fs-5">
-                      <i class="bi bi-pencil"></i>
-                    </p>
-                    <p class="mb-0 fs-5">選擇相片</p>
+          <!-- 編輯表單 -->
+          <form id="playlist-edit-form" class="mb-0" onsubmit="createPlaylist(event.target);">
+            <div class="row">
+              <div class="col-auto">
+                <!-- 封面圖片 -->
+                <input
+                  type="file"
+                  onchange="previewPlaylistCover(this?.files?.[0]);"
+                  name="playlist-cover-input"
+                  id="playlist-cover-input"
+                  accept="image/png, image/jpeg"
+                  class="d-none">
+                <label for="playlist-cover-input" class="btn btn-transparent p-0">
+                  <div class="position-relative">
+                    <img
+                      src="<?= $playlistCover; ?>"
+                      id="playlist-cover-preview"
+                      class="rounded"
+                      alt="封面圖片"
+                      width="180"
+                      height="180"
+                      style="filter: brightness(0.75);">
+                    <div class="position-absolute top-50 start-50 translate-middle">
+                      <p class="mb-0 fs-5">
+                        <i class="bi bi-pencil"></i>
+                      </p>
+                      <p class="mb-0 fs-5">選擇相片</p>
+                    </div>
                   </div>
+                </label>
+              </div>
+              <div class="col">
+                <!-- 播放清單名稱 -->
+                <div class="form-floating mb-2">
+                  <input type="text" class="form-control fs-7" id="playlist-name-input" placeholder="播放清單名稱">
+                  <label for="playlist-name-input" class="form-label fs-8">名稱</label>
                 </div>
-              </nutton>
-            </div>
-            <div class="col">
-              <div class="form-floating mb-2">
-                <input type="email" class="form-control fs-7" id="exampleFormControlInput1" placeholder="name@example.com">
-                <label for="exampleFormControlInput1" class="form-label fs-8">Email address</label>
-              </div>
-              <div class="form-floating">
-                <textarea
-                  class="form-control fs-7"
-                  id="exampleFormControlTextarea1"
-                  placeholder="說明文字"
-                  style="height: 114px;"></textarea>
-                <label for="exampleFormControlTextarea1" class="fs-8">Example textarea</label>
+                <!-- 播放清單說明 -->
+                <div class="form-floating">
+                  <textarea
+                    class="form-control fs-7"
+                    id="playlist-description-input"
+                    placeholder="播放清單說明文字"
+                    style="height: 114px;"></textarea>
+                  <label for="playlist-description-input" class="fs-8">說明</label>
+                </div>
               </div>
             </div>
-          </div>
+          </form>
         </div>
-        <div class="modal-footer border-top-0">
+        <div class="modal-footer border-top-0 pt-0">
           <button
-            type="button"
+            type="submit"
             class="btn btn-light rounded-pill fw-bold px-4 py-2">儲存</button>
           <p class="fs-8 mt-2">若繼續操作，即表示你同意 Soundify 存取你選擇上傳的圖片。請確認你有權上傳圖片。</p>
         </div>

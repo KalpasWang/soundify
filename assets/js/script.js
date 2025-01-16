@@ -1,5 +1,6 @@
 var player;
 var timer;
+var playlistCoverFile;
 var searchAjax;
 var sliderWidth;
 var cardWidth;
@@ -704,22 +705,28 @@ function updateUserPlaylists(e, songId) {
   }
 }
 
-function createPlaylist() {
-  var popup = prompt("Please enter the name of your playlist");
-
-  if (popup != null) {
-    $.post("handlers/createPlaylist.php", {
-      name: popup,
-    }).done(function (error) {
-      if (error != "") {
-        alert(error);
-        return;
-      }
-
-      //do something when ajax returns
-      openPage("yourMusic.php");
-    });
+function previewPlaylistCover(file) {
+  if (!file) {
+    return;
   }
+  if (file.size > 1 * 1024 * 1024) {
+    $alert = $("#playlist-edit-alert");
+    $alert.text("檔案大小不得超過 1MB");
+    $alert.fadeIn(150);
+    return;
+  }
+  let reader = new FileReader();
+  reader.onload = function (e) {
+    $cover = $("#playlist-cover-preview");
+    $cover[0].src = e.target.result;
+    $cover.hide();
+    $cover.fadeIn(150);
+  };
+  reader.readAsDataURL(file);
+}
+
+function createPlaylist(target) {
+  let form = $(target).serializeArray();
 }
 
 function deletePlaylist(playlistId) {
