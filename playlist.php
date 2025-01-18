@@ -10,6 +10,7 @@ if (isset($_GET['id'])) {
 // get playlist data
 $playlist = Playlist::createById($con, $playlistId);
 $playlistTitle = $playlist->getName();
+$playlistDescription = $playlist->getDescription();
 $playlistCover = $playlist->getCover();
 $playlistSongs = $playlist->getAllSongs();
 $owner = User::createById($con, $playlist->getOwnerId());
@@ -45,8 +46,9 @@ if (!$isAjax) {
         data-bs-target="#playlist-edit-modal"
         type="button"
         class="btn btn-transparent p-0 m-0">
-        <h1 id="playlist-<?= $playlistId; ?>" class="display-1 fw-bold my-3"><?= $playlistTitle; ?></h1>
+        <h1 id="playlist-<?= $playlistId; ?>" class="display-1 fw-bold mt-2 mb-1"><?= $playlistTitle; ?></h1>
       </button>
+      <p class="fs-7 text-secondary mb-1"><?= $playlistDescription; ?></p>
       <!-- 播放清單資訊 -->
       <p class="fs-5">
         <span class="fw-bold text-white"> <?= $ownerName; ?> </span>
@@ -272,19 +274,23 @@ if (!$isAjax) {
             <i class="bi bi-x-lg text-secondary"></i>
           </button>
         </div>
-        <div class="modal-body">
+        <div class="modal-body pb-1">
           <!-- alert if input invalid -->
           <div id="playlist-edit-alert" class="alert alert-danger" role="alert" style="display: none;">
           </div>
           <!-- 編輯表單 -->
-          <form id="playlist-edit-form" class="mb-0" onsubmit="createPlaylist(event.target);">
+          <form
+            id="playlist-edit-form"
+            class="mb-0"
+            autocomplete="off"
+            onsubmit="event.preventDefault(); updatePlaylist('<?= $playlistId; ?>', this);">
             <div class="row">
               <div class="col-auto">
                 <!-- 封面圖片 -->
                 <input
                   type="file"
                   onchange="previewPlaylistCover(this?.files?.[0]);"
-                  name="playlist-cover-input"
+                  name="cover"
                   id="playlist-cover-input"
                   accept="image/png, image/jpeg"
                   class="d-none">
@@ -310,26 +316,29 @@ if (!$isAjax) {
               <div class="col">
                 <!-- 播放清單名稱 -->
                 <div class="form-floating mb-2">
-                  <input type="text" class="form-control fs-7" id="playlist-name-input" placeholder="播放清單名稱">
+                  <input type="text" name="name" class="form-control fs-7" id="playlist-name-input" placeholder="播放清單名稱" value="<?= $playlistTitle; ?>">
                   <label for="playlist-name-input" class="form-label fs-8">名稱</label>
                 </div>
                 <!-- 播放清單說明 -->
                 <div class="form-floating">
                   <textarea
                     class="form-control fs-7"
+                    name="description"
                     id="playlist-description-input"
                     placeholder="播放清單說明文字"
-                    style="height: 114px;"></textarea>
+                    style="height: 114px;"><?= $playlistDescription; ?></textarea>
                   <label for="playlist-description-input" class="fs-8">說明</label>
                 </div>
               </div>
             </div>
+            <div class="mt-3 text-end">
+              <button
+                type="submit"
+                class="btn btn-light rounded-pill fw-bold px-4 py-2">儲存</button>
+            </div>
           </form>
         </div>
-        <div class="modal-footer border-top-0 pt-0">
-          <button
-            type="submit"
-            class="btn btn-light rounded-pill fw-bold px-4 py-2">儲存</button>
+        <div class="modal-footer justify-content-center border-top-0 pt-0">
           <p class="fs-8 mt-2">若繼續操作，即表示你同意 Soundify 存取你選擇上傳的圖片。請確認你有權上傳圖片。</p>
         </div>
       </div>

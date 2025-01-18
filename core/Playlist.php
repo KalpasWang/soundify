@@ -13,6 +13,7 @@ class Playlist implements ICollectionItem
   private string $id;
   private array $songs;
   const MAX_DESCCRIPTION_LENGTH = 500;
+  const MAX_NAME_LENGTH = 50;
 
   public function __construct(mysqli $db, array $data)
   {
@@ -125,7 +126,7 @@ class Playlist implements ICollectionItem
 
   public function getDescription(): string
   {
-    return $this->mysqliData['description'];
+    return $this->mysqliData['description'] ?? "";
   }
 
   public function getCreatedTimestamp()
@@ -232,6 +233,36 @@ class Playlist implements ICollectionItem
     $stmt->bind_param("ss", $this->id, $songId);
     $result = $stmt->execute();
     if ($result === false) {
+      throw new Exception($this->db->error);
+    }
+  }
+
+  public function updatePlaylist(string $name, string $description, array|null $image): void
+  {
+    if ($image !== null) {
+      if ($image['size'] > 1 * 1024 * 1024) {
+        throw new Exception("圖片大小不得超過 1MB");
+      }
+      $uploaddir = '../assets/images/playlists/';
+      $filename = bin2hex(random_bytes(16)) . '.' . pathinfo($image['name'], PATHINFO_EXTENSION);
+      while (file_exists($uploaddir . $filename)) {
+        $filename = bin2hex(random_bytes(16)) . '.' . pathinfo($image['name'], PATHINFO_EXTENSION);
+      }
+      $path = $uploaddir . $filename;
+      $dbpath = 'assets/images/playlists/' . $filename;
+      $result = move_uploaded_file($image['tmp_name'], $path);
+      if ($result === false) {
+        throw new Exception("圖片上傳失敗");
+      }
+      $query = $this->db->query("UPDATE playlists SET name='$name', description='$description', cover='$dbpath' WHERE id='$this->id'");
+      if ($query === false) {
+        throw new Exception($this->db->error);
+      }
+      return;
+    }
+    // if no image, just update name and description
+    $query = $this->db->query("UPDATE playlists SET name='$name', description='$description' WHERE id='$this->id'");
+    if ($query === false) {
       throw new Exception($this->db->error);
     }
   }

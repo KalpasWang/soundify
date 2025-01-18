@@ -723,11 +723,10 @@ function previewPlaylistCover(file) {
     $cover.fadeIn(150);
   };
   reader.readAsDataURL(file);
+  playlistCoverFile = file;
 }
 
-function createPlaylist(target) {
-  let form = $(target).serializeArray();
-}
+function createPlaylist(target) {}
 
 function deletePlaylist(playlistId) {
   var prompt = confirm("Are you sure you want to delte this playlist?");
@@ -745,6 +744,52 @@ function deletePlaylist(playlistId) {
       openPage("yourMusic.php");
     });
   }
+}
+
+function updatePlaylist(id, target) {
+  let formData = new FormData(target);
+  if (formData.get("name") == "") {
+    $alert.text("播放清單名稱不得為空").fadeIn(150);
+    return;
+  }
+  formData.append("playlistId", id);
+  console.log(...formData);
+  let $alert = $("#playlist-edit-alert");
+  let $submitBtn = $(target).find("button");
+  $submitBtn.attr("disabled", true);
+  $.ajax({
+    url: "handlers/updatePlaylist.php",
+    type: "POST",
+    data: formData,
+    contentType: false,
+    processData: false,
+    cache: false,
+    success: function (data) {
+      let response = JSON.parse(data);
+      if (response.success) {
+        $("#playlist-edit-modal").modal("hide");
+        refreshMainContent();
+      } else {
+        $alert.text(response.message).fadeIn(150);
+        $submitBtn.attr("disabled", false);
+      }
+    },
+  }).fail(function () {
+    $alert.text("出現錯誤，請稍後再試").fadeIn(150);
+    $submitBtn.attr("disabled", false);
+  });
+  // $.post("handlers/updatePlaylist.php", payload, function (data) {
+  //   let response = JSON.parse(data);
+  //   if (response.success) {
+  //     refreshMainContent();
+  //   } else {
+  //     $alert.text(response.message).fadeIn(150);
+  //     $submitBtn.attr("disabled", false);
+  //   }
+  // }).fail(function () {
+  //   $alert.text("出現錯誤，請稍後再試").fadeIn(150);
+  //   $submitBtn.attr("disabled", false);
+  // });
 }
 
 function closeDropdown(e) {
