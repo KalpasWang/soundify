@@ -26,12 +26,11 @@ if (!$isAjax) {
   <!-- 藝人資訊 -->
   <section id="artist-header" class="d-flex w-100 p-3 bg-gradient rounded-3" style="background-color: #074951;">
     <div id="cover" class="flex-shrink-1 d-flex align-items-center">
-      <img
-        width="145px"
-        height="145px"
-        src="<?= $artist->getAvatar(); ?>"
-        alt="<?= $artistTitle; ?>"
-        class="rounded-circle">
+      <div
+        title="<?= $artistTitle; ?>"
+        style="background-image: url('<?= $artist->getCover(); ?>');"
+        class="bg-light bg-cover rounded-circle w-145px h-145px"
+        role="img"></div>
     </div>
     <div id="details" class="flex-grow-1 ps-4">
       <h2 class="fs-5"><span class="badge text-bg-primary">藝人</span></h2>

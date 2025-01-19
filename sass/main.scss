@@ -98,9 +98,11 @@ $utilities: (
       75: 75%,
       100: 100%,
       auto: auto,
+      48px: 48px,
       72px: 72px,
       60px: 60px,
       64px: 64px,
+      145px: 145px,
       2rem: 2rem,
       3rem: 3rem,
       9rem: 9rem,
@@ -115,9 +117,11 @@ $utilities: (
       75: 75%,
       100: 100%,
       auto: auto,
+      48px: 48px,
       72px: 72px,
       60px: 60px,
       64px: 64px,
+      145px: 145px,
       2rem: 2rem,
       3rem: 3rem,
     ),
@@ -194,6 +198,12 @@ body {
   &:active {
     border-color: transparent !important;
   }
+}
+
+.bg-cover {
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
 }
 
 .dropdown-toggle::after,

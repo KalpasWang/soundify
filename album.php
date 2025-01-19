@@ -31,12 +31,11 @@ if (!$isAjax) {
   <!-- 專輯資訊 -->
   <section id="album-header" class="d-flex w-100 p-3 bg-success bg-gradient rounded-3">
     <div id="cover" class="flex-shrink-1 d-flex align-items-center">
-      <img
-        src="<?= $album->getCover(); ?>"
-        alt="<?= $albumTitle; ?>"
-        width="145px"
-        height="145px"
-        class="rounded">
+      <div
+        title="<?= $albumTitle; ?>"
+        style="background-image: url('<?= $album->getCover(); ?>');"
+        class="bg-light bg-cover rounded w-145px h-145px"
+        role="img"></div>
     </div>
     <div id="details" class="flex-grow-1 ps-4">
       <h2 class="fs-5"><span class="badge text-bg-primary">專輯</span></h2>

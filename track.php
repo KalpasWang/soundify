@@ -42,12 +42,11 @@ if (!$isAjax) {
   <!--歌曲資訊 -->
   <section id="song-header" class="d-flex w-100 p-3 bg-gradient rounded-3" style="background-color: #074951;">
     <div id="cover" class="flex-shrink-1 d-flex align-items-center">
-      <img
-        width="145px"
-        height="145px"
-        src="<?= $albumCover; ?>"
-        alt="<?= $songTitle; ?>"
-        class="rounded">
+      <div
+        title="<?= $songName; ?>"
+        style="background-image: url('<?= $albumCover ?>');"
+        class="bg-light bg-cover rounded w-145px h-145px"
+        role="img"></div>
     </div>
     <div id="details" class="flex-grow-1 ps-4">
       <h2 class="fs-5"><span class="badge text-bg-primary">歌曲</span></h2>

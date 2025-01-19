@@ -78,12 +78,11 @@ uasort($collection, function ($a, $b) {
           aria-label="<?= $list->getTitle(); ?> - <?= $list->getSubtitle(); ?>"
           type="button"
           class="btn btn-info p-0 w-64px h-64px">
-          <img
-            src="<?= $list->getCover(); ?>"
-            alt="封面圖片"
-            width="48"
-            height="48"
-            class="object-fit-cover rounded">
+          <div
+            title="<?= $list->getTitle(); ?>"
+            style="background-image: url('<?= $list->getCover(); ?>');"
+            class="d-inline-block bg-light bg-cover rounded w-48px h-48px"
+            role="img"></div>
         </button>
       </li>
     <?php endforeach; ?>
@@ -98,12 +97,11 @@ uasort($collection, function ($a, $b) {
           aria-label="<?= $item['title']; ?> - <?= $item['subtitle']; ?>"
           type="button"
           class="btn btn-info p-0 w-64px h-64px">
-          <img
-            src="<?= $item['cover']; ?>"
-            alt="封面圖片"
-            width="48"
-            height="48"
-            class="object-fit-cover <?= $item['type'] == 'artist' ? 'rounded-circle' : 'rounded'; ?>">
+          <div
+            title="<?= $item['title']; ?>"
+            style="background-image: url('<?= $item['cover']; ?>');"
+            class="d-inline-block bg-light bg-cover w-48px h-48px <?= $item['type'] == 'artist' ? 'rounded-circle' : 'rounded'; ?>"
+            role="img"></div>
         </button>
       </li>
     <?php endforeach; ?>

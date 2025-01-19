@@ -769,6 +769,7 @@ function updatePlaylist(id, target) {
       if (response.success) {
         $("#playlist-edit-modal").modal("hide");
         refreshMainContent();
+        refreshSidebar();
       } else {
         $alert.text(response.message).fadeIn(150);
         $submitBtn.attr("disabled", false);

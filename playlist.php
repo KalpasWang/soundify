@@ -32,12 +32,11 @@ if (!$isAjax) {
   <!-- 撥放清單資訊 -->
   <section id="playlist-header" class="d-flex w-100 p-3 bg-warning bg-gradient rounded-3">
     <div id="cover" class="flex-shrink-1 d-flex align-items-center">
-      <img
-        src="<?= $playlistCover; ?>"
-        alt="<?= $playlistTitle; ?>"
-        width="145px"
-        height="145px"
-        class="rounded">
+      <div
+        title="<?= $playlistTitle; ?>"
+        style="background-image: url('<?= $playlistCover ?>');"
+        class="bg-light bg-cover rounded w-145px h-145px"
+        role="img"></div>
     </div>
     <div id="details" class="flex-grow-1 ps-4">
       <h2 class="fs-5"><span class="badge text-bg-primary">播放清單</span></h2>
