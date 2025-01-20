@@ -85,13 +85,24 @@ class User
 
   public function createNewPlaylist(string $name): Playlist
   {
-    // create new playlist with $name
-    $stmt = $this->db->prepare("INSERT INTO playlists (name, owner_id) VALUES (?, ?)");
-    $stmt->bind_param("ss", $name, $this->id);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    // get new created playlist
-    $row = $result->fetch_assoc();
+    // count user playlists number
+    $query = $this->db->query("SELECT COUNT(*) FROM playlists WHERE owner_id='$this->id'");
+    if ($query === false) {
+      throw new Exception($this->db->error);
+    }
+    $count = $query->fetch_row()[0];
+    // insert new playlist with $name
+    $name = $name . ' #' . ($count + 1);
+    $query = $this->db->query("INSERT INTO playlists (name, owner_id) VALUES ('$name', '$this->id')");
+    if ($query === false) {
+      throw new Exception($this->db->error);
+    }
+    // select inserted playlist
+    $query = $this->db->query("SELECT * FROM playlists WHERE id=LAST_INSERT_ID()");
+    if ($query === false) {
+      throw new Exception($this->db->error);
+    }
+    $row = $query->fetch_assoc();
     return Playlist::createByRow($this->db, $row);
   }
 

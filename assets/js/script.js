@@ -726,24 +726,41 @@ function previewPlaylistCover(file) {
   playlistCoverFile = file;
 }
 
-function createPlaylist(target) {}
+function createPlaylist(target) {
+  $(target).attr("disabled", true);
+  $.post("handlers/createPlaylist.php", function (data) {
+    let response = JSON.parse(data);
+    if (response.success) {
+      refreshSidebar();
+      openPage("playlist.php?id=" + response.playlistId);
+    }
+    $(target).attr("disabled", false);
+    showNotification(response.message);
+  }).fail(function () {
+    $(target).attr("disabled", false);
+    showNotification("出現錯誤，請稍後再試");
+  });
+}
 
-function deletePlaylist(playlistId) {
-  var prompt = confirm("Are you sure you want to delte this playlist?");
-
-  if (prompt == true) {
-    $.post("handlers/deletePlaylist.php", {
-      playlistId: playlistId,
-    }).done(function (error) {
-      if (error != "") {
-        alert(error);
-        return;
+function deletePlaylist(playlistId, target) {
+  $(target).attr("disabled", true);
+  $.post(
+    "handlers/deletePlaylist.php",
+    { playlistId: playlistId },
+    function (data) {
+      let response = JSON.parse(data);
+      if (response.success) {
+        $("#playlist-delete-modal").modal("hide");
+        refreshSidebar();
+        openPage("index.php");
       }
-
-      //do something when ajax returns
-      openPage("yourMusic.php");
-    });
-  }
+      $(target).attr("disabled", false);
+      showNotification(response.message);
+    }
+  ).fail(function () {
+    $(target).attr("disabled", false);
+    showNotification("出現錯誤，請稍後再試");
+  });
 }
 
 function updatePlaylist(id, target) {
@@ -753,7 +770,6 @@ function updatePlaylist(id, target) {
     return;
   }
   formData.append("playlistId", id);
-  console.log(...formData);
   let $alert = $("#playlist-edit-alert");
   let $submitBtn = $(target).find("button");
   $submitBtn.attr("disabled", true);
@@ -779,18 +795,6 @@ function updatePlaylist(id, target) {
     $alert.text("出現錯誤，請稍後再試").fadeIn(150);
     $submitBtn.attr("disabled", false);
   });
-  // $.post("handlers/updatePlaylist.php", payload, function (data) {
-  //   let response = JSON.parse(data);
-  //   if (response.success) {
-  //     refreshMainContent();
-  //   } else {
-  //     $alert.text(response.message).fadeIn(150);
-  //     $submitBtn.attr("disabled", false);
-  //   }
-  // }).fail(function () {
-  //   $alert.text("出現錯誤，請稍後再試").fadeIn(150);
-  //   $submitBtn.attr("disabled", false);
-  // });
 }
 
 function closeDropdown(e) {

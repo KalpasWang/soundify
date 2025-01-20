@@ -53,6 +53,19 @@ class Playlist implements ICollectionItem
     return $playlists;
   }
 
+  public static function deletePlaylist(mysqli $db, string $playlistId)
+  {
+    $query = $db->query("DELETE FROM playlists WHERE id='$playlistId'");
+    if ($query === false) {
+      throw new Exception($db->error);
+    }
+    $query = $db->query("DELETE FROM playlist_songs WHERE playlist_id='$playlistId'");
+    if ($query === false) {
+      throw new Exception($db->error);
+    }
+    return true;
+  }
+
   public function getId(): string
   {
     return $this->id;

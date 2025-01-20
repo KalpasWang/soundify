@@ -58,7 +58,7 @@ if (!$isAjax) {
   </section>
   <!-- 播放清單控制選項 -->
   <section id="playlist-controls" class="d-flex justify-content-between align-items-center w-100 p-3">
-    <div id="left-controls" class="d-flex align-items-center">
+    <div id="left-controls" class="d-flex align-items-center w-100">
       <!-- 播放播放清單 button -->
       <button
         type="button"
@@ -106,6 +106,24 @@ if (!$isAjax) {
             style="display: <?= $isSavedPlaylist ? 'inline-block' : 'none'; ?>;">
             <i class="bi bi-check-circle-fill fs-3 text-primary"></i>
           </button>
+        </div>
+      <?php endif; ?>
+      <?php if ($ownerId == $userId): ?>
+        <!-- 刪除播放清單 -->
+        <div class="dropdown ms-3" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="<?= $playlistTitle ?> 的更多選項">
+          <button class="btn btn-info dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-three-dots text-light fs-3"></i>
+          </button>
+          <ul class="dropdown-menu dropdown-menu-dark">
+            <li><button
+                type="button"
+                class="dropdown-item"
+                data-bs-toggle="modal"
+                data-bs-target="#playlist-delete-modal">
+                <i class="bi bi-x-circle fs-6"></i>
+                <span class="ps-2">刪除</span>
+              </button></li>
+          </ul>
         </div>
       <?php endif; ?>
     </div>
@@ -339,6 +357,26 @@ if (!$isAjax) {
         </div>
         <div class="modal-footer justify-content-center border-top-0 pt-0">
           <p class="fs-8 mt-2">若繼續操作，即表示你同意 Soundify 存取你選擇上傳的圖片。請確認你有權上傳圖片。</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 播放清單刪除 modal -->
+  <div class="modal fade" id="playlist-delete-modal" tabindex="-1" aria-labelledby="delete-modal-title" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header border-bottom-0 pb-0">
+          <h4 class="modal-title fs-5 fw-bold" id="delete-modal-title">確定要從「你的音樂庫」中刪除嗎？</h4>
+        </div>
+        <div class="modal-body">
+          這個動作會將「<?= $playlistTitle ?>」從「你的音樂庫」刪除。
+        </div>
+        <div class="modal-footer border-top-0">
+          <button type="button" class="btn btn-lg btn-transparent rounded-pill fw-bold" data-bs-dismiss="modal">取消</button>
+          <button
+            type="button"
+            class="btn btn-lg btn-primary rounded-pill fw-bold"
+            onclick="deletePlaylist('<?= $playlistId; ?>', this);">刪除</button>
         </div>
       </div>
     </div>

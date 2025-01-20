@@ -50,8 +50,15 @@ uasort($collection, function ($a, $b) {
 ?>
 
 <nav class="h-100 d-flex flex-column align-items-center h-100">
-  <button type="button" class="btn btn-dark w-72px h-60px" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="展開「你的音樂庫」" aria-label="Toggle Sidebar">
-    <i class="bi bi-bookmarks" style="font-size: 32px;"></i>
+  <button
+    onclick="createPlaylist(this)"
+    type="button"
+    class="btn btn-dark w-72px h-60px"
+    data-bs-toggle="tooltip"
+    data-bs-placement="right"
+    data-bs-title="建立新播放清單"
+    aria-label="Toggle Sidebar">
+    <i class="bi bi-plus-lg" style="font-size: 32px;"></i>
   </button>
   <ul class="nav nav-pills flex-column mb-auto text-center">
     <li class="nav-item">
