@@ -306,7 +306,7 @@ if (!$isAjax) {
             id="playlist-edit-form"
             class="mb-0"
             autocomplete="off"
-            onsubmit="event.preventDefault(); updatePlaylist('<?= $playlistId; ?>', this);">
+            onsubmit="event.preventDefault(); updatePlaylist('<?= $playlistId; ?>','<?= $playlistTitle ?>','<?= $playlistDescription ?>', this);">
             <div class="row">
               <div class="col-auto">
                 <!-- 封面圖片 -->

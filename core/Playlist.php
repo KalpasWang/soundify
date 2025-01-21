@@ -257,16 +257,23 @@ class Playlist implements ICollectionItem
         throw new Exception("圖片大小不得超過 1MB");
       }
       $uploaddir = '../assets/images/playlists/';
+      // rename image to a random 16 bytes name
       $filename = bin2hex(random_bytes(16)) . '.' . pathinfo($image['name'], PATHINFO_EXTENSION);
       while (file_exists($uploaddir . $filename)) {
         $filename = bin2hex(random_bytes(16)) . '.' . pathinfo($image['name'], PATHINFO_EXTENSION);
       }
       $path = $uploaddir . $filename;
-      $dbpath = 'assets/images/playlists/' . $filename;
       $result = move_uploaded_file($image['tmp_name'], $path);
       if ($result === false) {
         throw new Exception("圖片上傳失敗");
       }
+      // delete original image
+      $oldCoverPath = $this->mysqliData['cover'];
+      if ($oldCoverPath && file_exists("../" . $oldCoverPath)) {
+        unlink("../" . $oldCoverPath);
+      }
+      // update playlist in db
+      $dbpath = 'assets/images/playlists/' . $filename;
       $query = $this->db->query("UPDATE playlists SET name='$name', description='$description', cover='$dbpath' WHERE id='$this->id'");
       if ($query === false) {
         throw new Exception($this->db->error);

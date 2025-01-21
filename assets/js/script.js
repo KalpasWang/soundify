@@ -763,14 +763,25 @@ function deletePlaylist(playlistId, target) {
   });
 }
 
-function updatePlaylist(id, target) {
+function updatePlaylist(id, name, description, target) {
   let formData = new FormData(target);
+  let $alert = $("#playlist-edit-alert");
+  let $modal = $("#playlist-edit-modal");
   if (formData.get("name") == "") {
     $alert.text("播放清單名稱不得為空").fadeIn(150);
     return;
   }
+  // check if form unchanged
+  if (
+    formData.get("name") == name &&
+    formData.get("description") == description &&
+    !playlistCoverFile
+  ) {
+    $alert.hide();
+    $modal.modal("hide");
+    return;
+  }
   formData.append("playlistId", id);
-  let $alert = $("#playlist-edit-alert");
   let $submitBtn = $(target).find("button");
   $submitBtn.attr("disabled", true);
   $.ajax({
@@ -783,9 +794,10 @@ function updatePlaylist(id, target) {
     success: function (data) {
       let response = JSON.parse(data);
       if (response.success) {
-        $("#playlist-edit-modal").modal("hide");
+        $modal.modal("hide");
         refreshMainContent();
         refreshSidebar();
+        showNotification(response.message);
       } else {
         $alert.text(response.message).fadeIn(150);
         $submitBtn.attr("disabled", false);
