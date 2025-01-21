@@ -718,7 +718,7 @@ function previewPlaylistCover(file) {
   let reader = new FileReader();
   reader.onload = function (e) {
     $cover = $("#playlist-cover-preview");
-    $cover[0].src = e.target.result;
+    $cover.css("background-image", "url(" + e.target.result + ")");
     $cover.hide();
     $cover.fadeIn(150);
   };

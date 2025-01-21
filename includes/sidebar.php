@@ -86,10 +86,10 @@ uasort($collection, function ($a, $b) {
           type="button"
           class="btn btn-info p-0 w-64px h-64px">
           <div
-            title="<?= $list->getTitle(); ?>"
+            role="img"
+            alt="<?= $list->getTitle(); ?>"
             style="background-image: url('<?= $list->getCover(); ?>');"
-            class="d-inline-block bg-light bg-cover rounded w-48px h-48px"
-            role="img"></div>
+            class="d-inline-block bg-light bg-cover rounded w-48px h-48px"></div>
         </button>
       </li>
     <?php endforeach; ?>
@@ -105,10 +105,10 @@ uasort($collection, function ($a, $b) {
           type="button"
           class="btn btn-info p-0 w-64px h-64px">
           <div
-            title="<?= $item['title']; ?>"
+            role="img"
+            alt="<?= $item['title']; ?>"
             style="background-image: url('<?= $item['cover']; ?>');"
-            class="d-inline-block bg-light bg-cover w-48px h-48px <?= $item['type'] == 'artist' ? 'rounded-circle' : 'rounded'; ?>"
-            role="img"></div>
+            class="d-inline-block bg-light bg-cover w-48px h-48px <?= $item['type'] == 'artist' ? 'rounded-circle' : 'rounded'; ?>"></div>
         </button>
       </li>
     <?php endforeach; ?>

@@ -103,6 +103,7 @@ $utilities: (
       60px: 60px,
       64px: 64px,
       145px: 145px,
+      180px: 180px,
       2rem: 2rem,
       3rem: 3rem,
       9rem: 9rem,
@@ -122,6 +123,7 @@ $utilities: (
       60px: 60px,
       64px: 64px,
       145px: 145px,
+      180px: 180px,
       2rem: 2rem,
       3rem: 3rem,
     ),
@@ -204,6 +206,16 @@ body {
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
+}
+
+.bg-contain {
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+.darken-75 {
+  filter: brightness(0.75);
 }
 
 .dropdown-toggle::after,

@@ -32,11 +32,17 @@ if (!$isAjax) {
   <!-- 撥放清單資訊 -->
   <section id="playlist-header" class="d-flex w-100 p-3 bg-warning bg-gradient rounded-3">
     <div id="cover" class="flex-shrink-1 d-flex align-items-center">
-      <div
-        title="<?= $playlistTitle; ?>"
-        style="background-image: url('<?= $playlistCover ?>');"
-        class="bg-light bg-cover rounded w-145px h-145px"
-        role="img"></div>
+      <button
+        type="button"
+        class="btn btn-transparent p-0 m-0"
+        data-bs-toggle="modal"
+        data-bs-target="#playlist-edit-modal">
+        <div
+          title="<?= $playlistTitle; ?>"
+          style="background-image: url('<?= $playlistCover ?>');"
+          class="bg-light bg-cover rounded w-145px h-145px"
+          role="img"></div>
+      </button>
     </div>
     <div id="details" class="flex-grow-1 ps-4">
       <h2 class="fs-5"><span class="badge text-bg-primary">播放清單</span></h2>
@@ -313,14 +319,12 @@ if (!$isAjax) {
                   class="d-none">
                 <label for="playlist-cover-input" class="btn btn-transparent p-0">
                   <div class="position-relative">
-                    <img
-                      src="<?= $playlistCover; ?>"
+                    <div
+                      role="img"
+                      alt="<?= $playlistTitle; ?> 的封面圖片"
                       id="playlist-cover-preview"
-                      class="rounded"
-                      alt="封面圖片"
-                      width="180"
-                      height="180"
-                      style="filter: brightness(0.75);">
+                      style="background-image: url('<?= $playlistCover; ?>');"
+                      class="bg-light bg-contain darken-75 rounded w-180px h-180px"></div>
                     <div class="position-absolute top-50 start-50 translate-middle">
                       <p class="mb-0 fs-5">
                         <i class="bi bi-pencil"></i>
