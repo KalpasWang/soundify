@@ -4,21 +4,26 @@ include_once("includes/core.php");
 if (isset($_GET['id'])) {
   $albumId = $_GET['id'];
 } else {
-  header("Location: index.php");
+  header("Location: 404.php");
 }
 
-// get album data
-$album = Album::createById($con, $albumId);
-$albumId = $album->getId();
-$albumTitle = $album->getTitle();
-$artist = $album->getArtist();
-$artistId = $artist->getId();
-$artistName = $artist->getName();
-$userId = $userLoggedIn->getId();
+try {
+  // get album data
+  $album = Album::createById($con, $albumId);
+  $albumId = $album->getId();
+  $albumTitle = $album->getTitle();
+  $artist = $album->getArtist();
+  $artistId = $artist->getId();
+  $artistName = $artist->getName();
+  $userId = $userLoggedIn->getId();
 
-// get playlists
-$playlists = $userLoggedIn->getPlaylists();
-$isSavedAlbum = $userLoggedIn->isSaved('album', $albumId);
+  // get playlists
+  $playlists = $userLoggedIn->getPlaylists();
+  $isSavedAlbum = $userLoggedIn->isSaved('album', $albumId);
+} catch (\Throwable $th) {
+  header("Location: 404.php");
+  exit();
+}
 
 // set title
 $title = "$albumTitle - Album by $artistName | Soundify";

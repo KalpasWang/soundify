@@ -4,33 +4,38 @@ include_once("includes/core.php");
 if (isset($_GET['id'])) {
   $songId = $_GET['id'];
 } else {
-  header("Location: index.php");
+  header("Location: 404.php");
 }
 
-$userId = $userLoggedIn->getId();
-$song = Song::createById($con, $songId);
-$songName = $song->getTitle();
-$songDuration = $song->getDuration();
-$songPlayTimes = $song->getPlayTimes();
+try {
+  $userId = $userLoggedIn->getId();
+  $song = Song::createById($con, $songId);
+  $songName = $song->getTitle();
+  $songDuration = $song->getDuration();
+  $songPlayTimes = $song->getPlayTimes();
 
-$artist = $song->getArtist();
-$artistId = $artist->getId();
-$artistName = $artist->getName();
-$artistAvatar = $artist->getAvatar();
-$artistSongs = $artist->getHotestSongs();
+  $artist = $song->getArtist();
+  $artistId = $artist->getId();
+  $artistName = $artist->getName();
+  $artistAvatar = $artist->getAvatar();
+  $artistSongs = $artist->getHotestSongs();
 
-$album = $song->getAlbum();
-$albumId = $album->getId();
-$albumCover = $album->getCover();
-$albumTitle = $album->getTitle();
-$albumReleaseDate = $album->getReleaseDate();
+  $album = $song->getAlbum();
+  $albumId = $album->getId();
+  $albumCover = $album->getCover();
+  $albumTitle = $album->getTitle();
+  $albumReleaseDate = $album->getReleaseDate();
 
-$userId = $userLoggedIn->getId();
-$userPlaylists = $userLoggedIn->getPlaylists();
+  $userId = $userLoggedIn->getId();
+  $userPlaylists = $userLoggedIn->getPlaylists();
 
-$isLiked = $song->isLikedBy($userId);
-$isInUserPlaylists = $song->isInUserPlaylists($userId);
-$isSaved = $isLiked || $isInUserPlaylists;
+  $isLiked = $song->isLikedBy($userId);
+  $isInUserPlaylists = $song->isInUserPlaylists($userId);
+  $isSaved = $isLiked || $isInUserPlaylists;
+} catch (\Throwable $th) {
+  header("Location: 404.php");
+  exit();
+}
 
 $title = "$songName | song by $artistName - Soundify";
 if (!$isAjax) {

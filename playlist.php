@@ -4,23 +4,28 @@ include_once("includes/core.php");
 if (isset($_GET['id'])) {
   $playlistId = $_GET['id'];
 } else {
-  header("Location: index.php");
+  header("Location: 404.php");
 }
 
-// get playlist data
-$playlist = Playlist::createById($con, $playlistId);
-$playlistTitle = $playlist->getName();
-$playlistDescription = $playlist->getDescription();
-$playlistCover = $playlist->getCover();
-$playlistSongs = $playlist->getAllSongs();
-$owner = User::createById($con, $playlist->getOwnerId());
-$ownerId = $owner->getId();
-$ownerName = $owner->getUsername();
-$isSavedPlaylist = $userLoggedIn->isSaved('playlist', $playlistId);
+try {
+  // get playlist data
+  $playlist = Playlist::createById($con, $playlistId);
+  $playlistTitle = $playlist->getName();
+  $playlistDescription = $playlist->getDescription();
+  $playlistCover = $playlist->getCover();
+  $playlistSongs = $playlist->getAllSongs();
+  $owner = User::createById($con, $playlist->getOwnerId());
+  $ownerId = $owner->getId();
+  $ownerName = $owner->getUsername();
+  $isSavedPlaylist = $userLoggedIn->isSaved('playlist', $playlistId);
 
-// get current user data
-$userPlaylists = $userLoggedIn->getPlaylists();
-$userId = $userLoggedIn->getId();
+  // get current user data
+  $userPlaylists = $userLoggedIn->getPlaylists();
+  $userId = $userLoggedIn->getId();
+} catch (\Throwable $th) {
+  header("Location: 404.php");
+  exit();
+}
 
 $title = "$playlistTitle - playlist by $ownerName | Soundify";
 if (!$isAjax) {

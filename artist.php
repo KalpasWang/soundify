@@ -4,17 +4,23 @@ include_once("includes/core.php");
 if (isset($_GET['id'])) {
   $artistId = $_GET['id'];
 } else {
-  header("Location: index.php");
+  header("Location: 404.php");
 }
 
-$userId = $userLoggedIn->getId();
-$userPlaylists = $userLoggedIn->getPlaylists();
+try {
+  $userId = $userLoggedIn->getId();
+  $userPlaylists = $userLoggedIn->getPlaylists();
 
-$artist = Artist::createById($con, $artistId);
-$artistName = $artist->getName();
-$artistSongs = $artist->getHotestSongs();
-$artistAlbums = $artist->getAllAlbums();
-$isFollowing = $userLoggedIn->isSaved('artist', $artistId);
+  $artist = Artist::createById($con, $artistId);
+  $artistName = $artist->getName();
+  $artistSongs = $artist->getHotestSongs();
+  $artistAlbums = $artist->getAllAlbums();
+  $isFollowing = $userLoggedIn->isSaved('artist', $artistId);
+} catch (\Throwable $th) {
+  header("Location: 404.php");
+  exit();
+}
+
 
 $title = "$artistName - Soundify";
 if (!$isAjax) {

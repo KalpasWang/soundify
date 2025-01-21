@@ -4,14 +4,14 @@ include_once("includes/core.php");
 if (isset($_GET['id'])) {
   $genreId = $_GET['id'];
 } else {
-  header("Location: index.php");
+  header("Location: 404.php");
 }
 
 try {
   $genre = Genre::createById($con, $genreId);
   $genreName = $genre->getZhName();
 } catch (\Throwable $th) {
-  header("Location: index.php");
+  header("Location: 404.php");
 }
 
 $title = 'Soundify - $genreName';

@@ -7,7 +7,7 @@ try {
   $userId = $userLoggedIn->getId();
   $userPlaylists = $userLoggedIn->getPlaylists();
 } catch (\Throwable $th) {
-  header("Location: index.php");
+  header("Location: 404.php");
   exit();
 }
 
