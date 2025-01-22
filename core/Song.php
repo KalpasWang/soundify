@@ -52,6 +52,21 @@ class Song implements ICollectionItem
     return $songs;
   }
 
+  public static function getHotSongs(mysqli $db, int $limit = 10): array
+  {
+    $query = $db->query("SELECT * FROM songs ORDER BY play_times DESC LIMIT $limit");
+    if ($query === false) {
+      throw new Exception($db->error);
+    }
+    $rows = $query->fetch_all(MYSQLI_ASSOC);
+    $songs = [];
+    foreach ($rows as $row) {
+      $song = self::createByRow($db, $row);
+      array_push($songs, $song);
+    }
+    return $songs;
+  }
+
   public static function getHotSongsByGenre(mysqli $db, string $genreId, int $limit = 10): array
   {
     // select top 10 songs by genre

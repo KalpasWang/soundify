@@ -4,19 +4,32 @@ $title = 'Soundify - Web Player: Music for everyone';
 if (!$isAjax) {
   include_once("includes/header.php");
 }
-$albums = Album::getRandomAlbums($con, 10);
-$artists = Artist::search($con, 'm');
+
+try {
+  $albums = Album::getHotAlbums($con, 10);
+  $songs = Song::getHotSongs($con, 10);
+  $artists = Artist::getHotArtists($con, 10);
+} catch (\Throwable $th) {
+  $msg = "<script>showNotification('<?= $th->getMessage() ?>');</script>";
+}
 ?>
 
 <div class="container-xxl px-3">
-  <section class="mt-3">
+  <section class="mt-5">
     <?php
     $sliderTitle = "熱門專輯";
     $items = $albums;
     include("includes/slider.php");
     ?>
   </section>
-  <section class="mt-3">
+  <section class="mt-5">
+    <?php
+    $sliderTitle = "熱門歌曲";
+    $items = $songs;
+    include("includes/slider.php");
+    ?>
+  </section>
+  <section class="mt-5">
     <?php
     $sliderTitle = "熱門藝人";
     $items = $artists;
@@ -41,5 +54,8 @@ $artists = Artist::search($con, 'm');
 <?php
 if (!$isAjax) {
   include_once("includes/footer.php");
+}
+if (isset($msg)) {
+  echo $msg;
 }
 ?>

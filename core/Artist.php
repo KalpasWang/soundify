@@ -49,6 +49,21 @@ class Artist implements ICollectionItem
     return $artists;
   }
 
+  public static function getHotArtists(mysqli $db, int $limit = 10): array
+  {
+    $artists = [];
+    $artistIds = [];
+    $hotSongs = Song::getHotSongs($db, $limit);
+    foreach ($hotSongs as $song) {
+      $artist = $song->getArtist();
+      if (!in_array($artist->getId(), $artistIds)) {
+        array_push($artistIds, $artist->getId());
+        array_push($artists, $artist);
+      }
+    }
+    return $artists;
+  }
+
   public static function getHotArtistsByGenre(mysqli $db, string $genreId, int $limit = 10): array
   {
     $artists = [];

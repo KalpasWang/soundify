@@ -53,9 +53,9 @@ class Album implements ICollectionItem
     return $albums;
   }
 
-  public static function getRandomAlbums(mysqli $db, int $number): array
+  public static function getHotAlbums(mysqli $db, int $number): array
   {
-    $result = $db->query("SELECT * FROM albums ORDER BY RAND() LIMIT $number");
+    $result = $db->query("SELECT * FROM albums ORDER BY play_times DESC LIMIT $number");
     if ($result->num_rows === 0) {
       throw new Exception("No albums found");
     }
