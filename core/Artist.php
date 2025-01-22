@@ -3,6 +3,8 @@
 declare(strict_types=1);
 
 include_once("ICollectionItem.php");
+include_once("Song.php");
+include_once("Album.php");
 
 class Artist implements ICollectionItem
 {
@@ -43,6 +45,30 @@ class Artist implements ICollectionItem
     foreach ($rows as $row) {
       $artist = self::createByRow($db, $row);
       array_push($artists, $artist);
+    }
+    return $artists;
+  }
+
+  public static function getHotArtistsByGenre(mysqli $db, string $genreId, int $limit = 10): array
+  {
+    $artists = [];
+    $artistIds = [];
+    $hotSongs = Song::getHotSongsByGenre($db, $genreId, $limit);
+    $hotAlbums = Album::getHotAlbumsByGenre($db, $genreId, $limit);
+    // pick artists which are creators of these hot songs & albums
+    foreach ($hotSongs as $song) {
+      $artist = $song->getArtist();
+      if (!in_array($artist->getId(), $artistIds)) {
+        array_push($artistIds, $artist->getId());
+        array_push($artists, $artist);
+      }
+    }
+    foreach ($hotAlbums as $album) {
+      $artist = $album->getArtist();
+      if (!in_array($artist->getId(), $artistIds)) {
+        array_push($artistIds, $artist->getId());
+        array_push($artists, $artist);
+      }
     }
     return $artists;
   }

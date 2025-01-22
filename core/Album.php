@@ -68,6 +68,22 @@ class Album implements ICollectionItem
     return $albums;
   }
 
+  public static function getHotAlbumsByGenre(mysqli $db, string $genreId, int $limit = 10): array
+  {
+    // select top 10 albums by genre
+    $query = $db->query("SELECT * FROM albums WHERE genre_id='$genreId' ORDER BY play_times DESC LIMIT $limit");
+    if ($query === false) {
+      throw new Exception($db->error);
+    }
+    $rows = $query->fetch_all(MYSQLI_ASSOC);
+    $albums = [];
+    foreach ($rows as $row) {
+      $album = self::createByRow($db, $row);
+      array_push($albums, $album);
+    }
+    return $albums;
+  }
+
   public function getId(): string
   {
     return $this->id;

@@ -9,20 +9,20 @@ $artists = Artist::search($con, 'm');
 ?>
 
 <div class="container-xxl px-3">
-  <div class="mt-3">
+  <section class="mt-3">
     <?php
     $sliderTitle = "熱門專輯";
     $items = $albums;
     include("includes/slider.php");
     ?>
-  </div>
-  <div class="mt-3">
+  </section>
+  <section class="mt-3">
     <?php
     $sliderTitle = "熱門藝人";
     $items = $artists;
     include("includes/slider.php");
     ?>
-  </div>
+  </section>
 </div>
 
 <script>

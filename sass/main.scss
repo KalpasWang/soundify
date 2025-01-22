@@ -22,6 +22,13 @@ $danger: #e91429;
 $light: #fff;
 $dark: #000;
 
+$gradient: linear-gradient(
+  180deg,
+  rgba($white, 0.4),
+  rgba($white, 0.25) 25%,
+  rgba($white, 0)
+);
+
 $enable-shadows: false;
 $input-focus-box-shadow: none;
 
