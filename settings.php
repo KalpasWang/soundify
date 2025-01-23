@@ -1,18 +1,40 @@
 <?php
-$title = 'Settings';
-include_once("includes/header.php");
+include_once("includes/core.php");
+
+try {
+  $username = $userLoggedIn->getUsername();
+  $avatar = $userLoggedIn->getAvatar();
+  $playlistNumber = count($userLoggedIn->getPlaylists());
+} catch (\Throwable $th) {
+  $msg = $th->getMessage();
+}
+
+$title = "Soundify - $username";
+if (!$isAjax) {
+  include_once("includes/header.php");
+}
 ?>
 
-<div class="entityInfo">
-  <div class="centerSection">
-    <div class="userInfo">
-      <h1><?php echo $userLoggedIn->getUsername(); ?></h1>
-    </div>
+<!-- 個人資訊 -->
+<section id="album-header" class="d-flex w-100 p-3 bg-success bg-gradient rounded-3">
+  <div id="cover" class="flex-shrink-1 d-flex align-items-center">
+    <div
+      role="img"
+      alt="<?= $username; ?>"
+      style="background-image: url('<?= $avatar; ?>');"
+      class="bg-secondary bg-cover rounded-circle shadow-lg w-145px h-145px"></div>
   </div>
-  <div class="buttonItems">
-    <button class="button" onclick="openPage('updateDetails.php')">USER DETAILS</button>
-    <button class="button" onclick="logout()">LOGOUT</button>
+  <div id="details" class="flex-grow-1 ps-4">
+    <h2 class="fs-5"><span class="badge text-bg-primary">設定</span></h2>
+    <h1 class="display-1 fw-bold my-3"><?= $username; ?></h1>
+    <p class="fs-5">
+      <span class="text-secondary"><?= $playlistNumber; ?> 個播放清單</span>
+    </p>
   </div>
-</div>
+</section>
 
-<?php include_once("includes/footer.php"); ?>
+<?php
+if (!$isAjax) {
+  include_once("includes/footer.php");
+}
+?>

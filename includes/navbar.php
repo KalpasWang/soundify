@@ -59,13 +59,13 @@ $page = basename($_SERVER['PHP_SELF'], '.php');
         data-bs-toggle="tooltip"
         data-bs-placement="bottom"
         data-bs-title="<?= $userLoggedIn->getUsername() ?>"
+        onclick="openPage('settings.php')"
         class="btn btn-custom rounded-circle w-3rem h-3rem p-0">
-        <img
-          src="<?= $userLoggedIn->getAvatar() ?>"
-          class="rounded-circle"
-          width="32"
-          height="32"
-          alt="<?= $userLoggedIn->getUsername() ?>">
+        <div
+          role="img"
+          alt="<?= $userLoggedIn->getUsername(); ?>"
+          style="background-image: url('<?= $userLoggedIn->getAvatar(); ?>');"
+          class="bg-light bg-cover rounded-circle w-32px h-32px"></div>
       </button>
     </div>
   </div>

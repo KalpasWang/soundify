@@ -16,7 +16,7 @@ try {
   header("Location: 404.php");
 }
 
-$title = 'Soundify - $genreName';
+$title = "Soundify - $genreName";
 if (!$isAjax) {
   include_once("includes/header.php");
 }
