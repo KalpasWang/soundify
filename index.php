@@ -18,6 +18,7 @@ try {
   <section class="mt-5">
     <?php
     $sliderTitle = "熱門專輯";
+    $sliderId = 'hot-albums';
     $items = $albums;
     include("includes/slider.php");
     ?>
@@ -25,6 +26,7 @@ try {
   <section class="mt-5">
     <?php
     $sliderTitle = "熱門歌曲";
+    $sliderId = 'hot-songs';
     $items = $songs;
     include("includes/slider.php");
     ?>
@@ -32,6 +34,7 @@ try {
   <section class="mt-5">
     <?php
     $sliderTitle = "熱門藝人";
+    $sliderId = 'hot-artists';
     $items = $artists;
     include("includes/slider.php");
     ?>
@@ -41,10 +44,7 @@ try {
 <script>
   // init when document ready
   $(document).ready(function() {
-    $('[data-bs-toggle="tooltip"]').tooltip();
-    if (!player) {
-      player = new PlaylistPlayer();
-    }
+    setup();
     <?php if ($isAjax): ?>
       $('title').text('<?= $title ?>');
     <?php endif; ?>

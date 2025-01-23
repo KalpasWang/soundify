@@ -464,10 +464,10 @@ function setup() {
   player.highlightActiveSong();
 }
 
-function slide(direction) {
-  const $slider = $(".slider");
+function slide(direction, id) {
+  const $slider = $(`#${id} > .slider`);
   sliderWidth = $slider[0].scrollWidth;
-  cardWidth = $(".slider-item").width();
+  cardWidth = $(`#${id} > .slider > .slider-item`).width();
   if (direction === "prev" && scrollPosition > 0) {
     scrollPosition -= cardWidth;
     $slider.animate({ scrollLeft: scrollPosition }, 300);

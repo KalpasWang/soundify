@@ -30,6 +30,7 @@ if (!$isAjax) {
   <section id="hot-songs" class="mt-5">
     <?php
     $sliderTitle = "熱門{$genreName}歌曲";
+    $sliderId = 'hot-gsongs';
     $items = $hotSongs;
     include("includes/slider.php");
     ?>
@@ -38,6 +39,7 @@ if (!$isAjax) {
   <section id="hot-albums" class="mt-5">
     <?php
     $sliderTitle = "熱門{$genreName}專輯";
+    $sliderId = 'hot-galbums';
     $items = Album::getHotAlbumsByGenre($con, $genreId);
     include("includes/slider.php");
     ?>
@@ -46,6 +48,7 @@ if (!$isAjax) {
   <section id="hot-artists" class="mt-5">
     <?php
     $sliderTitle = "熱門{$genreName}藝人";
+    $sliderId = 'hot-gartists';
     $items = Artist::getHotArtistsByGenre($con, $genreId);
     include("includes/slider.php");
     ?>
@@ -55,10 +58,7 @@ if (!$isAjax) {
 <script>
   // init when document ready
   $(document).ready(function() {
-    $('[data-bs-toggle="tooltip"]').tooltip();
-    if (!player) {
-      player = new PlaylistPlayer();
-    }
+    setup();
     <?php if ($isAjax): ?>
       $('title').text('<?= $title ?>');
     <?php endif; ?>

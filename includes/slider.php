@@ -3,17 +3,25 @@
 
   $sliderTitle: string
   $items: ICollectionItem
+  $sliderId: string
 -->
+<?php $sliderId = $sliderId . '-slider'; ?>
 <?php if (count($items) > 0): ?>
-  <div class="slider-container">
+  <div id="<?= $sliderId; ?>" class="slider-container">
     <div class="d-flex justify-content-between align-items-center">
       <h1 class="h3 fw-bold text-wide mb-3"><?= $sliderTitle; ?></h1>
       <div>
-        <button onclick="slide('prev')" class="slider-control-prev" type="button">
+        <button
+          onclick="slide('prev', '<?= $sliderId; ?>')"
+          class="slider-control-prev"
+          type="button">
           <i class="bi bi-chevron-left" aria-hidden="true"></i>
           <span class="visually-hidden">Previous</span>
         </button>
-        <button onclick="slide('next')" class="slider-control-next" type="button">
+        <button
+          onclick="slide('next', '<?= $sliderId; ?>')"
+          class="slider-control-next"
+          type="button">
           <i class="bi bi-chevron-right" aria-hidden="true"></i>
           <span class="visually-hidden">Next</span>
         </button>
@@ -21,7 +29,7 @@
     </div>
     <ul class="slider list-unstyled">
       <?php foreach ($items as $item): ?>
-        <?php $CoverClassName = $item->getType() === 'artist' ? 'rounded-circle' : 'rounded'; ?>
+        <?php $CoverClass = $item->getType() === 'artist' ? 'rounded-circle' : 'rounded'; ?>
         <li class="slider-item">
           <div
             role="button"
@@ -30,7 +38,7 @@
             <div class="card border-0 bg-transparent h-100" style="width: 9rem;">
               <img
                 src="<?= $item->getCover(); ?>"
-                class="card-img-top <?= $CoverClassName; ?>"
+                class="card-img-top <?= $CoverClass; ?>"
                 alt="<?= $item->getTitle(); ?>">
               <div class="card-body text-start p-0 pt-2">
                 <h5 class="card-title fs-6 fw-bold mb-0">
