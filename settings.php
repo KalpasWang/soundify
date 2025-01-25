@@ -25,13 +25,23 @@ if (!$isAjax) {
       class="bg-secondary bg-cover rounded-circle shadow-lg w-145px h-145px"></div>
   </div>
   <div id="details" class="flex-grow-1 ps-4">
-    <h2 class="fs-5"><span class="badge text-bg-primary">設定</span></h2>
+    <h2 class="fs-5"><span class="badge text-bg-primary">個人檔案</span></h2>
     <h1 class="display-1 fw-bold my-3"><?= $username; ?></h1>
     <p class="fs-5">
       <span class="text-secondary"><?= $playlistNumber; ?> 個播放清單</span>
     </p>
   </div>
 </section>
+
+<script>
+  // init when document ready
+  $(document).ready(function() {
+    setup();
+    <?php if ($isAjax): ?>
+      $('title').text('<?= $title ?>');
+    <?php endif; ?>
+  });
+</script>
 
 <?php
 if (!$isAjax) {

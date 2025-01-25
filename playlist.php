@@ -22,6 +22,8 @@ try {
   // get current user data
   $userPlaylists = $userLoggedIn->getPlaylists();
   $userId = $userLoggedIn->getId();
+  $isOwner = $userId == $ownerId;
+  $isNotOwner = !$isOwner;
 } catch (\Throwable $th) {
   header("Location: 404.php");
   exit();
@@ -37,27 +39,39 @@ if (!$isAjax) {
   <!-- 撥放清單資訊 -->
   <section id="playlist-header" class="d-flex w-100 p-3 bg-warning bg-gradient rounded-3">
     <div id="cover" class="flex-shrink-1 d-flex align-items-center">
-      <button
-        type="button"
-        class="btn btn-transparent p-0 m-0"
-        data-bs-toggle="modal"
-        data-bs-target="#playlist-edit-modal">
+      <?php if ($isOwner): ?>
+        <button
+          type="button"
+          class="btn btn-transparent p-0 m-0"
+          data-bs-toggle="modal"
+          data-bs-target="#playlist-edit-modal">
+          <div
+            title="<?= $playlistTitle; ?>"
+            style="background-image: url('<?= $playlistCover ?>');"
+            class="bg-light bg-cover rounded w-145px h-145px"
+            role="img"></div>
+        </button>
+      <?php else: ?>
         <div
           title="<?= $playlistTitle; ?>"
           style="background-image: url('<?= $playlistCover ?>');"
           class="bg-light bg-cover rounded w-145px h-145px"
           role="img"></div>
-      </button>
+      <?php endif; ?>
     </div>
     <div id="details" class="flex-grow-1 ps-4">
       <h2 class="fs-5"><span class="badge text-bg-primary">播放清單</span></h2>
-      <button
-        data-bs-toggle="modal"
-        data-bs-target="#playlist-edit-modal"
-        type="button"
-        class="btn btn-transparent p-0 m-0">
+      <?php if ($isOwner): ?>
+        <button
+          data-bs-toggle="modal"
+          data-bs-target="#playlist-edit-modal"
+          type="button"
+          class="btn btn-transparent p-0 m-0">
+          <h1 id="playlist-<?= $playlistId; ?>" class="display-1 fw-bold mt-2 mb-1"><?= $playlistTitle; ?></h1>
+        </button>
+      <?php else: ?>
         <h1 id="playlist-<?= $playlistId; ?>" class="display-1 fw-bold mt-2 mb-1"><?= $playlistTitle; ?></h1>
-      </button>
+      <?php endif; ?>
       <p class="fs-7 text-secondary mb-1"><?= $playlistDescription; ?></p>
       <!-- 播放清單資訊 -->
       <p class="fs-5">
@@ -93,7 +107,7 @@ if (!$isAjax) {
         class="btn btn-primary btn-lg rounded-circle p-2">
         <i class="bi bi-pause-fill fs-1"></i>
       </button>
-      <?php if ($ownerId != $userId): ?>
+      <?php if ($isNotOwner): ?>
         <div class="ms-3">
           <!-- 加入收藏 button -->
           <button
@@ -119,7 +133,7 @@ if (!$isAjax) {
           </button>
         </div>
       <?php endif; ?>
-      <?php if ($ownerId == $userId): ?>
+      <?php if ($isOwner): ?>
         <!-- 刪除播放清單 -->
         <div class="dropdown ms-3" data-bs-toggle="tooltip" data-bs-placement="right" data-bs-title="<?= $playlistTitle ?> 的更多選項">
           <button class="btn btn-info dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -292,104 +306,106 @@ if (!$isAjax) {
       <?php endforeach; ?>
     </ul>
   </section>
-  <!-- 播放清單編輯 modal -->
-  <div class="modal fade" id="playlist-edit-modal" tabindex="-1" aria-labelledby="playlist-modal-title" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header justify-content-between border-bottom-0 pb-0">
-          <h4 class="modal-title fs-4 fw-bold" id="playlist-modal-title">編輯詳細資料</h4>
-          <button type="button" class="btn btn-custom rounded-circle p-1" data-bs-dismiss="modal" aria-label="Close">
-            <i class="bi bi-x-lg text-secondary"></i>
-          </button>
-        </div>
-        <div class="modal-body pb-1">
-          <!-- alert if input invalid -->
-          <div id="playlist-edit-alert" class="alert alert-danger" role="alert" style="display: none;">
+  <?php if ($isOwner): ?>
+    <!-- 播放清單編輯 modal -->
+    <div class="modal fade" id="playlist-edit-modal" tabindex="-1" aria-labelledby="playlist-modal-title" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header justify-content-between border-bottom-0 pb-0">
+            <h4 class="modal-title fs-4 fw-bold" id="playlist-modal-title">編輯詳細資料</h4>
+            <button type="button" class="btn btn-custom rounded-circle p-1" data-bs-dismiss="modal" aria-label="Close">
+              <i class="bi bi-x-lg text-secondary"></i>
+            </button>
           </div>
-          <!-- 編輯表單 -->
-          <form
-            id="playlist-edit-form"
-            class="mb-0"
-            autocomplete="off"
-            onsubmit="event.preventDefault(); updatePlaylist('<?= $playlistId; ?>','<?= $playlistTitle ?>','<?= $playlistDescription ?>', this);">
-            <div class="row">
-              <div class="col-auto">
-                <!-- 封面圖片 -->
-                <input
-                  type="file"
-                  onchange="previewPlaylistCover(this?.files?.[0]);"
-                  name="cover"
-                  id="playlist-cover-input"
-                  accept="image/png, image/jpeg"
-                  class="d-none">
-                <label for="playlist-cover-input" class="btn btn-transparent p-0">
-                  <div class="position-relative">
-                    <div
-                      role="img"
-                      alt="<?= $playlistTitle; ?> 的封面圖片"
-                      id="playlist-cover-preview"
-                      style="background-image: url('<?= $playlistCover; ?>');"
-                      class="bg-light bg-contain darken-75 rounded w-180px h-180px"></div>
-                    <div class="position-absolute top-50 start-50 translate-middle">
-                      <p class="mb-0 fs-5">
-                        <i class="bi bi-pencil"></i>
-                      </p>
-                      <p class="mb-0 fs-5">選擇相片</p>
+          <div class="modal-body pb-1">
+            <!-- alert if input invalid -->
+            <div id="playlist-edit-alert" class="alert alert-danger" role="alert" style="display: none;">
+            </div>
+            <!-- 編輯表單 -->
+            <form
+              id="playlist-edit-form"
+              class="mb-0"
+              autocomplete="off"
+              onsubmit="event.preventDefault(); updatePlaylist('<?= $playlistId; ?>','<?= $playlistTitle ?>','<?= $playlistDescription ?>', this);">
+              <div class="row">
+                <div class="col-auto">
+                  <!-- 封面圖片 -->
+                  <input
+                    type="file"
+                    onchange="previewPlaylistCover(this?.files?.[0]);"
+                    name="cover"
+                    id="playlist-cover-input"
+                    accept="image/png, image/jpeg"
+                    class="d-none">
+                  <label for="playlist-cover-input" class="btn btn-transparent p-0">
+                    <div class="position-relative">
+                      <div
+                        role="img"
+                        alt="<?= $playlistTitle; ?> 的封面圖片"
+                        id="playlist-cover-preview"
+                        style="background-image: url('<?= $playlistCover; ?>');"
+                        class="bg-light bg-contain darken-75 rounded w-180px h-180px"></div>
+                      <div class="position-absolute top-50 start-50 translate-middle">
+                        <p class="mb-0 fs-5">
+                          <i class="bi bi-pencil"></i>
+                        </p>
+                        <p class="mb-0 fs-5">選擇相片</p>
+                      </div>
                     </div>
+                  </label>
+                </div>
+                <div class="col">
+                  <!-- 播放清單名稱 -->
+                  <div class="form-floating mb-2">
+                    <input type="text" name="name" class="form-control fs-7" id="playlist-name-input" placeholder="播放清單名稱" value="<?= $playlistTitle; ?>">
+                    <label for="playlist-name-input" class="form-label fs-8">名稱</label>
                   </div>
-                </label>
-              </div>
-              <div class="col">
-                <!-- 播放清單名稱 -->
-                <div class="form-floating mb-2">
-                  <input type="text" name="name" class="form-control fs-7" id="playlist-name-input" placeholder="播放清單名稱" value="<?= $playlistTitle; ?>">
-                  <label for="playlist-name-input" class="form-label fs-8">名稱</label>
-                </div>
-                <!-- 播放清單說明 -->
-                <div class="form-floating">
-                  <textarea
-                    class="form-control fs-7"
-                    name="description"
-                    id="playlist-description-input"
-                    placeholder="播放清單說明文字"
-                    style="height: 114px;"><?= $playlistDescription; ?></textarea>
-                  <label for="playlist-description-input" class="fs-8">說明</label>
+                  <!-- 播放清單說明 -->
+                  <div class="form-floating">
+                    <textarea
+                      class="form-control fs-7"
+                      name="description"
+                      id="playlist-description-input"
+                      placeholder="播放清單說明文字"
+                      style="height: 114px;"><?= $playlistDescription; ?></textarea>
+                    <label for="playlist-description-input" class="fs-8">說明</label>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="mt-3 text-end">
-              <button
-                type="submit"
-                class="btn btn-light rounded-pill fw-bold px-4 py-2">儲存</button>
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer justify-content-center border-top-0 pt-0">
-          <p class="fs-8 mt-2">若繼續操作，即表示你同意 Soundify 存取你選擇上傳的圖片。請確認你有權上傳圖片。</p>
+              <div class="mt-3 text-end">
+                <button
+                  type="submit"
+                  class="btn btn-light rounded-pill fw-bold px-4 py-2">儲存</button>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer justify-content-center border-top-0 pt-0">
+            <p class="fs-8 mt-2">若繼續操作，即表示你同意 Soundify 存取你選擇上傳的圖片。請確認你有權上傳圖片。</p>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <!-- 播放清單刪除 modal -->
-  <div class="modal fade" id="playlist-delete-modal" tabindex="-1" aria-labelledby="delete-modal-title" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header border-bottom-0 pb-0">
-          <h4 class="modal-title fs-5 fw-bold" id="delete-modal-title">確定要從「你的音樂庫」中刪除嗎？</h4>
-        </div>
-        <div class="modal-body">
-          這個動作會將「<?= $playlistTitle ?>」從「你的音樂庫」刪除。
-        </div>
-        <div class="modal-footer border-top-0">
-          <button type="button" class="btn btn-lg btn-transparent rounded-pill fw-bold" data-bs-dismiss="modal">取消</button>
-          <button
-            type="button"
-            class="btn btn-lg btn-primary rounded-pill fw-bold"
-            onclick="deletePlaylist('<?= $playlistId; ?>', this);">刪除</button>
+    <!-- 播放清單刪除 modal -->
+    <div class="modal fade" id="playlist-delete-modal" tabindex="-1" aria-labelledby="delete-modal-title" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header border-bottom-0 pb-0">
+            <h4 class="modal-title fs-5 fw-bold" id="delete-modal-title">確定要從「你的音樂庫」中刪除嗎？</h4>
+          </div>
+          <div class="modal-body">
+            這個動作會將「<?= $playlistTitle ?>」從「你的音樂庫」刪除。
+          </div>
+          <div class="modal-footer border-top-0">
+            <button type="button" class="btn btn-lg btn-transparent rounded-pill fw-bold" data-bs-dismiss="modal">取消</button>
+            <button
+              type="button"
+              class="btn btn-lg btn-primary rounded-pill fw-bold"
+              onclick="deletePlaylist('<?= $playlistId; ?>', this);">刪除</button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
+  <?php endif; ?>
 </div>
 
 <script>
