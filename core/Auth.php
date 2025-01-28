@@ -88,9 +88,8 @@ class Auth
     if (self::$db) {
       // save to database
       $passwordHash = password_hash($password, PASSWORD_DEFAULT);
-      $avatarPath = "assets/images/avatars/default-avatar.png";
-      $stmt = self::$db->prepare("INSERT INTO users (username, email, password, avatar) VALUES (?, ?, ?, ?)");
-      $stmt->bind_param("ssss", $username, $email, $passwordHash, $avatarPath);
+      $stmt = self::$db->prepare("INSERT INTO users (username, email, password) VALUES (?, ?, ?)");
+      $stmt->bind_param("ssss", $username, $email, $passwordHash);
       return $stmt->execute();
     }
     return false;

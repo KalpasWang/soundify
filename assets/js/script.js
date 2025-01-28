@@ -1,5 +1,6 @@
 var player;
 var timer;
+var userAvatarFile;
 var playlistCoverFile;
 var searchAjax;
 var sliderWidth;
@@ -456,7 +457,6 @@ class PlaylistPlayer {
 
 function setup() {
   $('[data-bs-toggle="tooltip"]').tooltip();
-  $('[data-bs-toggle-second="tooltip"]').tooltip();
   if (!player) {
     player = new PlaylistPlayer();
   }
@@ -485,14 +485,81 @@ window.onpopstate = function (e) {
   openPage(page);
 };
 
-function updateUsername(usernameClass) {
-  var value = $("." + usernameClass).val();
-  $.post("handlers/updateUsername.php", {
-    username: value,
-  }).done(function (response) {
-    $("." + usernameClass)
-      .nextAll(".message")
-      .text(response);
+function previewUserAvatar(file) {
+  if (!file) {
+    return;
+  }
+  if (file.size > 1 * 1024 * 1024) {
+    $alert = $("#profile-alert");
+    $alert.text("檔案大小不得超過 1MB");
+    $alert.fadeIn(150);
+    return;
+  }
+  let reader = new FileReader();
+  reader.onload = function (e) {
+    $cover = $("#profile-avatar-preview");
+    $cover.css("background-image", "url(" + e.target.result + ")");
+    $cover.hide();
+    $cover.fadeIn(150);
+  };
+  reader.readAsDataURL(file);
+  userAvatarFile = file;
+}
+
+function updateUser(id, username, target) {
+  let formData = new FormData(target);
+  let $alert = $("#profile-alert");
+  let $modal = $("#profile-modal");
+  if (formData.get("name") == "") {
+    $alert.text("名稱不得為空").fadeIn(150);
+    return;
+  }
+  // check if form unchanged
+  let newName = formData.get("name");
+  if (newName == username && !userAvatarFile) {
+    $alert.hide();
+    $modal.modal("hide");
+    return;
+  }
+  newName = newName.trim();
+  if (newName.length > 25 || newName.length < 5) {
+    $alert.text("名稱不得超過 25 個字元或少於 5 個字元").fadeIn(150);
+    return;
+  }
+  formData.append("userId", id);
+  let $submitBtn = $(target).find("button");
+  $submitBtn.attr("disabled", true);
+  $.ajax({
+    url: "handlers/updateUser.php",
+    type: "POST",
+    data: formData,
+    contentType: false,
+    processData: false,
+    cache: false,
+    success: function (data) {
+      let response;
+      try {
+        response = JSON.parse(data);
+      } catch (error) {
+        console.log(data);
+        console.error(error);
+        $submitBtn.attr("disabled", false);
+        $alert.text("JSON 解析錯誤").fadeIn(150);
+        return;
+      }
+      if (response?.success) {
+        $modal.modal("hide");
+        refreshNavbar();
+        refreshMainContent();
+        showNotification(response.message);
+      } else {
+        $alert.text(response.message).fadeIn(150);
+        $submitBtn.attr("disabled", false);
+      }
+    },
+  }).fail(function () {
+    $alert.text("出現錯誤，請稍後再試").fadeIn(150);
+    $submitBtn.attr("disabled", false);
   });
 }
 
@@ -561,6 +628,16 @@ function refreshMainContent() {
   let route = window.location.href;
   let page = route.split("/").at(-1);
   openPage(page, scrollPosition, false);
+}
+
+function refreshNavbar() {
+  let url = encodeURI(`${BASE_URL}includes/navbar.php`);
+  $("#navbar").load(url, function (response, status, xhr) {
+    if (status == "error") {
+      console.error("Error: " + xhr.status + " " + xhr.statusText);
+      return;
+    }
+  });
 }
 
 function refreshSidebar() {

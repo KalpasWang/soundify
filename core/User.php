@@ -62,7 +62,53 @@ class User
 
   public function getAvatar()
   {
+    if (empty($this->mysqliData['avatar'])) {
+      return BASE_URL . "assets/images/avatars/default-avatar.png";
+    }
     return BASE_URL . $this->mysqliData['avatar'];
+  }
+
+  public function updateUser(string $name, array|null $image): void
+  {
+    $name = trim($name);
+    $name = strip_tags($name);
+    $name = htmlspecialchars($name);
+    if (strlen($name) > 25 || strlen($name) < 5) {
+      throw new Exception("名稱長度不得小於 5 或大於 25");
+    }
+    if ($image !== null) {
+      if ($image['size'] > 1 * 1024 * 1024) {
+        throw new Exception("圖片大小不得超過 1MB");
+      }
+      $uploaddir = '../assets/images/avatars/';
+      // rename image to a random 16 bytes name
+      $filename = bin2hex(random_bytes(16)) . '.' . pathinfo($image['name'], PATHINFO_EXTENSION);
+      while (file_exists($uploaddir . $filename)) {
+        $filename = bin2hex(random_bytes(16)) . '.' . pathinfo($image['name'], PATHINFO_EXTENSION);
+      }
+      $path = $uploaddir . $filename;
+      $result = move_uploaded_file($image['tmp_name'], $path);
+      if ($result === false) {
+        throw new Exception("圖片上傳失敗");
+      }
+      // delete original image
+      $oldAvatarPath = $this->mysqliData['avatar'];
+      if ($oldAvatarPath && file_exists("../" . $oldAvatarPath)) {
+        unlink("../" . $oldAvatarPath);
+      }
+      // update playlist in db
+      $dbpath = 'assets/images/avatars/' . $filename;
+      $query = $this->db->query("UPDATE users SET username='$name', avatar='$dbpath' WHERE id='$this->id'");
+      if ($query === false) {
+        throw new Exception($this->db->error);
+      }
+      return;
+    }
+    // if no image, just update name and description
+    $query = $this->db->query("UPDATE users SET username='$name' WHERE id='$this->id'");
+    if ($query === false) {
+      throw new Exception($this->db->error);
+    }
   }
 
   public function getPlaylists(): array

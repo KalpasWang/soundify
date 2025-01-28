@@ -252,6 +252,12 @@ class Playlist implements ICollectionItem
 
   public function updatePlaylist(string $name, string $description, array|null $image): void
   {
+    $name = trim($name);
+    $name = strip_tags($name);
+    $name = htmlspecialchars($name);
+    if (empty($name)) {
+      throw new Exception("播放清單名稱不得為空");
+    }
     if ($image !== null) {
       if ($image['size'] > 1 * 1024 * 1024) {
         throw new Exception("圖片大小不得超過 1MB");
