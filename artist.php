@@ -17,8 +17,7 @@ try {
   $artistAlbums = $artist->getAllAlbums();
   $isFollowing = $userLoggedIn->isSaved('artist', $artistId);
 } catch (\Throwable $th) {
-  header("Location: 404.php");
-  exit();
+  $msg = $th->getMessage();
 }
 
 
@@ -250,6 +249,9 @@ if (!$isAjax) {
     setup();
     <?php if ($isAjax): ?>
       $('title').text('<?= $title ?>');
+    <?php endif; ?>
+    <?php if (isset($msg)): ?>
+      showNotification('發生錯誤：' + '<?= $msg ?>');
     <?php endif; ?>
   });
 </script>

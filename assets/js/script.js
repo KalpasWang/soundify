@@ -462,6 +462,16 @@ function setup() {
   }
   player.togglePlayingBtn();
   player.highlightActiveSong();
+  let pageName = window.location.pathname.split("/").at(-1);
+  if (pageName === "search.php") {
+    $(".search-btn .bi").replaceWith(
+      '<i class="bi bi-collection-fill text-light"></i>'
+    );
+  } else {
+    $(".search-btn .bi").replaceWith(
+      '<i class="bi bi-collection text-secondary"></i>'
+    );
+  }
 }
 
 function slide(direction, id) {

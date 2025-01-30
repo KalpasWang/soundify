@@ -21,8 +21,7 @@ try {
   $playlists = $userLoggedIn->getPlaylists();
   $isSavedAlbum = $userLoggedIn->isSaved('album', $albumId);
 } catch (\Throwable $th) {
-  header("Location: 404.php");
-  exit();
+  $msg = $th->getMessage();
 }
 
 // set title
@@ -241,6 +240,9 @@ if (!$isAjax) {
     setup();
     <?php if ($isAjax): ?>
       $('title').text('<?= $title ?>');
+    <?php endif; ?>
+    <?php if (isset($msg)): ?>
+      showNotification('發生錯誤：' + '<?= $msg ?>');
     <?php endif; ?>
   });
 </script>

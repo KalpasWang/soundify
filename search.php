@@ -4,8 +4,7 @@ include_once("includes/core.php");
 try {
   $genres = Genre::getAllGenres($con);
 } catch (\Throwable $th) {
-  header("Location: index.php");
-  exit();
+  $msg = $th->getMessage();
 }
 
 $pageName = '搜尋';
@@ -47,19 +46,11 @@ if (!$isAjax) {
   // init when document ready
   $(document).ready(function() {
     setup();
-    $('.search-btn .bi').replaceWith('<i class="bi bi-collection-fill text-light"></i>')
     <?php if ($isAjax): ?>
       $('title').text('<?= $title ?>');
     <?php endif; ?>
+    <?php if (isset($msg)): ?>
+      showNotification('發生錯誤：' + '<?= $msg ?>');
+    <?php endif; ?>
   });
-  // $(".searchInput").focus();
-  // $(function() {
-  //   $(".searchInput").keyup(function() {
-  //     clearTimeout(timer);
-  //     timer = setTimeout(function() {
-  //       var val = $(".searchInput").val();
-  //       openPage("search.php?term=" + val);
-  //     }, 2000);
-  //   })
-  // })
 </script>

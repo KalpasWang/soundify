@@ -46,7 +46,7 @@ if ($basename == $requestFileName) {
         data-bs-toggle="tooltip"
         data-bs-placement="bottom"
         data-bs-title="瀏覽">
-        <span class="bg-success border-0">
+        <span class="bg-transparent border-0">
           <i class="bi bi-collection text-secondary"></i>
         </span>
       </button>

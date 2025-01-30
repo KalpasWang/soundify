@@ -33,8 +33,7 @@ try {
   $isInUserPlaylists = $song->isInUserPlaylists($userId);
   $isSaved = $isLiked || $isInUserPlaylists;
 } catch (\Throwable $th) {
-  header("Location: 404.php");
-  exit();
+  $msg = $th->getMessage();
 }
 
 $title = "$songName | song by $artistName - Soundify";
@@ -379,6 +378,9 @@ if (!$isAjax) {
     setup();
     <?php if ($isAjax): ?>
       $('title').text('<?= $title ?>');
+    <?php endif; ?>
+    <?php if (isset($msg)): ?>
+      showNotification('發生錯誤：' + '<?= $msg ?>');
     <?php endif; ?>
   });
 </script>

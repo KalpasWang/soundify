@@ -7,8 +7,7 @@ try {
   $userId = $userLoggedIn->getId();
   $userPlaylists = $userLoggedIn->getPlaylists();
 } catch (\Throwable $th) {
-  header("Location: 404.php");
-  exit();
+  $msg = $th->getMessage();
 }
 
 $pageName = '已按讚的歌曲';
@@ -214,6 +213,9 @@ if (!$isAjax) {
     setup()
     <?php if ($isAjax): ?>
       $('title').text('<?= $title ?>');
+    <?php endif; ?>
+    <?php if (isset($msg)): ?>
+      showNotification('發生錯誤：' + '<?= $msg ?>');
     <?php endif; ?>
   });
 </script>

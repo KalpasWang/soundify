@@ -25,8 +25,7 @@ try {
   $isOwner = $userId == $ownerId;
   $isNotOwner = !$isOwner;
 } catch (\Throwable $th) {
-  header("Location: 404.php");
-  exit();
+  $msg = $th->getMessage();
 }
 
 $title = "$playlistTitle - playlist by $ownerName | Soundify";
@@ -414,6 +413,9 @@ if (!$isAjax) {
     setup()
     <?php if ($isAjax): ?>
       $('title').text('<?= $title ?>');
+    <?php endif; ?>
+    <?php if (isset($msg)): ?>
+      showNotification('發生錯誤：' + '<?= $msg ?>');
     <?php endif; ?>
   });
 </script>
