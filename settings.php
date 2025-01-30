@@ -3,6 +3,7 @@ include_once("includes/core.php");
 
 try {
   $username = $userLoggedIn->getUsername();
+  $userId = $userLoggedIn->getId();
   $avatar = $userLoggedIn->getAvatar();
   $playlistNumber = count($userLoggedIn->getPlaylists());
 } catch (\Throwable $th) {
@@ -68,6 +69,8 @@ if (!$isAjax) {
             id="profile-form"
             class="mb-0"
             autocomplete="off"
+            method="post"
+            enctype="multipart/form-data"
             onsubmit="event.preventDefault(); updateUser('<?= $userId; ?>','<?= $username ?>', this);">
             <div class="row">
               <!-- 封面圖片 -->
@@ -125,6 +128,9 @@ if (!$isAjax) {
     setup();
     <?php if ($isAjax): ?>
       $('title').text('<?= $title ?>');
+    <?php endif; ?>
+    <?php if (isset($msg)): ?>
+      showNotification('發生錯誤：' + '<?= $msg ?>');
     <?php endif; ?>
   });
 </script>

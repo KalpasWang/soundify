@@ -10,7 +10,7 @@ try {
   $songs = Song::getHotSongs($con, 10);
   $artists = Artist::getHotArtists($con, 10);
 } catch (\Throwable $th) {
-  $msg = "<script>showNotification('<?= $th->getMessage() ?>');</script>";
+  $msg = $th->getMessage();
 }
 ?>
 
@@ -48,14 +48,14 @@ try {
     <?php if ($isAjax): ?>
       $('title').text('<?= $title ?>');
     <?php endif; ?>
+    <?php if (isset($msg)): ?>
+      showNotification('發生錯誤：' + '<?= $msg ?>');
+    <?php endif; ?>
   });
 </script>
 
 <?php
 if (!$isAjax) {
   include_once("includes/footer.php");
-}
-if (isset($msg)) {
-  echo $msg;
 }
 ?>

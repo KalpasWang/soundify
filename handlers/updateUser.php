@@ -19,7 +19,7 @@ try {
     $userId = $_POST['userId'];
     $name = $_POST['name'] ?? '';
     $image = null;
-    if ($_FILES['avatar']['size'] > 0) {
+    if ($_FILES['avatar']['size'] > 0 && $_FILES['avatar']['error'] == 0) {
       $image = $_FILES['avatar'];
     }
     $user = User::createById($con, $userId);

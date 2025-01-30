@@ -506,7 +506,7 @@ function previewUserAvatar(file) {
   userAvatarFile = file;
 }
 
-function updateUser(id, username, target) {
+function updateUser(id, name, target) {
   let formData = new FormData(target);
   let $alert = $("#profile-alert");
   let $modal = $("#profile-modal");
@@ -516,7 +516,7 @@ function updateUser(id, username, target) {
   }
   // check if form unchanged
   let newName = formData.get("name");
-  if (newName == username && !userAvatarFile) {
+  if (newName == name && !userAvatarFile) {
     $alert.hide();
     $modal.modal("hide");
     return;
